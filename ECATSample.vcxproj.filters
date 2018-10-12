@@ -1,0 +1,514 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ab80ee29-4fbc-4878-9ee1-551cf0c94a82}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{9d1f9ce8-dfa8-427f-9892-02da4fcb3f03}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{d20d94a8-8c25-4239-b565-bd771d9ce44a}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="communication">
+      <UniqueIdentifier>{17a650f6-65ff-4732-a330-c0dc842ca5fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{a4c29c38-9201-4108-944b-228669b3fc26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="control">
+      <UniqueIdentifier>{f41e084b-9050-4f2d-beea-b64b4ba16423}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="chart">
+      <UniqueIdentifier>{8bc949f5-7a4e-49b0-adf6-2bc30e80f734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{b711df5c-f25a-47fe-a956-8c7edf636b6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="register">
+      <UniqueIdentifier>{4b78f1a7-00e6-41e4-aced-c2c106f72e13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="json">
+      <UniqueIdentifier>{ca30f0e4-3b43-4c1d-81cc-e26f047459a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{7593b069-85ac-4270-9bef-b06b0d919c4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hardware">
+      <UniqueIdentifier>{ff6c159a-d415-404a-8fb2-f4c2276243fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opengl">
+      <UniqueIdentifier>{b27e079a-1b3d-421d-b0fd-af87df6e675d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ECATSample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="communication\communication.cpp">
+      <Filter>communication</Filter>
+    </ClCompile>
+    <ClCompile Include="communication\delta.cpp">
+      <Filter>communication</Filter>
+    </ClCompile>
+    <ClCompile Include="communication\SerialPort.cpp">
+      <Filter>communication</Filter>
+    </ClCompile>
+    <ClCompile Include="communication\sixdof.cpp">
+      <Filter>communication</Filter>
+    </ClCompile>
+    <ClCompile Include="config\inihelper.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="util\model.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="control\pid.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\sensor.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartAxis.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartAxisLabel.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartBarSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartCandlestickSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartCrossHairCursor.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartCtrl.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartCursor.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartDateTimeAxis.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartDragLineCursor.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartFont.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartGanttSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartGradient.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartGrid.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartLegend.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartLineSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartLogarithmicAxis.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartPointsSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartScrollBar.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartStandardAxis.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartSurfaceSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartTitle.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="chart\ChartXYSerie.cpp">
+      <Filter>chart</Filter>
+    </ClCompile>
+    <ClCompile Include="control\Com.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\JY901.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\kalman_filter.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>communication</Filter>
+    </ClCompile>
+    <ClCompile Include="register\register.cpp">
+      <Filter>register</Filter>
+    </ClCompile>
+    <ClCompile Include="register\MD5.cpp">
+      <Filter>register</Filter>
+    </ClCompile>
+    <ClCompile Include="register\device.cpp">
+      <Filter>register</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogRegister.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_reader.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_value.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_writer.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="ECATSampleDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="communication\phasemotioncontrol.cpp">
+      <Filter>communication</Filter>
+    </ClCompile>
+    <ClCompile Include="hardware\UserPCI1723.cpp">
+      <Filter>hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="hardware\UserPCI2394.cpp">
+      <Filter>hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="hardware\SixdofDioAndPulseCount.cpp">
+      <Filter>hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="util\crc.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl\sixdofopenglhelper.cpp">
+      <Filter>opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="control\inertialnavigation.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\water.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\landvision.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="hardware\UserPCI1750.cpp">
+      <Filter>hardware</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ECATSample.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ECATSample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECATSampleDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\communication.h">
+      <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\delta.h">
+      <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\SerialPort.h">
+      <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\sixdof.h">
+      <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\stdafx.h">
+      <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="config\inihelper.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="util\model.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="EtherCAT_DLL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EtherCAT_DLL_Err.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="control\pid.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\sensor.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\uiconfig.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartAxis.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartAxisLabel.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartBalloonLabel.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartBarSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartCandlestickSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartCrossHairCursor.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartCtrl.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartCursor.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartDateTimeAxis.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartDragLineCursor.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartFont.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartGanttSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartGradient.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartGrid.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartLabel.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartLegend.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartLineSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartLogarithmicAxis.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartMouseListener.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartPointsArray.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartPointsSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartScrollBar.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartSerieBase.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartSeriesMouseListener.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartStandardAxis.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartString.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartSurfaceSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartTitle.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\ChartXYSerie.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart\PointsOrdering.h">
+      <Filter>chart</Filter>
+    </ClInclude>
+    <ClInclude Include="chart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Com.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\JY901.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\kalman_filter.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="Sixdofdll2010.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="register\register.h">
+      <Filter>register</Filter>
+    </ClInclude>
+    <ClInclude Include="register\MD5.h">
+      <Filter>register</Filter>
+    </ClInclude>
+    <ClInclude Include="register\device.h">
+      <Filter>register</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogRegister.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json\allocator.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\assertions.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\autolink.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\config.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\features.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\forwards.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json_tool.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\reader.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\value.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\version.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\writer.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\phasemotioncontrol.h">
+      <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="hardware\UserPCI1723.h">
+      <Filter>hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="hardware\UserPCI1750.h">
+      <Filter>hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="hardware\UserPCI2394.h">
+      <Filter>hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="hardware\UserPCICard.h">
+      <Filter>hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="PCI2394.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hardware\SixdofDioAndPulseCount.h">
+      <Filter>hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="bdaqctrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\crc.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="modbus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="modbus-rtu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="modbus-tcp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="modbus-version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="glut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl\sixdofopenglhelper.h">
+      <Filter>opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="control\inertialnavigation.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\water.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\landvision.h">
+      <Filter>control</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="EtherCAT_DLL.lib" />
+    <Library Include="modbus.lib" />
+    <Library Include="glut.lib" />
+    <Library Include="glut32.lib" />
+    <Library Include="PCI2394.lib" />
+    <Library Include="Sixdofdll2010.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\ECATSample.ico">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\ECATSample.rc2">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="chart\ChartBalloonLabel.inl">
+      <Filter>chart</Filter>
+    </None>
+    <None Include="chart\ChartLabel.inl">
+      <Filter>chart</Filter>
+    </None>
+    <None Include="chart\ChartPointsArray.inl">
+      <Filter>chart</Filter>
+    </None>
+    <None Include="chart\ChartSerieBase.inl">
+      <Filter>chart</Filter>
+    </None>
+    <None Include="json\json_valueiterator.inl">
+      <Filter>json</Filter>
+    </None>
+  </ItemGroup>
+</Project>

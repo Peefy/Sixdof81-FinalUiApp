@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{5F597E96-13F6-606B-0699-E24C0B2F678B}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>F:\_VSpro\Cpp\MFC\SixDofCppUiApp;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\_VSpro\Cpp\MFC\SixDofCppUiApp;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug\ECATSample.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Debug\ECATSample.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0404</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\ECATSample.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Debug\ECATSample.exe</OutputFile>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\ECATSample.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Release\ECATSample.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0404</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\ECATSample.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Release\ECATSample.exe</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="chart\ChartAxis.cpp" />
+    <ClCompile Include="chart\ChartAxisLabel.cpp" />
+    <ClCompile Include="chart\ChartBarSerie.cpp" />
+    <ClCompile Include="chart\ChartCandlestickSerie.cpp" />
+    <ClCompile Include="chart\ChartCrossHairCursor.cpp" />
+    <ClCompile Include="chart\ChartCtrl.cpp" />
+    <ClCompile Include="chart\ChartCursor.cpp" />
+    <ClCompile Include="chart\ChartDateTimeAxis.cpp" />
+    <ClCompile Include="chart\ChartDragLineCursor.cpp" />
+    <ClCompile Include="chart\ChartFont.cpp" />
+    <ClCompile Include="chart\ChartGanttSerie.cpp" />
+    <ClCompile Include="chart\ChartGradient.cpp" />
+    <ClCompile Include="chart\ChartGrid.cpp" />
+    <ClCompile Include="chart\ChartLegend.cpp" />
+    <ClCompile Include="chart\ChartLineSerie.cpp" />
+    <ClCompile Include="chart\ChartLogarithmicAxis.cpp" />
+    <ClCompile Include="chart\ChartPointsSerie.cpp" />
+    <ClCompile Include="chart\ChartScrollBar.cpp" />
+    <ClCompile Include="chart\ChartSerie.cpp" />
+    <ClCompile Include="chart\ChartStandardAxis.cpp" />
+    <ClCompile Include="chart\ChartSurfaceSerie.cpp" />
+    <ClCompile Include="chart\ChartTitle.cpp" />
+    <ClCompile Include="chart\ChartXYSerie.cpp" />
+    <ClCompile Include="communication\communication.cpp" />
+    <ClCompile Include="communication\delta.cpp" />
+    <ClCompile Include="communication\phasemotioncontrol.cpp" />
+    <ClCompile Include="communication\SerialPort.cpp" />
+    <ClCompile Include="communication\sixdof.cpp" />
+    <ClCompile Include="config\inihelper.cpp" />
+    <ClCompile Include="control\Com.cpp" />
+    <ClCompile Include="control\inertialnavigation.cpp" />
+    <ClCompile Include="control\JY901.cpp" />
+    <ClCompile Include="control\kalman_filter.cpp" />
+    <ClCompile Include="control\landvision.cpp" />
+    <ClCompile Include="control\pid.cpp" />
+    <ClCompile Include="control\sensor.cpp" />
+    <ClCompile Include="control\water.cpp" />
+    <ClCompile Include="DialogRegister.cpp" />
+    <ClCompile Include="ECATSample.cpp" />
+    <ClCompile Include="ECATSampleDlg.cpp" />
+    <ClCompile Include="hardware\SixdofDioAndPulseCount.cpp" />
+    <ClCompile Include="hardware\UserPCI1723.cpp" />
+    <ClCompile Include="hardware\UserPCI1750.cpp" />
+    <ClCompile Include="hardware\UserPCI2394.cpp" />
+    <ClCompile Include="json\json_reader.cpp" />
+    <ClCompile Include="json\json_value.cpp" />
+    <ClCompile Include="json\json_writer.cpp" />
+    <ClCompile Include="opengl\sixdofopenglhelper.cpp" />
+    <ClCompile Include="register\device.cpp" />
+    <ClCompile Include="register\MD5.cpp" />
+    <ClCompile Include="register\register.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="util\crc.cpp" />
+    <ClCompile Include="util\model.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ECATSample.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bdaqctrl.h" />
+    <ClInclude Include="chart.h" />
+    <ClInclude Include="chart\ChartAxis.h" />
+    <ClInclude Include="chart\ChartAxisLabel.h" />
+    <ClInclude Include="chart\ChartBalloonLabel.h" />
+    <ClInclude Include="chart\ChartBarSerie.h" />
+    <ClInclude Include="chart\ChartCandlestickSerie.h" />
+    <ClInclude Include="chart\ChartCrossHairCursor.h" />
+    <ClInclude Include="chart\ChartCtrl.h" />
+    <ClInclude Include="chart\ChartCursor.h" />
+    <ClInclude Include="chart\ChartDateTimeAxis.h" />
+    <ClInclude Include="chart\ChartDragLineCursor.h" />
+    <ClInclude Include="chart\ChartFont.h" />
+    <ClInclude Include="chart\ChartGanttSerie.h" />
+    <ClInclude Include="chart\ChartGradient.h" />
+    <ClInclude Include="chart\ChartGrid.h" />
+    <ClInclude Include="chart\ChartLabel.h" />
+    <ClInclude Include="chart\ChartLegend.h" />
+    <ClInclude Include="chart\ChartLineSerie.h" />
+    <ClInclude Include="chart\ChartLogarithmicAxis.h" />
+    <ClInclude Include="chart\ChartMouseListener.h" />
+    <ClInclude Include="chart\ChartPointsArray.h" />
+    <ClInclude Include="chart\ChartPointsSerie.h" />
+    <ClInclude Include="chart\ChartScrollBar.h" />
+    <ClInclude Include="chart\ChartSerie.h" />
+    <ClInclude Include="chart\ChartSerieBase.h" />
+    <ClInclude Include="chart\ChartSeriesMouseListener.h" />
+    <ClInclude Include="chart\ChartStandardAxis.h" />
+    <ClInclude Include="chart\ChartString.h" />
+    <ClInclude Include="chart\ChartSurfaceSerie.h" />
+    <ClInclude Include="chart\ChartTitle.h" />
+    <ClInclude Include="chart\ChartXYSerie.h" />
+    <ClInclude Include="chart\PointsOrdering.h" />
+    <ClInclude Include="communication\communication.h" />
+    <ClInclude Include="communication\delta.h" />
+    <ClInclude Include="communication\phasemotioncontrol.h" />
+    <ClInclude Include="communication\SerialPort.h" />
+    <ClInclude Include="communication\sixdof.h" />
+    <ClInclude Include="communication\stdafx.h" />
+    <ClInclude Include="config\inihelper.h" />
+    <ClInclude Include="control\Com.h" />
+    <ClInclude Include="control\inertialnavigation.h" />
+    <ClInclude Include="control\JY901.h" />
+    <ClInclude Include="control\kalman_filter.h" />
+    <ClInclude Include="control\landvision.h" />
+    <ClInclude Include="control\pid.h" />
+    <ClInclude Include="control\sensor.h" />
+    <ClInclude Include="control\water.h" />
+    <ClInclude Include="DialogRegister.h" />
+    <ClInclude Include="ECATSample.h" />
+    <ClInclude Include="ECATSampleDlg.h" />
+    <ClInclude Include="EtherCAT_DLL.h" />
+    <ClInclude Include="EtherCAT_DLL_Err.h" />
+    <ClInclude Include="glut.h" />
+    <ClInclude Include="hardware\SixdofDioAndPulseCount.h" />
+    <ClInclude Include="hardware\UserPCI1723.h" />
+    <ClInclude Include="hardware\UserPCI1750.h" />
+    <ClInclude Include="hardware\UserPCI2394.h" />
+    <ClInclude Include="hardware\UserPCICard.h" />
+    <ClInclude Include="json\allocator.h" />
+    <ClInclude Include="json\assertions.h" />
+    <ClInclude Include="json\autolink.h" />
+    <ClInclude Include="json\config.h" />
+    <ClInclude Include="json\features.h" />
+    <ClInclude Include="json\forwards.h" />
+    <ClInclude Include="json\json.h" />
+    <ClInclude Include="json\json_tool.h" />
+    <ClInclude Include="json\reader.h" />
+    <ClInclude Include="json\value.h" />
+    <ClInclude Include="json\version.h" />
+    <ClInclude Include="json\writer.h" />
+    <ClInclude Include="modbus-rtu.h" />
+    <ClInclude Include="modbus-tcp.h" />
+    <ClInclude Include="modbus-version.h" />
+    <ClInclude Include="modbus.h" />
+    <ClInclude Include="opengl\sixdofopenglhelper.h" />
+    <ClInclude Include="PCI2394.h" />
+    <ClInclude Include="register\device.h" />
+    <ClInclude Include="register\MD5.h" />
+    <ClInclude Include="register\register.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Sixdofdll2010.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="ui\uiconfig.h" />
+    <ClInclude Include="util\crc.h" />
+    <ClInclude Include="util\model.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\ECATSample.ico" />
+    <CustomBuild Include="res\ECATSample.rc2">
+      <FileType>RC</FileType>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="EtherCAT_DLL.lib" />
+    <Library Include="glut.lib" />
+    <Library Include="glut32.lib" />
+    <Library Include="modbus.lib" />
+    <Library Include="PCI2394.lib" />
+    <Library Include="Sixdofdll2010.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icon1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="chart\ChartBalloonLabel.inl" />
+    <None Include="chart\ChartLabel.inl" />
+    <None Include="chart\ChartPointsArray.inl" />
+    <None Include="chart\ChartSerieBase.inl" />
+    <None Include="json\json_valueiterator.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="ECATSample.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

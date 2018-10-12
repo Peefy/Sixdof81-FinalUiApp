@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DAQNavi Version="3.2.1.0" Profile="1.0.0.0">
+    <DaqDevice ModuleIndex="0">
+        <Property ID="8">
+            <Description>Product ID:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType>ProductId</EnumType>
+            <Tip>Product ID is used to represent a DAQ Device model and distinguish devices of different models. Each of a device model has an a unique Product ID.</Tip>
+            <Value>0</Value>
+        </Property>
+    </DaqDevice>
+    <DaqAi ModuleIndex="0">
+        <Property ID="23">
+            <Description>Resolution:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Data resolution refers to the number of the bit that is used to realize analog to digital(or digital to analog) conversion,the bigger bit number of ADC(or DAC) is, the higher the resolution will be</Tip>
+            <Value>12</Value>
+        </Property>
+        <Property ID="26">
+            <Description>Channel Number Max:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip> Max number of physical channel.Physical channel refers to visible input/output terminals or pins that can connect wires on a data acquisition card.</Tip>
+            <Value>7</Value>
+        </Property>
+        <Property ID="27">
+            <Description>Channel Connection Type:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>AiChannelType</EnumType>
+            <Tip>The channel connection type.</Tip>
+            <Value>3</Value>
+        </Property>
+        <Property ID="31">
+            <Description>Value Range:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>ValueRange</EnumType>
+            <Tip>The device supported Value Range type.</Tip>
+            <Value>1,2,3,5,7,8,9,11,32797,32798,32799,32800,32801,32802,32803</Value>
+        </Property>
+        <Property ID="35">
+            <Description>Scan Method:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType>SamplingMethod</EnumType>
+            <Tip>The device channel scan method,it would be Simultaneous or EqualIntervalSwitch.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="38">
+            <Description>Convert Clock Sources:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The device supported convert clock source list.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="39">
+            <Description>Convert Clock Rate Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>The supported convert clock rate range.</Tip>
+            <Value>5,1,1000000000</Value>
+        </Property>
+        <Property ID="43">
+            <Description>Trigger Count:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>The supported trigger count.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="44">
+            <Description>Trigger Sources:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The supported trigger sources.</Tip>
+            <Value>0,23,24,25,26,27,28,29,30,17</Value>
+        </Property>
+        <Property ID="45">
+            <Description>Trigger Action:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>TriggerAction</EnumType>
+            <Tip>The supported trigger actions.</Tip>
+            <Value>1,2</Value>
+        </Property>
+        <Property ID="46">
+            <Description>Trigger Delay Count Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>The supported range of the trigger delay count can be set.</Tip>
+            <Value>5,0,65535</Value>
+        </Property>
+        <Property ID="34">
+            <Description>Cjc Channels:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>The supported Cjc channels.</Tip>
+            <Value>-1</Value>
+        </Property>
+        <Property ID="36">
+            <Description>Scan Channel Start Base:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>The base number of the start scan channel, for example, if this property value is 2, the start scan channel can be only set to 2,4,6,8 and so on.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="37">
+            <Description>Scan Channel Count Base:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>The base number of the scan channel count, for example, if scan channel count is 2, the scan channel count can only be set to 2,4,6,8 and so on.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="51">
+            <Description>Connection Type:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>AiSignalType</EnumType>
+            <Tip>Gets or sets the connection type of each channel.</Tip>
+            <Value>0,0,0,0,0,0,0,0</Value>
+        </Property>
+        <Property ID="52">
+            <Description>Value Range Type:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>ValueRange</EnumType>
+            <Tip>Gets or sets the ValueRange for the selected channel.</Tip>
+            <Value>1,1,1,1,1,1,1,1</Value>
+        </Property>
+        <Property ID="57">
+            <Description>Cjc Channel:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the channel number of the Cjc channel which are used to temperature measurement.</Tip>
+            <Value>-1</Value>
+        </Property>
+        <Property ID="58">
+            <Description>Set Cjc Update Frequency:</Description>
+            <Attribute>3</Attribute>
+            <Type>5</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets how long time to update the Cjc value.</Tip>
+            <Value>2</Value>
+        </Property>
+        <Property ID="59">
+            <Description>Cjc Value:</Description>
+            <Attribute>3</Attribute>
+            <Type>5</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the CJC value, in Celsius degree.</Tip>
+            <Value>25</Value>
+        </Property>
+        <Property ID="63">
+            <Description>Scan Channel Start:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the physical channel number of the start channel to be scanned by buffered AI or buffered AO.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="64">
+            <Description>Scan Channel Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the workable channel count to be scanned by buffered AI or buffered AO. The maximum available workable channel count depends on the connection type of channels.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="61">
+            <Description>Convert Clock Source:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>Gets or sets the conversion clock source used by Buffered AI or Buffered AO. The value should be a type of SignalDrop.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="62">
+            <Description>Convert Clock Rate:</Description>
+            <Attribute>3</Attribute>
+            <Type>5</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the convert clock rate of each channel used for Buffered AI or Buffered AO.</Tip>
+            <Value>1000</Value>
+        </Property>
+        <Property ID="50">
+            <Description>Channel Count:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>The count of logical channels which can be used to acquire AI samples. This value depends on the channel connection type of the device.</Tip>
+            <Value>8</Value>
+        </Property>
+        <Property ID="68">
+            <Description>Trigger Source:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>Gets or sets the signal source of trigger used by buffered AI or buffered AO sampling.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="72">
+            <Description>Trigger Action:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>TriggerAction</EnumType>
+            <Tip>Gets or sets the action to be executed after the trigger condition is satisfied.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="69">
+            <Description>Trigger Edge:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>ActiveSignal</EnumType>
+            <Tip>Gets or sets the signal edge of trigger source at which the signal is considered as a valid trigger signal.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="70">
+            <Description>Trigger Level:</Description>
+            <Attribute>3</Attribute>
+            <Type>5</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the threshold value of the trigger signal. This is only for the signal which is analog type signal.</Tip>
+            <Value>10</Value>
+        </Property>
+        <Property ID="71">
+            <Description>Trigger Delay Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the delay count in Buffered AI or Buffered AO with trigger.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="60">
+            <Description>Interval Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the interval count for buffered AI or buffered AO.In Buffered AI,The data buffer is divided into a series of section for sending DataReady events, Intervalcount set the count how many samples per channel acquired, the DataReady event will happened. When each channel samples a size of IntervalCount data, driver would sending DataReady event to notice the user application that the data is ready; In Buffered AO, the data buffer is also divided into a series of section for sending DataTransmitted events, Intervalcount set the count how many samples per channel output, the DataTransmitted event will happened. When each channel output a size of IntervalCount data, driver sending DataTransmitted event to notice the user application that the data has outputted.</Tip>
+            <Value>512</Value>
+        </Property>
+        <Property ID="390">
+            <Description>Record Section Length:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the record section length.</Tip>
+            <Value>512</Value>
+        </Property>
+        <Property ID="391">
+            <Description>Record Section Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the record section count.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="349">
+            <Description>Recode Cycle:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the record cycles.</Tip>
+            <Value>1</Value>
+        </Property>
+    </DaqAi>
+    <DaqAo ModuleIndex="0">
+        <Property ID="23">
+            <Description>Resolution:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Data resolution refers to the number of the bit that is used to realize analog to digital(or digital to analog) conversion,the bigger bit number of ADC(or DAC) is, the higher the resolution will be</Tip>
+            <Value>12</Value>
+        </Property>
+        <Property ID="26">
+            <Description>Channel Number Max:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip> Max number of physical channel.Physical channel refers to visible input/output terminals or pins that can connect wires on a data acquisition card.</Tip>
+            <Value>7</Value>
+        </Property>
+        <Property ID="31">
+            <Description>Value Range:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>ValueRange</EnumType>
+            <Tip>The device supported Value Range type.</Tip>
+            <Value>1,2,3,5,7,8,9,11,61441,61442</Value>
+        </Property>
+        <Property ID="32">
+            <Description>External Reference Voltage Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>The device supported external  ValueRange range.</Tip>
+            <Value>5,-10,10</Value>
+        </Property>
+        <Property ID="33">
+            <Description>External Reference Anti-Polar:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Whether the external reference voltage polar is opposite with the output voltage.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="35">
+            <Description>Scan Method:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType>SamplingMethod</EnumType>
+            <Tip>The device channel scan method,it would be Simultaneous or EqualIntervalSwitch.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="38">
+            <Description>Convert Clock Sources:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The device supported convert clock source list.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="39">
+            <Description>Convert Clock Rate Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>The supported convert clock rate range.</Tip>
+            <Value>5,1,1000000</Value>
+        </Property>
+        <Property ID="43">
+            <Description>Trigger Count:</Description>
+            <Attribute>0</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>The supported trigger count.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="44">
+            <Description>Trigger Sources:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The supported trigger sources.</Tip>
+            <Value>0,23,24,25,26,27,28,29,30,17</Value>
+        </Property>
+        <Property ID="45">
+            <Description>Trigger Action:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>TriggerAction</EnumType>
+            <Tip>The supported trigger actions.</Tip>
+            <Value>1,2</Value>
+        </Property>
+        <Property ID="46">
+            <Description>Trigger Delay Count Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>The supported range of the trigger delay count can be set.</Tip>
+            <Value>5,0,65535</Value>
+        </Property>
+        <Property ID="52">
+            <Description>Value Range Type:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>ValueRange</EnumType>
+            <Tip>Gets or sets the ValueRange for the selected channel.</Tip>
+            <Value>1,1,1,1,1,1,1,1</Value>
+        </Property>
+        <Property ID="55">
+            <Description>External Reference value for Unipolar:</Description>
+            <Attribute>3</Attribute>
+            <Type>65541</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the external reference value for unipolar.</Tip>
+            <Value>10</Value>
+        </Property>
+        <Property ID="56">
+            <Description>External Reference value for Bipolar</Description>
+            <Attribute>3</Attribute>
+            <Type>65541</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the external reference value for bipolar.</Tip>
+            <Value>10</Value>
+        </Property>
+        <Property ID="63">
+            <Description>Scan Channel Start:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the physical channel number of the start channel to be scanned by buffered AI or buffered AO.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="64">
+            <Description>Scan Channel Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the workable channel count to be scanned by buffered AI or buffered AO. The maximum available workable channel count depends on the connection type of channels.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="61">
+            <Description>Convert Clock Source:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>Gets or sets the conversion clock source used by Buffered AI or Buffered AO. The value should be a type of SignalDrop.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="62">
+            <Description>Convert Clock Rate:</Description>
+            <Attribute>3</Attribute>
+            <Type>5</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the convert clock rate of each channel used for Buffered AI or Buffered AO.</Tip>
+            <Value>1000</Value>
+        </Property>
+        <Property ID="68">
+            <Description>Trigger Source:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>Gets or sets the signal source of trigger used by buffered AI or buffered AO sampling.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="72">
+            <Description>Trigger Action:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>TriggerAction</EnumType>
+            <Tip>Gets or sets the action to be executed after the trigger condition is satisfied.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="69">
+            <Description>Trigger Edge:</Description>
+            <Attribute>1</Attribute>
+            <Type>2</Type>
+            <EnumType>ActiveSignal</EnumType>
+            <Tip>Gets or sets the signal edge of trigger source at which the signal is considered as a valid trigger signal.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="70">
+            <Description>Trigger Level:</Description>
+            <Attribute>3</Attribute>
+            <Type>5</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the threshold value of the trigger signal. This is only for the signal which is analog type signal.</Tip>
+            <Value>10</Value>
+        </Property>
+        <Property ID="71">
+            <Description>Trigger Delay Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the delay count in Buffered AI or Buffered AO with trigger.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="60">
+            <Description>Interval Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the interval count for buffered AI or buffered AO.In Buffered AI,The data buffer is divided into a series of section for sending DataReady events, Intervalcount set the count how many samples per channel acquired, the DataReady event will happened. When each channel samples a size of IntervalCount data, driver would sending DataReady event to notice the user application that the data is ready; In Buffered AO, the data buffer is also divided into a series of section for sending DataTransmitted events, Intervalcount set the count how many samples per channel output, the DataTransmitted event will happened. When each channel output a size of IntervalCount data, driver sending DataTransmitted event to notice the user application that the data has outputted.</Tip>
+            <Value>512</Value>
+        </Property>
+    </DaqAo>
+    <DaqDio ModuleIndex="0">
+        <Property ID="26">
+            <Description>Channel Number Max:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip> Max number of physical channel.Physical channel refers to visible input/output terminals or pins that can connect wires on a data acquisition card.</Tip>
+            <Value>15</Value>
+        </Property>
+        <Property ID="82">
+            <Description>Ports Type:</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType>DioPortType</EnumType>
+            <Tip>The type of all digital port.There are six kinds of port type,the name and meaning, listed in the DioPortType Enumeration.</Tip>
+            <Value>2,2</Value>
+        </Property>
+        <Property ID="86">
+            <Description>Interrupt Channels</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets which channels support DI interrupt function. </Tip>
+            <Value>1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0</Value>
+        </Property>
+        <Property ID="85">
+            <Description>Interrupt Trigger Edge:</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType>ActiveSignal</EnumType>
+            <Tip>The supported trigger edge type which can be used in DI Interrupt. </Tip>
+            <Value>1,2,3</Value>
+        </Property>
+        <Property ID="87">
+            <Description>Gate Channels</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets whether DI Interrupt function of the selected device can be controlled by a gate signal or not.</Tip>
+            <Value>1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0</Value>
+        </Property>
+        <Property ID="88">
+            <Description>Status Change Interrupt Channels</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets the channels which support DI Status Change Interrupt of the selected device.</Tip>
+            <Value>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</Value>
+        </Property>
+        <Property ID="89">
+            <Description>Pattern Match Interrupt Channels</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets the ports which support DI Pattern Match Interrupt of the selected device. </Tip>
+            <Value>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</Value>
+        </Property>
+        <Property ID="120">
+            <Description>DI Data Mask:</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>DiDataMask is used to describe whether each channel of a digital port is used DI function or not. The value of DataMask has 8 bits and each bit corresponds to one channel of the digital port. Value 1 means that the corresponding channel can be used for DI function. DiDataMask of this port will be changed when the port direction changing.</Tip>
+            <Value>255,255</Value>
+        </Property>
+        <Property ID="121">
+            <Description>DO Data Mask:</Description>
+            <Attribute>0</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Do DataMask is used to describe whether each channel of  one digital port could be used for digital output.  Every DataMask has 8 bits and each bit corresponds to one channel of digital port. When the value of one bit is 1, it means the corresponding channel could be used for digital output.DoDataMask of this port will be changed when the port direction changing.</Tip>
+            <Value>255,255</Value>
+        </Property>
+        <Property ID="124">
+            <Description>Trigger Edge:</Description>
+            <Attribute>1</Attribute>
+            <Type>65536</Type>
+            <EnumType>ActiveSignal</EnumType>
+            <Tip>Gets or sets the signal edge of trigger source at which the signal is considered as a valid trigger signal.</Tip>
+            <Value>1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0</Value>
+        </Property>
+        <Property ID="125">
+            <Description>Gate Enabled/Disabled:</Description>
+            <Attribute>1</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets which channel enabled gate control for DI interrupt function.</Tip>
+            <Value>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Value>
+        </Property>
+        <Property ID="126">
+            <Description>Status Change Channels Enabled/Disabled:</Description>
+            <Attribute>1</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets which channel enabled to be used for Status Change Interrupt function. If one of a enabled channel has status changing, Status Change Interrupt would happen.</Tip>
+            <Value>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Value>
+        </Property>
+        <Property ID="127">
+            <Description>Pattern Match Channels Enabled/Disabled:</Description>
+            <Attribute>1</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets which channel enabled to be used for Pattern Match Interrupt function. If all the enabled channel value equal to this value's corresponding bit,Pattern Match events would happen.</Tip>
+            <Value>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Value>
+        </Property>
+        <Property ID="128">
+            <Description>Pattern Match Value:</Description>
+            <Attribute>3</Attribute>
+            <Type>65536</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the match value for Pattern Match Interrupt function. If all the enabled channel value equal to this value's corresponding bit,Pattern Match events would happen.</Tip>
+            <Value>255,255</Value>
+        </Property>
+    </DaqDio>
+    <DaqCounter ModuleIndex="0">
+        <Property ID="26">
+            <Description>Channel Number Max:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip> Max number of physical channel.Physical channel refers to visible input/output terminals or pins that can connect wires on a data acquisition card.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="23">
+            <Description>Resolution:</Description>
+            <Attribute>2</Attribute>
+            <Type>2</Type>
+            <EnumType></EnumType>
+            <Tip>Data resolution refers to the number of the bit that is used to realize analog to digital(or digital to analog) conversion,the bigger bit number of ADC(or DAC) is, the higher the resolution will be</Tip>
+            <Value>32</Value>
+        </Property>
+        <Property ID="174">
+            <Description>Counter0 Capabilities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>CounterCapability</EnumType>
+            <Tip>The supported functions of channel 0.</Tip>
+            <Value>2,3,4,5,6,7</Value>
+        </Property>
+        <Property ID="175">
+            <Description>Counter1 Capabilities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>CounterCapability</EnumType>
+            <Tip>The supported functions of channel 1.</Tip>
+            <Value>2,3,4,5,6,7</Value>
+        </Property>
+        <Property ID="206">
+            <Description>Chip Operation Modes</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>CounterOperationMode</EnumType>
+            <Tip>The supported counter chip operation mode.</Tip>
+            <Value>0,1,2,3,4,5</Value>
+        </Property>
+        <Property ID="207">
+            <Description>Chip Signal Counting Types:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalCountingType</EnumType>
+            <Tip>The supported chip counting mode for this component. The counting mode would be one of the DownCount, UpCount, PulseDirection, TwoPulse, AbPhase_x1, AbPhase_x2, ABPhase_x4. </Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="287">
+            <Description>Clock Polarities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>The supported CLK counting edge types, it would be Positive or Negative,Positive means rising edge and Negative means falling edge. </Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="289">
+            <Description>Gate Control by Software Setting:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>Gets whether the supported gate control can be enabled by software setting,1 means yes and 0 means no.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="288">
+            <Description>Gate Polarities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>The supported gate level types, it would be Positive or Negative,Positive means high level and Negative means low level.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="259">
+            <Description>Counter0 Clock Source:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The supported clock sources which counter0 can be use.</Tip>
+            <Value>685</Value>
+        </Property>
+        <Property ID="260">
+            <Description>Counter1 Clock Source:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The supported clock sources which counter1 can be used.</Tip>
+            <Value>685</Value>
+        </Property>
+        <Property ID="267">
+            <Description>Counter0 Gate Source:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The supported gate source which counter0 can be used.</Tip>
+            <Value>685,639</Value>
+        </Property>
+        <Property ID="268">
+            <Description>Counter1 Gate Source:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>The supported gate source which counter1 can be used.</Tip>
+            <Value>685,640</Value>
+        </Property>
+        <Property ID="293">
+            <Description>Clock Polarities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>The supported CLK counting edge types, it would be Positive or Negative,Positive means rising edge and Negative means falling edge. </Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="294">
+            <Description>Gate Polarities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>The supported gate level types, it would be Positive or Negative,Positive means high level and Negative means low level.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="295">
+            <Description>Output Signal Types:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>OutSignalType</EnumType>
+            <Tip>The supported output signal type.</Tip>
+            <Value>3</Value>
+        </Property>
+        <Property ID="320">
+            <Description>Delay Count Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>The supported delay count range which DelayCount should be set in this range.</Tip>
+            <Value>5,2,2147483647</Value>
+        </Property>
+        <Property ID="299">
+            <Description>Gate Control:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>Gets whether the gate pin control can be set by software setting.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="300">
+            <Description>Gate Polarities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>The supported gate level types, it would be Positive or Negative,Positive means high level and Negative means low level.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="301">
+            <Description>Output Signal Types:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>OutSignalType</EnumType>
+            <Tip>The supported output signal type.</Tip>
+            <Value>3</Value>
+        </Property>
+        <Property ID="302">
+            <Description>Frequency Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>Gets the supported output range.</Tip>
+            <Value>5,1,100</Value>
+        </Property>
+        <Property ID="213">
+            <Description>Frequency Measurement Method:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>FreqMeasureMethod</EnumType>
+            <Tip>The supported frequency measurement method.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="306">
+            <Description>Gate Control:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>Gets whether the gate pin control can be set by software setting.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="307">
+            <Description>Gate Polarities:</Description>
+            <Attribute>0</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>The supported gate level types, it would be Positive or Negative,Positive means high level and Negative means low level.</Tip>
+            <Value>1</Value>
+        </Property>
+        <Property ID="308">
+            <Description>High Period Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>Gets the high period range which can be set for high period.</Tip>
+            <Value>5,0.01,1000</Value>
+        </Property>
+        <Property ID="309">
+            <Description>Low Period Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>Gets the high period range which can be set for low period.</Tip>
+            <Value>5,0.01,1000</Value>
+        </Property>
+        <Property ID="310">
+            <Description>Output Count Range:</Description>
+            <Attribute>2</Attribute>
+            <Type>7</Type>
+            <EnumType></EnumType>
+            <Tip>Gets the output pulse count limit.</Tip>
+            <Value>5,0,0</Value>
+        </Property>
+        <Property ID="322">
+            <Description>Up-Down Counter Initial Values:</Description>
+            <Attribute>2</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>The supported initial value which can be used for Up-Down counter value reset.</Tip>
+            <Value>0</Value>
+        </Property>
+        <Property ID="279">
+            <Description>Clock Source:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>Gets or sets the clock source for primary counter.</Tip>
+            <Value>0,0</Value>
+        </Property>
+        <Property ID="290">
+            <Description>Clock Polarity:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>Gets or sets the clock polarity from the counter supported polarities.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="292">
+            <Description>Gate Enabled/Disabled:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets whether enabled the gate control or not.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="291">
+            <Description>Gate Polarity:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>Gets or sets the clock polarity from the gate supported polarities.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="231">
+            <Description>Frequency Measurement Method:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>FreqMeasureMethod</EnumType>
+            <Tip>Gets or sets the frequency measurement method.</Tip>
+            <Value>0,0</Value>
+        </Property>
+        <Property ID="232">
+            <Description>Collection Period Configuration:</Description>
+            <Attribute>3</Attribute>
+            <Type>65541</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or Sets the CollectionPeriod for the method of CountingPulseBySysTime,this is the gate width for pulse counting in Frequency Measurement function.</Tip>
+            <Value>0,0</Value>
+        </Property>
+        <Property ID="281">
+            <Description>Clock Source:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>Gets or sets the clock source.</Tip>
+            <Value>685,685</Value>
+        </Property>
+        <Property ID="282">
+            <Description>Gate Source:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalDrop</EnumType>
+            <Tip>Gets or sets the gate source.</Tip>
+            <Value>639,640</Value>
+        </Property>
+        <Property ID="296">
+            <Description>Clock Polarity:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>Gets or sets the clock polarity form the supported.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="297">
+            <Description>Gate Polarity:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>Gets or sets the gate polarity form the supported.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="298">
+            <Description>Out Signal Type:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>OutSignalType</EnumType>
+            <Tip>Gets or sets the output signal type form the supported.</Tip>
+            <Value>3,3</Value>
+        </Property>
+        <Property ID="283">
+            <Description>Delay Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the delay count.</Tip>
+            <Value>2,2</Value>
+        </Property>
+        <Property ID="303">
+            <Description>Gate Enabled/Disabled:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets whether enable the gate control.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="304">
+            <Description>Gate Polarity:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>Gets or sets the gate polarity from the supported. </Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="305">
+            <Description>Out Signal Type:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>OutSignalType</EnumType>
+            <Tip>Gets or sets the output signal type form the supported.</Tip>
+            <Value>3,3</Value>
+        </Property>
+        <Property ID="284">
+            <Description>Frequency of Signals:</Description>
+            <Attribute>3</Attribute>
+            <Type>65541</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the frequency value.</Tip>
+            <Value>10,10</Value>
+        </Property>
+        <Property ID="311">
+            <Description>Gate Enabled/Disabled:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets whether enable the gate control.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="312">
+            <Description>Gate Polarity:</Description>
+            <Attribute>1</Attribute>
+            <Type>65538</Type>
+            <EnumType>SignalPolarity</EnumType>
+            <Tip>Gets or sets the gate polarity from the supported.</Tip>
+            <Value>1,1</Value>
+        </Property>
+        <Property ID="285">
+            <Description>High Pulse Period:</Description>
+            <Attribute>3</Attribute>
+            <Type>65541</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the high period.</Tip>
+            <Value>0.08,0.08</Value>
+        </Property>
+        <Property ID="286">
+            <Description>Low Pulse Period:</Description>
+            <Attribute>3</Attribute>
+            <Type>65541</Type>
+            <EnumType></EnumType>
+            <Tip>Gets or sets the high period.</Tip>
+            <Value>0.02,0.02</Value>
+        </Property>
+        <Property ID="313">
+            <Description>Out Signal Count:</Description>
+            <Attribute>3</Attribute>
+            <Type>65538</Type>
+            <EnumType>OutSignal Count</EnumType>
+            <Tip>Gets or sets the output signal count form the supported.</Tip>
+            <Value>0,0</Value>
+        </Property>
+    </DaqCounter>
+</DAQNavi>

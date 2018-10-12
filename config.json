@@ -1,0 +1,10 @@
+﻿{
+    "stopAndMiddle" : true,
+    "key" : false,
+    "portName" : 4,
+    "baudRate" : 57600,
+    "isUseConfig" : true,
+    "appTitle" : "大型特种车驾驶模拟训练系统",
+    "windowTitle" : "星光凯明六自由度平台",
+    "corporationName" : "北京市星光凯明动感仿真模拟器中心"
+}
