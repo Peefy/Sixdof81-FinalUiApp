@@ -24,12 +24,6 @@
 //缸的数量
 #define AXES_COUNT 6
 
-//电机到丝杠的导程 一圈大概是6mm, 缸最大伸长量为700mm
-#define PULSE_PER_R 1024
-#define MM_PER_R 7.50
-
-#define LENGTH_TO_PULSE_SCALE (PULSE_PER_R / MM_PER_R)
-
 #define FREEDOM_X_INDEX     0
 #define FREEDOM_Y_INDEX     1
 #define FREEDOM_Z_INDEX     2
@@ -51,46 +45,6 @@ typedef enum
 }SixDofPlatformStatus;
 
 extern char * SixDofStatusText[];
-
-typedef struct 
-{
-	//单位1mm
-	double X;
-	//单位1mm
-	double Y;
-	//单位1mm
-	double Z;
-	//单位1度
-	double Yaw;
-	//单位1度
-	double Roll;
-	//单位1度
-	double Pitch;
-}SixdofPackage;
-
-class SixDof
-{
-public:
-	SixDof();
-	~SixDof();
-	bool IsRegister;
-	void GetSixServoPulseNum(I32 * pulse_arr, double * data);
-	void GetSixServoPulseNum(double * pulse_arr, double * data);
-	void GetSixServoPulseNum(double * pulse_arr, SixdofPackage * data);
-	double X;
-	double Y;
-	double Z;
-	double Roll;
-	double Yaw;
-	double Pitch;
-	double PoleLength[AXES_COUNT];
-private:
-	double pulses[AXES_COUNT];
-	void DataInit();
-	void DllInit();
-	double* DuGuControl(double x, double y, double z, double roll, double pitch, double yaw);
-};
-
 
 
 #endif

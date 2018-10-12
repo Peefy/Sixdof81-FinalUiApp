@@ -10,9 +10,6 @@
 
 #include "DialogRegister.h"
 
-#include "EtherCAT_DLL.h"
-#include "EtherCAT_DLL_Err.h"
-
 #include "chart.h"
 
 #include "Sixdofdll2010.h"
@@ -20,7 +17,6 @@
 #include "communication/sixdof.h"
 #include "communication/phasemotioncontrol.h"
 #include "communication/communication.h"
-#include "communication/delta.h"
 #include "communication/SerialPort.h"
 
 #include "control/sensor.h"
@@ -54,11 +50,9 @@ using namespace std;
 
 #define TIMER_MS 10
 
+#define SIXDOF_CONTROL_DELEY 1
 #define SCENE_THREAD_DELAY 1000
 #define SENSOR_THREAD_DELAY 1000
-
-#define SIXDOF_CONTROL_DELEY 1
-
 #define DATA_BUFFER_THREAD_DELAY 1000
 
 #define CHIRP_TIME 5
@@ -68,7 +62,6 @@ using namespace std;
 
 bool enableShock = false;
 bool enableChirp = true;
-bool stopSCurve = false;
 
 void SixdofControl();
 void SensorRead();
@@ -83,10 +76,10 @@ volatile HANDLE SensorThread;
 volatile HANDLE SceneThread;
 volatile HANDLE DataBufferThread;
 
-SixDof sixdof;
+// 六自由度平台逻辑控制
 PhaseMotionControl delta;
+// 六自由度数据
 DataPackage data = {0};
-SixDofPlatformStatus status = SIXDOF_STATUS_BOTTOM;
 // 惯导通信接口
 InertialNavigation navigation;
 // 下平台通信接口
@@ -94,10 +87,13 @@ Water water;
 // 陆地视景通信接口
 LandVision vision;
 
+// 六自由度平台状态
 double pulse_cal[AXES_COUNT];
 double lastStartPulse[AXES_COUNT];
+SixDofPlatformStatus status = SIXDOF_STATUS_BOTTOM;
 SixDofPlatformStatus lastStartStatus = SIXDOF_STATUS_BOTTOM;
 
+// 图表
 CChartCtrl m_ChartCtrl1; 
 CChartLineSerie *pLineSerie1;
 CChartLineSerie *pLineSerie2;
@@ -106,16 +102,13 @@ CChartLineSerie *pLineSerie4;
 CChartLineSerie *pLineSerie5;
 CChartLineSerie *pLineSerie6;
 
-bool isStart = false;
 bool isAutoInit = true;
 bool isTest = true;
 
 double testVal[FREEDOM_NUM];
 double testHz[FREEDOM_NUM];
-double controltime = 0;
 
 double chartBottomAxisPoint[CHART_POINT_NUM] = { 0 };
-
 double chartXValPoint[CHART_POINT_NUM] = { 0 };
 double chartYValPoint[CHART_POINT_NUM] = { 0 };
 double chartZValPoint[CHART_POINT_NUM] = { 0 };
@@ -125,6 +118,7 @@ double chartYawValPoint[CHART_POINT_NUM] = { 0 };
 
 double runTime = 0;
 double chartTime = 0;
+unsigned int Counter = 0;
 
 DWORD WINAPI DataTransThread(LPVOID pParam)
 {
@@ -159,7 +153,7 @@ int bufferLength = 0;
 
 DWORD WINAPI DataBufferInfoThread(LPVOID pParam)
 {
-	// 实时获取编码器脉冲计数
+	// 上升、下降、中立位的逻辑控制
 	delta.DDAControlThread();
 	return 0;
 }
@@ -233,20 +227,16 @@ void SensorRead()
 	//vision.RenewVisionData();
 }
 
-bool isCsp = false;
-U16 Counter = 0;
-
 void SixdofControl()
 {
-	//delta.RenewNowPulse();
+	Counter++;
 	if(closeDataThread == false)
 	{	
-	
 		DWORD start_time = 0;
 		start_time = GetTickCount();
 		delta.RenewNowPulse();
 		auto delay = SIXDOF_CONTROL_DELEY;
-		double dis[AXES_COUNT] = {DIS_PER_R, DIS_PER_R, DIS_PER_R, DIS_PER_R, DIS_PER_R, DIS_PER_R};
+		double dis[AXES_COUNT] = {0};
 		// 正弦测试运动
 		if (isTest == true)
 		{
@@ -260,6 +250,7 @@ void SixdofControl()
 			double roll = 0;
 			double pitch = 0;
 			double yaw = 0;
+			// 开始正弦运动时加一个chrip信号缓冲
 			if (t <= chirpTime && enableChirp == true)
 			{
 				for (auto i = 0; i < AXES_COUNT; ++i)
@@ -497,6 +488,7 @@ void CECATSampleDlg::ChartInit()
 void CECATSampleDlg::AppInit()
 {
 	int statusTemp = 0;
+	// 检测应用是否注册
 	auto isRegister = TestAppIsRegister();
 	if (isRegister == false)
 	{
@@ -507,6 +499,7 @@ void CECATSampleDlg::AppInit()
 		delete dlg;
 		if (DialogRegister::IsRegister == false)
 		{
+			// 不注册就退出应用
 			OnBnClickedOk();
 		}
 		else
@@ -514,8 +507,11 @@ void CECATSampleDlg::AppInit()
 			MessageBox(_T("注册成功！"));
 		}
 	}
+	// 读取上次应用退出时平台的状态
 	config::ReadStatusAndPulse(statusTemp, lastStartPulse);
+	// 读取停止并回中模式
 	stopAndMiddle = config::ReadIsAutoStopAndMiddle();
+	// 上次应用退出时平台的状态
 	lastStartStatus = (SixDofPlatformStatus)statusTemp;
 
 	SetDlgItemText(IDC_EDIT_X_VAL, _T("0"));
@@ -578,8 +574,6 @@ void CECATSampleDlg::AppInit()
 		CircleTopRadius, CircleBottomRadius, DistanceBetweenHingeTop,
 		DistanceBetweenHingeBottom);
 	OpenThread();
-	//navigation.Open();
-	//water.Open();
 	vision.Open(VISION_PORT, VISION_BAUDRATE);
 }
 
@@ -602,8 +596,9 @@ BOOL CECATSampleDlg::OnInitDialog()
 
 	SetIcon(m_hIcon, TRUE);			
 	SetIcon(m_hIcon, FALSE);	
-	
+	// 应用初始化
 	AppInit();
+	// openGl初始化
 	InitOpenGlControl();
 	SetTimer(0, TIMER_MS, NULL);
 	return TRUE;  
@@ -810,8 +805,8 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 	SetDlgItemText(IDC_EDIT_Pose, statusStr);
 
 	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"), 
-		sixdof.PoleLength[0], sixdof.PoleLength[1], sixdof.PoleLength[2],
-		sixdof.PoleLength[3], sixdof.PoleLength[4], sixdof.PoleLength[5]);
+		delta.NowPluse[0], delta.NowPluse[1], delta.NowPluse[2],
+		delta.NowPluse[3], delta.NowPluse[4], delta.NowPluse[5]);
 	SetDlgItemText(IDC_EDIT_Pulse, statusStr);
 
 	statusStr.Format(_T("1:%.1f 2:%.1f 3:%.1f 4:%.1f 5:%.1f 6:%.1f"),
@@ -878,7 +873,6 @@ void CECATSampleDlg::OnOK()
 {
 	delta.ServoStop();
 	delta.Close();
-
 	CDialog::OnOK();
 }
 
@@ -890,6 +884,7 @@ void CECATSampleDlg::OnChkAbs()
 void CECATSampleDlg::OnBnClickedBtnRise()
 {	
 	delta.ReadAllSwitchStatus();
+	// 所有开关触碰到了才能上升
 	if (delta.IsAllAtBottom() == false)
 	{
 		MessageBox(_T(SIXDOF_NOT_BOTTOM_AND_RISE_MESSAGE));
@@ -938,15 +933,15 @@ void CECATSampleDlg::OnBnClickedBtnStart()
 	delta.RenewNowPulse();
 	delta.GetMotionAveragePulse();
 	delta.UnlockServo();
+	// 正常使用模式
 	isTest = false;
 	t = 0;
 	closeDataThread = false;
-	isStart = true;	
 }
 
 void CECATSampleDlg::OnBnClickedBtnStopme()
 {
-	stopSCurve = true;
+	// 停止Csp运动
 	closeDataThread = true;
 	delta.ServoStop();
 	Sleep(10);
@@ -1046,17 +1041,18 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 		MessageBox(_T(SIXDOF_NOT_BEGIN_MESSAGE));
 		return;
 	}
-	stopSCurve = false;
-	isCsp = false;
 	status = SIXDOF_STATUS_RUN;
+	// 电机先停后启动
 	delta.ServoStop();
 	delta.RenewNowPulse();
 	delta.GetMotionAveragePulse();
 	delta.UnlockServo();
+	// 正弦测试运动模式
 	isTest = true;
+	// 正弦时间清0
 	t = 0;
+	// 允许运动
 	closeDataThread = false;
-	isStart = true;
 }
 
 void CECATSampleDlg::OnBnClickedButtonExit()
@@ -1066,6 +1062,7 @@ void CECATSampleDlg::OnBnClickedButtonExit()
 
 void CECATSampleDlg::OnBnClickedButtonTest3()
 {
+	// 所有电机上锁停转
 	delta.ServoStop();
 }
 

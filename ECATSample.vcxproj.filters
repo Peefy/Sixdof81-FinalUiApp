@@ -51,9 +51,6 @@
     <ClCompile Include="communication\communication.cpp">
       <Filter>communication</Filter>
     </ClCompile>
-    <ClCompile Include="communication\delta.cpp">
-      <Filter>communication</Filter>
-    </ClCompile>
     <ClCompile Include="communication\SerialPort.cpp">
       <Filter>communication</Filter>
     </ClCompile>
@@ -229,9 +226,6 @@
     <ClInclude Include="communication\communication.h">
       <Filter>communication</Filter>
     </ClInclude>
-    <ClInclude Include="communication\delta.h">
-      <Filter>communication</Filter>
-    </ClInclude>
     <ClInclude Include="communication\SerialPort.h">
       <Filter>communication</Filter>
     </ClInclude>
@@ -246,12 +240,6 @@
     </ClInclude>
     <ClInclude Include="util\model.h">
       <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="EtherCAT_DLL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EtherCAT_DLL_Err.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="control\pid.h">
       <Filter>control</Filter>
@@ -474,7 +462,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="EtherCAT_DLL.lib" />
     <Library Include="modbus.lib" />
     <Library Include="glut.lib" />
     <Library Include="glut32.lib" />

@@ -159,7 +159,6 @@
     <ClCompile Include="chart\ChartTitle.cpp" />
     <ClCompile Include="chart\ChartXYSerie.cpp" />
     <ClCompile Include="communication\communication.cpp" />
-    <ClCompile Include="communication\delta.cpp" />
     <ClCompile Include="communication\phasemotioncontrol.cpp" />
     <ClCompile Include="communication\SerialPort.cpp" />
     <ClCompile Include="communication\sixdof.cpp" />
@@ -233,7 +232,6 @@
     <ClInclude Include="chart\ChartXYSerie.h" />
     <ClInclude Include="chart\PointsOrdering.h" />
     <ClInclude Include="communication\communication.h" />
-    <ClInclude Include="communication\delta.h" />
     <ClInclude Include="communication\phasemotioncontrol.h" />
     <ClInclude Include="communication\SerialPort.h" />
     <ClInclude Include="communication\sixdof.h" />
@@ -250,8 +248,6 @@
     <ClInclude Include="DialogRegister.h" />
     <ClInclude Include="ECATSample.h" />
     <ClInclude Include="ECATSampleDlg.h" />
-    <ClInclude Include="EtherCAT_DLL.h" />
-    <ClInclude Include="EtherCAT_DLL_Err.h" />
     <ClInclude Include="glut.h" />
     <ClInclude Include="hardware\SixdofDioAndPulseCount.h" />
     <ClInclude Include="hardware\UserPCI1723.h" />
@@ -293,7 +289,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="EtherCAT_DLL.lib" />
     <Library Include="glut.lib" />
     <Library Include="glut32.lib" />
     <Library Include="modbus.lib" />
