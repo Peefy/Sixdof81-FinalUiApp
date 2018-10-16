@@ -24,10 +24,10 @@ using namespace std;
 // 单位mm
 #define MM_RPM 25.0
 // 电机转一圈编码器读数 1024
-#define PULSE_COUNT_RPM 1024.0
+#define PULSE_COUNT_RPM 2048.0
 
 #define PlaneAboveHingeLength       245.0
-#define PlaneAboveBottomLength      2475.0
+#define PlaneAboveBottomLength      2024.0
 #define CircleTopRadius             855.85
 #define CircleBottomRadius          1220.85
 #define DistanceBetweenHingeTop     200.0
@@ -58,7 +58,7 @@ using namespace std;
 #define RISE_TIME 500.0
 #define FALL_TIME 400.0
 // 上升到中立位电机需要转动的圈数
-#define RISE_R 13.0
+#define RISE_R 14.0
 
 #define MAX_POS (PULSE_COUNT_RPM * MAX_MM / MM_RPM)
 #define MIDDLE_POS (PULSE_COUNT_RPM * RISE_R)
@@ -80,7 +80,7 @@ public:
 	PhaseMotionControl();
 	~PhaseMotionControl();
 	bool InitCard();
-	void Close();
+	void Close(SixDofPlatformStatus laststatus);
 	void SetMotionVeloctySingle(int index, double velocity);
 	void SetMotionVelocty(double* velocity, int axexnum);
 	bool ServoAllOnOff(bool isOn);

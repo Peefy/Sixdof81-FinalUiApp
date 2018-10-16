@@ -118,7 +118,6 @@ double chartYawValPoint[CHART_POINT_NUM] = { 0 };
 
 double runTime = 0;
 double chartTime = 0;
-unsigned int Counter = 0;
 
 DWORD WINAPI DataTransThread(LPVOID pParam)
 {
@@ -227,6 +226,8 @@ void SensorRead()
 	//vision.RenewVisionData();
 }
 
+unsigned int Counter = 0;
+
 void SixdofControl()
 {
 	Counter++;
@@ -300,7 +301,7 @@ void SixdofControl()
 			t += 0.016;
 			delta.PidCsp(dis);
 		}
-		// 视景姿态模拟运动
+		// 惯性导航
 		else
 		{
 			double deltaroll = 0;
@@ -630,6 +631,11 @@ BOOL CECATSampleDlg::PreTranslateMessage(MSG* pMsg)
 			GetDlgItem(IDC_EDIT_InitialStatus)->ShowWindow(isShowSingleUpDown);
 			GetDlgItem(IDC_SHOW)->ShowWindow(!isShowSingleUpDown);
 		}
+		if (pMsg->wParam == 'X')
+		{
+			closeDataThread = true;
+			delta.ServoStop();
+		}
 	}
 	else if (pMsg->message == WM_KEYUP)
 	{
@@ -793,6 +799,7 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		isAutoInit = false;
 		OnBTNInitialCard();	
 	}
+
 	SensorRead();
 #if ENABLE_LINE_GRAPH
 	MoveValPoint();
@@ -801,7 +808,7 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 	RenderScene();
 #endif
 	statusStr.Format(_T("x:%d y:%d z:%d y:%d a:%d b:%d time:%.2f count:%d"), data.X, data.Y, data.Z,
-		data.Yaw, data.Pitch, data.Roll, runTime, Counter);
+		data.Yaw, data.Pitch, data.Roll, runTime, 0);
 	SetDlgItemText(IDC_EDIT_Pose, statusStr);
 
 	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"), 
@@ -830,16 +837,11 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 				SetDlgItemText(IDC_EDIT_InitialStatus, _T(STATUS_INIT_FINISH));
 				EanbleButton(1);
 				InitialFlag = 2;
-				delta.ResetStatus();
 				Sleep(100);
 				if (lastStartStatus == 0){
 					//delta.ReadAllSwitchStatus();
 					//OnBnClickedBtnRise();
 				}		
-				else if(lastStartStatus == SIXDOF_STATUS_READY)
-				{
-					status = SIXDOF_STATUS_READY;
-				}
 				else
 				{
 					delta.PowerOnSelfTest(lastStartStatus, lastStartPulse);
@@ -872,7 +874,7 @@ void CECATSampleDlg::OnChkSvon()
 void CECATSampleDlg::OnOK() 
 {
 	delta.ServoStop();
-	delta.Close();
+	delta.Close(status);
 	CDialog::OnOK();
 }
 
@@ -895,6 +897,8 @@ void CECATSampleDlg::OnBnClickedBtnRise()
 		MessageBox(_T(SIXDOF_NOT_BOTTOM_MESSAGE));
 		return;
 	}
+	delta.ResetStatus();
+	Sleep(20);
 	status = SIXDOF_STATUS_ISRISING;	
 	delta.Rise();
 }
@@ -944,8 +948,7 @@ void CECATSampleDlg::OnBnClickedBtnStopme()
 	// 停止Csp运动
 	closeDataThread = true;
 	delta.ServoStop();
-	Sleep(10);
-	delta.MoveToZeroPulseNumber();
+	Sleep(500);
 	if (status == SIXDOF_STATUS_RUN)
 	{
 		if (stopAndMiddle == true)
@@ -963,7 +966,14 @@ void CECATSampleDlg::OnBnClickedBtnStopme()
 
 void CECATSampleDlg::OnBnClickedBtnDown()
 {	
+	delta.ReadAllSwitchStatus();
+	// 所有开关触碰到了才能上升
+	if (delta.IsAllAtBottom() == true)
+	{
+		return;
+	}	
 	status = SIXDOF_STATUS_ISFALLING;
+	delta.ServoStop();
 	delta.Down();
 }
 
@@ -975,7 +985,7 @@ void CECATSampleDlg::OnBnClickedOk()
 	CloseThread();
 	delta.ServoStop();
 	Sleep(10);
-	delta.Close();
+	delta.Close(status);
 	CDialog::OnOK();
 }
 
@@ -986,7 +996,7 @@ void CECATSampleDlg::OnBnClickedBtnConnect()
 
 void CECATSampleDlg::OnBnClickedBtnResetme()
 {
-	delta.ResetStatus();
+	//delta.ResetStatus();
 }
 
 void CECATSampleDlg::OnBnClickedBtnDisconnect()

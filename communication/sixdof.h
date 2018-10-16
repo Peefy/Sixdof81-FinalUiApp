@@ -8,13 +8,13 @@
 #include "../TYPE_DEF.H"
 
 //平台运动最大角度
-#define MAX_DEG 10
+#define MAX_DEG 15
 #define DEG_SCALE 0.01
 //平台运动最大位移
 #define MAX_XYZ 100
 #define XYZ_SCALE 0.1
 // 平台运动最大频率
-#define MAX_HZ 20
+#define MAX_HZ 5
 
 #define DLL_NAME "Sixdofdll2010.dll"
 #define FUNC_NAME "Control"

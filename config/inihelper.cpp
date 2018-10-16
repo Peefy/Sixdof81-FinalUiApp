@@ -127,7 +127,7 @@ namespace config {
 	{
 		try
 		{
-			ifstream fin(RECORD_FILE_NAME);
+			ifstream fin(RECORD_DOUBLE_FILE_NAME);
 			fin >> statusInt;
 			fin >> pulse[0];
 			fin >> pulse[1];

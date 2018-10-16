@@ -21,7 +21,7 @@
 #define RISE_MOTION_P 0.00004
 #define RISE_MOTION_I 0.0000002
 #define RISE_MOTION_D 0.0
-#define RISE_MAX_VEL  0.2
+#define RISE_MAX_VEL  0.5
 #else
 #define MOTION_P 0.0015
 #define MOTION_I 0.00001
@@ -70,7 +70,7 @@ PhaseMotionControl::~PhaseMotionControl()
 {
 	if (this->disposed == false)
 	{
-		this->Close();
+		
 	}
 }
 
@@ -79,8 +79,10 @@ bool PhaseMotionControl::InitCard()
 	return sixdofDioAndCount.Init();
 }
 
-void PhaseMotionControl::Close()
+void PhaseMotionControl::Close(SixDofPlatformStatus laststatus)
 {
+	RenewNowPulse();
+	config::RecordStatusAndPulse(nullptr, laststatus, NowPluse);
 	this->disposed = true;
 }
 
@@ -151,7 +153,7 @@ void PhaseMotionControl::AllTestUp()
 void PhaseMotionControl::AllTestDown()
 {
 	double vel = -DOWN_VEL;
-	double vels[AXES_COUNT] = {vel, vel, vel, vel, vel, vel};
+	double vels[AXES_COUNT] = {vel, vel, vel - 0.01, vel, vel, vel};
 	UnlockServo();
 	SetMotionVelocty(vels, AXES_COUNT);
 }
@@ -252,6 +254,11 @@ void PhaseMotionControl::UnlockServo(int index)
 void PhaseMotionControl::Rise()
 {
 	LockServo();
+	for (int i = 0;i < AXES_COUNT;++i)
+	{
+		MyPidParaInit(MotionRisePidControler);
+	}
+	Sleep(10);
 	isrising = true;
 	Sleep(10);
 	isfalling = false;
@@ -454,6 +461,11 @@ void PhaseMotionControl::DDAControlThread()
 
 void PhaseMotionControl::MoveToZeroPulseNumber()
 {
+	for (int i = 0;i < AXES_COUNT;++i)
+	{
+		MyPidParaInit(MotionRisePidControler);
+	}
+	Sleep(10);
 	isrising = true;
 	UnlockServo();
 }
@@ -558,28 +570,28 @@ bool PhaseMotionControl::PowerOnSelfTest(SixDofPlatformStatus laststatus, double
 	switch (laststatus)
 	{
 	case SIXDOF_STATUS_BOTTOM:
-		Down();
+		//AllTestDown();
 		break;
 	case SIXDOF_STATUS_READY:
 		//下降
-		//Down();
+		AllTestDown();
 		break;
 	case SIXDOF_STATUS_MIDDLE:
-		//Down();
+		AllTestDown();
 		break;
 	case SIXDOF_STATUS_RUN:
 		//回中
 		//MoveToLocation(lastpulse, AXES_COUNT, false);
 		//下降
-		Down();
+		AllTestDown();
 		break;
 	case SIXDOF_STATUS_ISRISING:
 		//下降
-		Down();
+		AllTestDown();
 		break;
 	case SIXDOF_STATUS_ISFALLING:
 		//下降
-		Down();
+		AllTestDown();
 		break;
 	default:
 		break;
