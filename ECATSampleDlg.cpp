@@ -888,6 +888,7 @@ void CECATSampleDlg::OnChkSvon()
 void CECATSampleDlg::OnOK() 
 {
 	delta.ServoStop();
+	Sleep(100);
 	delta.Close(status);
 	CDialog::OnOK();
 }
