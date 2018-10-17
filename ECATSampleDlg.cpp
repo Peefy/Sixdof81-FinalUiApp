@@ -825,9 +825,9 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		data.Yaw, data.Pitch, data.Roll, runTime, 0);
 	SetDlgItemText(IDC_EDIT_Pose, statusStr);
 
-	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"), 
-		delta.NowPluse[0], delta.NowPluse[1], delta.NowPluse[2],
-		delta.NowPluse[3], delta.NowPluse[4], delta.NowPluse[5]);
+	//statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"), 
+	//	delta.NowPluse[0], delta.NowPluse[1], delta.NowPluse[2],
+	//	delta.NowPluse[3], delta.NowPluse[4], delta.NowPluse[5]);
 	SetDlgItemText(IDC_EDIT_Pulse, statusStr);
 
 	statusStr.Format(_T("1:%.1f 2:%.1f 3:%.1f 4:%.1f 5:%.1f 6:%.1f"),

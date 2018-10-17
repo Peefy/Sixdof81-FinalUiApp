@@ -13,7 +13,7 @@
 #define ASSERT_INDEX(index) 	if (index < 0 && index >= AXES_COUNT) return;
 
 #if IS_BIG_MOTION
-#define MOTION_P 0.00005
+#define MOTION_P 0.0001
 #define MOTION_I 0.0000001
 #define MOTION_D 0.0
 #define MAX_VEL  2.5
