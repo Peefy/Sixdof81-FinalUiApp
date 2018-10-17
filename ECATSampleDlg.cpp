@@ -104,6 +104,7 @@ CChartLineSerie *pLineSerie6;
 
 bool isAutoInit = true;
 bool isTest = true;
+bool isCosMode = false;
 
 double testVal[FREEDOM_NUM];
 double testHz[FREEDOM_NUM];
@@ -284,6 +285,18 @@ void SixdofControl()
 				pitch = sin(2 * pi * nowHz[4] * nowt) * testVal[4];
 				yaw = sin(2 * pi * nowHz[5] * nowt) * testVal[5];
 			}
+			if (isCosMode = true)
+			{
+				double cos_t = t - 1 / nowHz[4] * 0.25;
+				if (cos_t <= 0)
+					cos_t = 0;
+				x = sin(2 * pi * nowHz[0] * t) * testVal[0];
+				y = sin(2 * pi * nowHz[1] * t) * testVal[1];
+				z = sin(2 * pi * nowHz[2] * t) * testVal[2];
+				roll = sin(2 * pi * nowHz[3] * t) * testVal[3];
+				pitch = sin(2 * pi * nowHz[4] * cos_t) * testVal[4];
+				yaw = sin(2 * pi * nowHz[5] * t) * testVal[5];
+			}
 			data.X = (int16_t)(x * 10);
 			data.Y = (int16_t)(y * 10);
 			data.Z = (int16_t)(z * 10);
@@ -422,6 +435,7 @@ BEGIN_MESSAGE_MAP(CECATSampleDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_EXIT, &CECATSampleDlg::OnBnClickedButtonExit)
 	ON_BN_CLICKED(IDC_BUTTON_TEST3, &CECATSampleDlg::OnBnClickedButtonTest3)
 	ON_BN_CLICKED(IDC_BUTTON_STOP_TEST, &CECATSampleDlg::OnBnClickedButtonStopTest)
+	ON_BN_CLICKED(IDC_BUTTON_COS_MODE, &CECATSampleDlg::OnBnClickedButtonCosMode)
 END_MESSAGE_MAP()
 
 void CECATSampleDlg::ChartInit()
@@ -934,11 +948,13 @@ void CECATSampleDlg::OnBnClickedBtnStart()
 	}
 	status = SIXDOF_STATUS_RUN;
 	delta.ServoStop();
+	Sleep(100);
 	delta.RenewNowPulse();
 	delta.GetMotionAveragePulse();
 	delta.UnlockServo();
 	// 正常使用模式
 	isTest = false;
+	isCosMode = false;
 	t = 0;
 	closeDataThread = false;
 }
@@ -967,13 +983,13 @@ void CECATSampleDlg::OnBnClickedBtnStopme()
 void CECATSampleDlg::OnBnClickedBtnDown()
 {	
 	delta.ReadAllSwitchStatus();
-	// 所有开关触碰到了才能上升
 	if (delta.IsAllAtBottom() == true)
 	{
 		return;
 	}	
 	status = SIXDOF_STATUS_ISFALLING;
 	delta.ServoStop();
+	Sleep(100);
 	delta.Down();
 }
 
@@ -984,7 +1000,7 @@ void CECATSampleDlg::OnBnClickedOk()
 	//water.Close();
 	CloseThread();
 	delta.ServoStop();
-	Sleep(10);
+	Sleep(100);
 	delta.Close(status);
 	CDialog::OnOK();
 }
@@ -1059,6 +1075,7 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	delta.UnlockServo();
 	// 正弦测试运动模式
 	isTest = true;
+	isCosMode = false;
 	// 正弦时间清0
 	t = 0;
 	// 允许运动
@@ -1079,4 +1096,10 @@ void CECATSampleDlg::OnBnClickedButtonTest3()
 void CECATSampleDlg::OnBnClickedButtonStopTest()
 {
 	OnBnClickedBtnStopme();
+}
+
+void CECATSampleDlg::OnBnClickedButtonCosMode()
+{
+	OnBnClickedButtonTest();
+	isCosMode = true;
 }

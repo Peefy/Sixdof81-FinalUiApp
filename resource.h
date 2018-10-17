@@ -65,6 +65,8 @@
 #define IDC_EDIT_PITCH_HZ               1043
 #define IDC_EDIT13                      1044
 #define IDC_EDIT_YAW_HZ                 1044
+#define IDC_BUTTON_TEST5                1045
+#define IDC_BUTTON_COS_MODE             1045
 #define IDC_EDT_STS_CMD                 1046
 #define IDC_EDT_STS_FBK                 1049
 #define IDC_EDT_STS_IO                  1051

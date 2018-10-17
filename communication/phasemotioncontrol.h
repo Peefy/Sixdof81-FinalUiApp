@@ -23,7 +23,7 @@ using namespace std;
 #define MAX_MM 700.0
 // 单位mm
 #define MM_RPM 25.0
-// 电机转一圈编码器读数 1024
+// 电机转一圈编码器读数 2048
 #define PULSE_COUNT_RPM 2048.0
 
 #define PlaneAboveHingeLength       245.0
@@ -66,7 +66,7 @@ using namespace std;
 
 #define MM_TO_PULSE_COUNT_SCALE (PULSE_COUNT_RPM / MM_RPM)
 
-#define MOTION_LOCK_LEVEL false
+#define MOTION_LOCK_LEVEL   false
 #define SWITCH_BOTTOM_LEVEL true
 #define MOTION_ENABLE_LEVEL true
 
