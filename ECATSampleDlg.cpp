@@ -589,6 +589,7 @@ void CECATSampleDlg::AppInit()
 		CircleTopRadius, CircleBottomRadius, DistanceBetweenHingeTop,
 		DistanceBetweenHingeBottom);
 	OpenThread();
+	navigation.Open();
 }
 
 double CECATSampleDlg::GetCEditNumber(int cEditId)
