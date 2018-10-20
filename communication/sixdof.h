@@ -8,7 +8,7 @@
 #include "../TYPE_DEF.H"
 
 //平台运动最大角度
-#define MAX_DEG 15
+#define MAX_DEG 18
 #define DEG_SCALE 0.01
 //平台运动最大位移
 #define MAX_XYZ 180
