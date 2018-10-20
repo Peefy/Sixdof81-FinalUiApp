@@ -589,7 +589,6 @@ void CECATSampleDlg::AppInit()
 		CircleTopRadius, CircleBottomRadius, DistanceBetweenHingeTop,
 		DistanceBetweenHingeBottom);
 	OpenThread();
-	vision.Open(VISION_PORT, VISION_BAUDRATE);
 }
 
 double CECATSampleDlg::GetCEditNumber(int cEditId)
