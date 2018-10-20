@@ -61,7 +61,7 @@ using namespace std;
 //#define ENABLE_LINE_GRAPH   1
 
 bool enableShock = false;
-bool enableChirp = true;
+bool enableChirp = false;
 
 void SixdofControl();
 void SensorRead();

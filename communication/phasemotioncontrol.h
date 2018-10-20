@@ -24,10 +24,10 @@ using namespace std;
 // 单位mm
 #define MM_RPM 25.0
 // 电机转一圈编码器读数 2048
-#define PULSE_COUNT_RPM 2048.0
+#define PULSE_COUNT_RPM 2500
 
-#define PlaneAboveHingeLength       245.0
-#define PlaneAboveBottomLength      2024.0
+#define PlaneAboveHingeLength       229.907
+#define PlaneAboveBottomLength      2050.0
 #define CircleTopRadius             855.85
 #define CircleBottomRadius          1220.85
 #define DistanceBetweenHingeTop     200.0
