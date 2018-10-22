@@ -9,6 +9,8 @@
 //ÏÞÎ»º¯Êý
 #define RANGE(x,min,max)   (((x)<(min) ? (min) : ( (x)>(max) ? (max):(x) )))
 
+#define DOWN_RANGE(x, min) ( (x)<(min) ? (min) : (x) )
+
 #define BIT_CLEAN(var,n)        (var) &= ~(1<<(n))   
 #define BIT_SET(var,n)          (var) |=  (1<<(n))   
 #define BIT_GET(var,n)          (((var)>>(n))&0x01)  

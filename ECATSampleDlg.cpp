@@ -108,6 +108,7 @@ bool isCosMode = false;
 
 double testVal[FREEDOM_NUM];
 double testHz[FREEDOM_NUM];
+double testPhase[FREEDOM_NUM];
 
 double chartBottomAxisPoint[CHART_POINT_NUM] = { 0 };
 double chartXValPoint[CHART_POINT_NUM] = { 0 };
@@ -276,7 +277,7 @@ void SixdofControl()
 				pitch = sin(2 * pi * nowHz[4] * nowt + 2 * pi * testHz[4]) * testVal[4];
 				yaw = sin(2 * pi * nowHz[5] * nowt + 2 * pi * testHz[5]) * testVal[5];
 			}
-			else
+			else if(isCosMode == false)
 			{
 				x = sin(2 * pi * nowHz[0] * nowt) * testVal[0];
 				y = sin(2 * pi * nowHz[1] * nowt) * testVal[1];
@@ -285,17 +286,31 @@ void SixdofControl()
 				pitch = sin(2 * pi * nowHz[4] * nowt) * testVal[4];
 				yaw = sin(2 * pi * nowHz[5] * nowt) * testVal[5];
 			}
+			else
+			{
+
+			}
 			if (isCosMode = true)
 			{
-				double cos_t = t - 1 / nowHz[4] * 0.25;
-				if (cos_t <= 0)
-					cos_t = 0;
-				x = sin(2 * pi * nowHz[0] * t) * testVal[0];
-				y = sin(2 * pi * nowHz[1] * t) * testVal[1];
-				z = sin(2 * pi * nowHz[2] * t) * testVal[2];
-				roll = sin(2 * pi * nowHz[3] * t) * testVal[3];
-				pitch = sin(2 * pi * nowHz[4] * cos_t) * testVal[4];
-				yaw = sin(2 * pi * nowHz[5] * t) * testVal[5];
+				double nowphase_t[AXES_COUNT] = {t,t,t,t,t,t};
+				for (int i = 0;i < AXES_COUNT; ++i)
+				{
+					if (nowHz[i] != 0)
+					{
+						auto phase_t = t - 1.0 / nowHz[i] * (testPhase[i] / 360.0);
+						nowphase_t[i] = DOWN_RANGE(phase_t, 0);
+					}			
+					else
+					{
+						nowphase_t[i] = t;
+					}					
+				}
+				x = sin(2 * pi * nowHz[0] * nowphase_t[0]) * testVal[0];
+				y = sin(2 * pi * nowHz[1] * nowphase_t[1]) * testVal[1];
+				z = sin(2 * pi * nowHz[2] * nowphase_t[2]) * testVal[2];
+				roll = sin(2 * pi * nowHz[3] * nowphase_t[3]) * testVal[3];
+				pitch = sin(2 * pi * nowHz[4] * nowphase_t[4]) * testVal[4];
+				yaw = sin(2 * pi * nowHz[5] * nowphase_t[5]) * testVal[5];
 			}
 			data.X = (int16_t)(x * 10);
 			data.Y = (int16_t)(y * 10);
@@ -435,7 +450,6 @@ BEGIN_MESSAGE_MAP(CECATSampleDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_EXIT, &CECATSampleDlg::OnBnClickedButtonExit)
 	ON_BN_CLICKED(IDC_BUTTON_TEST3, &CECATSampleDlg::OnBnClickedButtonTest3)
 	ON_BN_CLICKED(IDC_BUTTON_STOP_TEST, &CECATSampleDlg::OnBnClickedButtonStopTest)
-	ON_BN_CLICKED(IDC_BUTTON_COS_MODE, &CECATSampleDlg::OnBnClickedButtonCosMode)
 END_MESSAGE_MAP()
 
 void CECATSampleDlg::ChartInit()
@@ -543,6 +557,13 @@ void CECATSampleDlg::AppInit()
 	SetDlgItemText(IDC_EDIT_PITCH_HZ, _T("0"));
 	SetDlgItemText(IDC_EDIT_YAW_HZ, _T("0"));
 
+	SetDlgItemText(IDC_EDIT_X_PHASE, _T("0"));
+	SetDlgItemText(IDC_EDIT_Y_PHASE, _T("0"));
+	SetDlgItemText(IDC_EDIT_Z_PHASE, _T("0"));
+	SetDlgItemText(IDC_EDIT_ROLL_PHASE, _T("0"));
+	SetDlgItemText(IDC_EDIT_PITCH_PHASE, _T("0"));
+	SetDlgItemText(IDC_EDIT_YAW_PHASE, _T("0"));
+
 	CDialog::SetWindowTextW(_T(WINDOW_TITLE));
 	GetDlgItem(IDC_BTN_Start)->SetWindowTextW(_T(IDC_BTN_START_SHOW_TEXT));
 	GetDlgItem(IDC_BTN_SINGLE_UP)->SetWindowTextW(_T(IDC_BTN_SINGLE_UP_SHOW_TEXT));
@@ -568,6 +589,13 @@ void CECATSampleDlg::AppInit()
 	GetDlgItem(IDC_STATIC_ROLL_HZ)->SetWindowTextW(_T(IDC_STATIC_ROLL_HZ_SHOW_TEXT));
 	GetDlgItem(IDC_STATIC_PITCH_HZ)->SetWindowTextW(_T(IDC_STATIC_PITCH_HZ_SHOW_TEXT));
 	GetDlgItem(IDC_STATIC_YAW_HZ)->SetWindowTextW(_T(IDC_STATIC_YAW_HZ_SHOW_TEXT));
+
+	GetDlgItem(IDC_STATIC_X_PHASE)->SetWindowTextW(_T(IDC_STATIC_X_PHASE_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_Y_PHASE)->SetWindowTextW(_T(IDC_STATIC_Y_PHASE_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_Z_PHASE)->SetWindowTextW(_T(IDC_STATIC_Z_PHASE_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_ROLL_PHASE)->SetWindowTextW(_T(IDC_STATIC_ROLL_PHASE_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_PITCH_PHASE)->SetWindowTextW(_T(IDC_STATIC_PITCH_PHASE_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_YAW_PHASE)->SetWindowTextW(_T(IDC_STATIC_YAW_PHASE_SHOW_TEXT));
 
 	GetDlgItem(IDC_STATIC_TEST)->SetWindowTextW(_T(IDC_STATIC_TEST_SHOW_TEXT));
 	GetDlgItem(IDC_BUTTON_TEST)->SetWindowTextW(_T(IDC_BUTTON_TEST_SHOW_TEXT));
@@ -1035,6 +1063,12 @@ void CECATSampleDlg::OnBnClickedBtnSingleDown()
 
 void CECATSampleDlg::OnBnClickedButtonTest()
 {
+	if (status != SIXDOF_STATUS_READY)
+	{
+		MessageBox(_T(SIXDOF_NOT_BEGIN_MESSAGE));
+		return;
+	}
+	memset(testPhase, 0, sizeof(double) * AXES_COUNT);
 	//位移单位mm 角度单位 度
 	auto xval = RANGE(GetCEditNumber(IDC_EDIT_X_VAL), -MAX_XYZ, MAX_XYZ); 
 	auto yval = RANGE(GetCEditNumber(IDC_EDIT_Y_VAL), -MAX_XYZ, MAX_XYZ);
@@ -1050,6 +1084,13 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	auto pitchhz = RANGE(GetCEditNumber(IDC_EDIT_PITCH_HZ), 0, MAX_HZ);
 	auto yawhz = RANGE(GetCEditNumber(IDC_EDIT_YAW_HZ), 0, MAX_HZ);
 
+	auto xphase = RANGE(GetCEditNumber(IDC_EDIT_X_PHASE), 0, MAX_PHASE);
+	auto yphase = RANGE(GetCEditNumber(IDC_EDIT_Y_PHASE), 0, MAX_PHASE);
+	auto zphase = RANGE(GetCEditNumber(IDC_EDIT_Z_PHASE), 0, MAX_PHASE);
+	auto rollphase = RANGE(GetCEditNumber(IDC_EDIT_ROLL_PHASE), 0, MAX_PHASE);
+	auto pitchphase = RANGE(GetCEditNumber(IDC_EDIT_PITCH_PHASE), 0, MAX_PHASE);
+	auto yawphase = RANGE(GetCEditNumber(IDC_EDIT_YAW_PHASE), 0, MAX_PHASE);
+
 	testVal[0] = xval;
 	testVal[1] = yval;
 	testVal[2] = zval;
@@ -1063,11 +1104,14 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	testHz[3] = rollhz;
 	testHz[4] = pitchhz;
 	testHz[5] = yawhz;
-	if (status != SIXDOF_STATUS_READY)
-	{
-		MessageBox(_T(SIXDOF_NOT_BEGIN_MESSAGE));
-		return;
-	}
+
+	testPhase[0] = xphase;
+	testPhase[1] = yphase;
+	testPhase[2] = zphase;
+	testPhase[3] = rollphase;
+	testPhase[4] = pitchphase;
+	testPhase[5] = yawphase;
+
 	status = SIXDOF_STATUS_RUN;
 	// 电机先停后启动
 	delta.ServoStop();
@@ -1076,7 +1120,7 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	delta.UnlockServo();
 	// 正弦测试运动模式
 	isTest = true;
-	isCosMode = false;
+	isCosMode = true;
 	// 正弦时间清0
 	t = 0;
 	// 允许运动
@@ -1099,8 +1143,3 @@ void CECATSampleDlg::OnBnClickedButtonStopTest()
 	OnBnClickedBtnStopme();
 }
 
-void CECATSampleDlg::OnBnClickedButtonCosMode()
-{
-	OnBnClickedButtonTest();
-	isCosMode = true;
-}

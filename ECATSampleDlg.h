@@ -87,6 +87,13 @@ public:
 	afx_msg void OnBnClickedButtonStopTest();
 	afx_msg void OnBnClickedButtonTest5();
 	afx_msg void OnBnClickedButtonCosMode();
+	afx_msg void OnBnClickedButtonMode1();
+	afx_msg void OnBnClickedButtonMode2();
+	afx_msg void OnBnClickedButtonMode3();
+	afx_msg void OnBnClickedButtonMode4();
+	afx_msg void OnBnClickedButtonMode5();
+	afx_msg void OnBnClickedButtonMode6();
+	afx_msg void OnBnClickedButtonMode7();
 };
 
 //{{AFX_INSERT_LOCATION}}
