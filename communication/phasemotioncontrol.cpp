@@ -31,7 +31,7 @@
 #define RISE_MOTION_P 0.00017
 #define RISE_MOTION_I 0.000002
 #define RISE_MOTION_D 0.0
-#define RISE_MAX_VEL  0.4
+#define RISE_MAX_VEL  0.2
 #endif // IS_BIG_MOTION
 
 PID_Type MotionLocationPidControler[AXES_COUNT] = 

@@ -341,9 +341,9 @@ void SixdofControl()
 			data.X = 0;
 			data.Y = 0;
 			data.Z = 0;
-			data.Roll = deltaroll / DEG_SCALE;
-			data.Pitch = deltapitch / DEG_SCALE;
-			data.Yaw = deltayaw / DEG_SCALE;
+			data.Roll += deltaroll / DEG_SCALE;
+			data.Pitch += deltapitch / DEG_SCALE;
+			data.Yaw += deltayaw / DEG_SCALE;
 			auto x = RANGE(data.X * XYZ_SCALE, -MAX_XYZ, MAX_XYZ);
 			auto y = RANGE(data.Y * XYZ_SCALE, -MAX_XYZ, MAX_XYZ);
 			auto z = RANGE(data.Z * XYZ_SCALE, -MAX_XYZ, MAX_XYZ);
