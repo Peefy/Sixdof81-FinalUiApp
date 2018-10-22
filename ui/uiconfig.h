@@ -37,7 +37,7 @@
 #define IDC_STATIC_PITCH_PHASE_SHOW_TEXT  "俯仰相位"
 #define IDC_STATIC_YAW_PHASE_SHOW_TEXT    "航向相位"
 
-#define IDC_STATIC_TEST_SHOW_TEXT      "测试(位移单位:1mm, 角度单位:1°, 频率单位:1Hz)"
+#define IDC_STATIC_TEST_SHOW_TEXT      "测试(位移单位:1mm, 角度单位:1°, 频率单位:1Hz, 相位单位:1°)"
 #define IDC_BUTTON_TEST_SHOW_TEXT      "运行测试"
 
 #define CORPORATION_NAME "北京市星光凯明动感仿真模拟器中心"
