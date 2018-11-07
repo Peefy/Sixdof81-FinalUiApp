@@ -22,11 +22,11 @@ public:
 	uint8_t DefaultPackageHeaderTwo;
 	int PortNumber;
 	int BaudRate;
+	bool IsRecievedData;
 	bool Open(int portNumber, int baudRate);
 	bool Close();
-	T* GetDataFromCom();
-	bool IsRecievedData;
-	T * Data;
+	T GetDataFromCom();
+	T Data;
 private:
 	BaseCom();
 };
@@ -34,7 +34,6 @@ private:
 template <typename T>
 BaseCom<T>::BaseCom()
 {
-	Data = new T;
 	DefaultPackageHeaderOne = 0x55;
 	DefaultPackageHeaderTwo = 0xAA;
 }
@@ -42,7 +41,6 @@ BaseCom<T>::BaseCom()
 template <typename T>
 BaseCom<T>::BaseCom(uint8_t headerOne, uint8_t headerTwo)
 {
-	Data = new T;
 	DefaultPackageHeaderOne = headerOne;
 	DefaultPackageHeaderTwo = headerTwo;
 }
@@ -50,7 +48,7 @@ BaseCom<T>::BaseCom(uint8_t headerOne, uint8_t headerTwo)
 template <typename T>
 BaseCom<T>::~BaseCom()
 {
-	delete Data;
+	
 }
 
 template <typename T>
@@ -69,7 +67,7 @@ bool BaseCom<T>::Close()
 }
 
 template <typename T>
-T* BaseCom<T>::GetDataFromCom()
+T BaseCom<T>::GetDataFromCom()
 {
 	static char uchrTemp[COM_BASE_BUFFER_MAX];
 	static unsigned char chrTemp[COM_BASE_BUFFER_MAX];
@@ -87,10 +85,7 @@ T* BaseCom<T>::GetDataFromCom()
 			memcpy(&chrTemp[0], &chrTemp[1], usRxLength);                        
 			continue;
 		}
-		if(chrTemp[1] == DefaultPackageHeaderTwo)
-		{
-			memcpy(Data, &chrTemp[0], length);
-		}
+		memcpy(&Data, &chrTemp[0], length);
 		usRxLength -= length;
 		memcpy(&chrTemp[0], &chrTemp[length], usRxLength);    
 		IsRecievedData = true;

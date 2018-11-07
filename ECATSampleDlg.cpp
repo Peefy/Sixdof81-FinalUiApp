@@ -332,24 +332,27 @@ void SixdofControl()
 		// 惯性导航
 		else
 		{
+			double deltax = 0;
+			double deltay = 0;
+			double deltaz = 0;
 			double deltaroll = 0;
 			double deltayaw = 0;
 			double deltapitch = 0;
 			navigation.RenewData();
 			navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
 			double pi = 3.1415926;
-			data.X = 0;
-			data.Y = 0;
-			data.Z = 0;
-			data.Roll += deltaroll / DEG_SCALE;
-			data.Pitch += deltapitch / DEG_SCALE;
-			data.Yaw += deltayaw / DEG_SCALE;
-			auto x = RANGE(data.X * XYZ_SCALE, -MAX_XYZ, MAX_XYZ);
-			auto y = RANGE(data.Y * XYZ_SCALE, -MAX_XYZ, MAX_XYZ);
-			auto z = RANGE(data.Z * XYZ_SCALE, -MAX_XYZ, MAX_XYZ);
-			auto roll = RANGE(data.Roll * DEG_SCALE, -MAX_DEG, MAX_DEG);
-			auto pitch = RANGE(data.Pitch * DEG_SCALE, -MAX_DEG, MAX_DEG);
-			auto yaw = RANGE(data.Yaw * DEG_SCALE, -MAX_DEG, MAX_DEG);
+			data.X = (int16_t)(deltax * 10);
+			data.Y = (int16_t)(deltay * 10);
+			data.Z = (int16_t)(deltaz * 10);
+			data.Roll = (int16_t)(deltaroll * 100);
+			data.Yaw = (int16_t)(deltayaw * 100);
+			data.Pitch = (int16_t)(deltapitch * 100);
+			auto x = RANGE(deltax, -MAX_XYZ, MAX_XYZ);
+			auto y = RANGE(deltay, -MAX_XYZ, MAX_XYZ);
+			auto z = RANGE(deltaz, -MAX_XYZ, MAX_XYZ);
+			auto roll = RANGE(deltaroll, -MAX_DEG, MAX_DEG);
+			auto pitch = RANGE(deltapitch, -MAX_DEG, MAX_DEG);
+			auto yaw = RANGE(deltayaw, -MAX_DEG, MAX_DEG);
 			double* pulse_dugu = Control(x, y, z, roll, yaw, pitch);
 			for (auto ii = 0; ii < AXES_COUNT; ++ii)
 			{
