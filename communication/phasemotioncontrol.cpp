@@ -299,8 +299,6 @@ void PhaseMotionControl::Csp(double * pulse)
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
-int count = 0;
-
 void PhaseMotionControl::PidCsp(double * pulse)
 {
 	for (auto i = 0; i < AXES_COUNT; ++i)
@@ -335,7 +333,6 @@ void PhaseMotionControl::ForwardCsp(double x, double y, double z, double roll, d
 		nowPulseInput[i] = NowPluse[i] * nowPulseScale;
 	}
 	auto poses = FromLengthToPose(nowPulseInput);
-
 	auto vels = Control((x - poses[0]) * K + x, 
 		(y - poses[1]) * K + y, 
 		(z - poses[2]) * K + z, 
@@ -413,7 +410,7 @@ void PhaseMotionControl::DDAControlThread()
 			RenewNowPulse();
 			double pulses[AXES_COUNT] = {0};
 			SlowPidCsp(pulses);
-			for (int i =0; i < AXES_COUNT; ++i)
+			for (int i = 0; i < AXES_COUNT; ++i)
 			{
 				if (abs(NowPluse[i] - MIDDLE_POS) <= eps)
 				{
@@ -428,7 +425,7 @@ void PhaseMotionControl::DDAControlThread()
 			RenewNowPulse();
 			double pulses[AXES_COUNT] = {-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS};
 			SlowPidCsp(pulses);
-			for (int i =0; i < AXES_COUNT; ++i)
+			for (int i = 0; i < AXES_COUNT; ++i)
 			{
 				if (abs(NowPluse[i] - 0) <= 1)
 				{
@@ -444,7 +441,7 @@ void PhaseMotionControl::DDAControlThread()
 			double sum = 0;
 			memcpy(pulses, pos, sizeof(double) * AXES_COUNT);
 			SlowPidCsp(pulses);
-			for (int i = 0;i < AXES_COUNT;++i)
+			for (int i = 0; i < AXES_COUNT; ++i)
 			{
 				sum += abs(pulses[i] - NowPluse[i]); 
 			}
@@ -542,7 +539,10 @@ bool PhaseMotionControl::CheckStatus(SixDofPlatformStatus& status)
 	case SIXDOF_STATUS_RUN:
 		break;
 	case SIXDOF_STATUS_ISRISING:
-		pulse = GetMotionAveragePulse();
+		if(lockobj.try_lock())
+		{
+			pulse = GetMotionAveragePulse();
+		}
 		if (pulse >= (RISE_R - 1) * PULSE_COUNT_RPM)
 		{
 			status = SIXDOF_STATUS_READY;
@@ -559,7 +559,6 @@ bool PhaseMotionControl::CheckStatus(SixDofPlatformStatus& status)
 	}
 	str = SixDofStatusText[status];
 	Status = status;
-	config::RecordStatusAndPulse(str, (int)status, NowPluse);
 	return true;
 }
 
