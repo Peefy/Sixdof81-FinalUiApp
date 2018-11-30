@@ -542,6 +542,7 @@ bool PhaseMotionControl::CheckStatus(SixDofPlatformStatus& status)
 		if(lockobj.try_lock())
 		{
 			pulse = GetMotionAveragePulse();
+			lockobj.unlock();
 		}
 		if (pulse >= (RISE_R - 1) * PULSE_COUNT_RPM)
 		{
