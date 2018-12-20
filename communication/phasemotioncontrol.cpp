@@ -21,7 +21,7 @@
 #define RISE_MOTION_P 0.00004
 #define RISE_MOTION_I 0.0000002
 #define RISE_MOTION_D 0.0
-#define RISE_MAX_VEL  0.5
+#define RISE_MAX_VEL  0.2
 #else
 #define MOTION_P 0.0015
 #define MOTION_I 0.00001
@@ -82,7 +82,11 @@ bool PhaseMotionControl::InitCard()
 void PhaseMotionControl::Close(SixDofPlatformStatus laststatus)
 {
 	RenewNowPulse();
-	config::RecordStatusAndPulse(nullptr, laststatus, NowPluse);
+	if (lockobj.try_lock())
+	{
+		config::RecordStatusAndPulse(nullptr, laststatus, NowPluse);
+		lockobj.unlock();
+	}
 	this->disposed = true;
 }
 
@@ -106,28 +110,6 @@ bool PhaseMotionControl::ServoAllOnOff(bool isOn)
 	sixdofDioAndCount.EnableAllMotor(isOn);
 #endif
 	return true;
-}
-
-void PhaseMotionControl::MoveToLocationSingle(int index, double location, bool isAbs)
-{
-	ASSERT_INDEX(index);
-	double now_pos[AXES_COUNT] = {0, 0, 0, 0, 0, 0};
-	memcpy(now_pos, NowPluse, sizeof(double) * AXES_COUNT);
-	now_pos[index] = location;
-	MoveToLocation(now_pos, AXES_COUNT, isAbs);
-}
-
-void PhaseMotionControl::MoveToLocation(double* location, int axexnum, bool isAbs)
-{
-	memcpy(pos, location, sizeof(double) * AXES_COUNT);
-	if (isAbs == false)
-	{
-		for (int i = 0; i < AXES_COUNT; ++i)
-		{
-			pos[i] += location[i];
-		}
-	}
-	enableMove = true;
 }
 
 void PhaseMotionControl::SingleUp(int index)
@@ -160,12 +142,16 @@ void PhaseMotionControl::AllTestDown()
 
 bool PhaseMotionControl::ResetStatus()
 {
-	sixdofDioAndCount.ClearPulseCount();
-	for (int i = 0;i < AXES_COUNT;++i)
+	if (lockobj.try_lock())
 	{
-		NowPluse[i] = 0;
+		sixdofDioAndCount.ClearPulseCount();
+		for (int i = 0;i < AXES_COUNT;++i)
+		{
+			NowPluse[i] = 0;
+		}
+		AvrPulse = 0;
+		lockobj.unlock();
 	}
-	AvrPulse = 0;
 	return true;
 }
 
@@ -301,65 +287,66 @@ void PhaseMotionControl::Csp(double * pulse)
 
 void PhaseMotionControl::PidCsp(double * pulse)
 {
-	for (auto i = 0; i < AXES_COUNT; ++i)
-	{
-		pulse[i] = pulse[i] + MIDDLE_POS;
-		pulse[i] = RANGE_V(pulse[i], 0, MAX_POS);
-		now_vel[i] = MyDeltaPID_Real(&MotionLocationPidControler[i], \
-			NowPluse[i], pulse[i]);
+	if (lockobj.try_lock())
+	{	
+		for (auto i = 0; i < AXES_COUNT; ++i)
+		{
+			pulse[i] = pulse[i] + MIDDLE_POS;
+			pulse[i] = RANGE_V(pulse[i], 0, MAX_POS);
+			now_vel[i] = MyDeltaPID_Real(&MotionLocationPidControler[i], \
+				NowPluse[i], pulse[i]);
+		}
+		lockobj.unlock();
 	}
+
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
 void PhaseMotionControl::SlowPidCsp(double * pulse)
 {
-	for (auto i = 0; i < AXES_COUNT; ++i)
-	{
-		pulse[i] = pulse[i] + MIDDLE_POS;
-		pulse[i] = RANGE_V(pulse[i], 0, MAX_POS);
-		now_vel[i] = MyDeltaPID_Real(&MotionRisePidControler[i], \
-			NowPluse[i], pulse[i]);
+	if (lockobj.try_lock())
+	{	
+		for (auto i = 0; i < AXES_COUNT; ++i)
+		{
+			pulse[i] = pulse[i] + MIDDLE_POS;
+			pulse[i] = RANGE_V(pulse[i], 0, MAX_POS);
+			now_vel[i] = MyDeltaPID_Real(&MotionRisePidControler[i], \
+				NowPluse[i], pulse[i]);
+		}
+		lockobj.unlock();
 	}
-	SetMotionVelocty(now_vel, AXES_COUNT);
-}
 
-void PhaseMotionControl::ForwardCsp(double x, double y, double z, double roll, double yaw, double pitch)
-{
-	double K = 0.1;
-	double nowPulseScale = MM_RPM / PULSE_COUNT_RPM;
-	double nowPulseInput[AXES_COUNT] = {0};
-	for (int i = 0;i < AXES_COUNT;++i)
-	{
-		nowPulseInput[i] = NowPluse[i] * nowPulseScale;
-	}
-	auto poses = FromLengthToPose(nowPulseInput);
-	auto vels = Control((x - poses[0]) * K + x, 
-		(y - poses[1]) * K + y, 
-		(z - poses[2]) * K + z, 
-		(roll - poses[3]) * K + roll,
-		(yaw - poses[5]) * K + yaw, 
-		(pitch - poses[4]) * K + pitch);
-	SetMotionVelocty(vels, AXES_COUNT);
+	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
 double* PhaseMotionControl::GetMotionNowEncoderVelocity()
 {
 	auto pulses = sixdofDioAndCount.ReadPulseCount();
-	for(auto i = 0; i < AXES_COUNT; ++i)
-	{
-		NowPluse[i] = pulses[i];
+	if (lockobj.try_lock())
+	{	
+		for(auto i = 0; i < AXES_COUNT; ++i)
+		{
+			NowPluse[i] = pulses[i];
+		}
+		lockobj.unlock();
 	}
+
 	return NowPluse;
 }
 
 double PhaseMotionControl::GetMotionAveragePulse()
 {
 	double pulse_num = 0;
-	for(auto i = 0; i < AXES_COUNT; ++i)
+	if (lockobj.try_lock())
 	{
-		auto actual_pos = NowPluse[i];
-		pulse_num += actual_pos;
+		for(auto i = 0; i < AXES_COUNT; ++i)
+		{
+			auto actual_pos = NowPluse[i];
+			pulse_num += actual_pos;
+		}
+		lockobj.unlock();
 	}
+
 	double avr_pulse = pulse_num / (double)AXES_COUNT;
 	AvrPulse = avr_pulse;
 	return avr_pulse;
@@ -404,54 +391,57 @@ void PhaseMotionControl::DDAControlThread()
 {
 	while (true)
 	{
-		double eps = AXES_COUNT * 2;
-		if (isrising == true)
+		if(lockobj.try_lock())
 		{
-			RenewNowPulse();
-			double pulses[AXES_COUNT] = {0};
-			SlowPidCsp(pulses);
-			for (int i = 0; i < AXES_COUNT; ++i)
+			double eps = AXES_COUNT * AXES_COUNT;
+			if (isrising == true)
 			{
-				if (abs(NowPluse[i] - MIDDLE_POS) <= eps)
+				RenewNowPulse();
+				double pulses[AXES_COUNT] = {0};
+				SlowPidCsp(pulses);
+				for (int i = 0; i < AXES_COUNT; ++i)
 				{
-					ServoSingleStop(i);
-					LockServo(i);
+					if (abs(NowPluse[i] - MIDDLE_POS) <= eps)
+					{
+						ServoSingleStop(i);
+						LockServo(i);
+					}
 				}
-			}
 
-		}
-		if(isfalling == true)
-		{
-			RenewNowPulse();
-			double pulses[AXES_COUNT] = {-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS};
-			SlowPidCsp(pulses);
-			for (int i = 0; i < AXES_COUNT; ++i)
+			}
+			if(isfalling == true)
 			{
-				if (abs(NowPluse[i] - 0) <= 1)
+				RenewNowPulse();
+				double pulses[AXES_COUNT] = {-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS};
+				SlowPidCsp(pulses);
+				for (int i = 0; i < AXES_COUNT; ++i)
 				{
-					//ServoSingleStop(i);
-					//LockServo(i);
+					if (abs(NowPluse[i] - 0) <= 1)
+					{
+						//ServoSingleStop(i);
+						//LockServo(i);
+					}
 				}
 			}
-		}
-		if(enableMove == true)
-		{
-			RenewNowPulse();
-			double pulses[AXES_COUNT] = {0};
-			double sum = 0;
-			memcpy(pulses, pos, sizeof(double) * AXES_COUNT);
-			SlowPidCsp(pulses);
-			for (int i = 0; i < AXES_COUNT; ++i)
+			if(enableMove == true)
 			{
-				sum += abs(pulses[i] - NowPluse[i]); 
+				RenewNowPulse();
+				double pulses[AXES_COUNT] = {0};
+				double sum = 0;
+				memcpy(pulses, pos, sizeof(double) * AXES_COUNT);
+				SlowPidCsp(pulses);
+				for (int i = 0; i < AXES_COUNT; ++i)
+				{
+					sum += abs(pulses[i] - NowPluse[i]); 
+				}
+				if (sum <= eps * AXES_COUNT)
+				{
+					ServoStop();
+				}	
 			}
-			if (sum <= eps * AXES_COUNT)
-			{
-				ServoStop();
-			}	
-		}
-		ReadAllSwitchStatus();
-		
+			ReadAllSwitchStatus();
+			lockobj.unlock();	
+		}	
 		Sleep(DDA_CONTROL_THREAD_DELAY);
 	}
 }

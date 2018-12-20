@@ -84,8 +84,6 @@ public:
 	void SetMotionVeloctySingle(int index, double velocity);
 	void SetMotionVelocty(double* velocity, int axexnum);
 	bool ServoAllOnOff(bool isOn);
-	void MoveToLocationSingle(int index, double location, bool isAbs);
-	void MoveToLocation(double* location, int axexnum, bool isAbs);
 	void SingleUp(int index);
 	void SingleDown(int index);
 	void AllTestUp();
@@ -105,7 +103,6 @@ public:
 	void Csp(double * pulse);
 	void PidCsp(double * pulse);
 	void SlowPidCsp(double * pulse);
-	void ForwardCsp(double x, double y, double z, double roll, double yaw, double pitch);
 	double GetMotionAveragePulse();
 	double* GetMotionNowEncoderVelocity();
 	void RenewNowPulse();
