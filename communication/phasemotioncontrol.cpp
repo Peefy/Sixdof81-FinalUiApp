@@ -167,7 +167,6 @@ void PhaseMotionControl::EnableServo()
 #else
 	sixdofDioAndCount.SetMotionEnableBit(bits);
 #endif
-	
 }
 
 void PhaseMotionControl::LockServo()
@@ -330,7 +329,6 @@ double* PhaseMotionControl::GetMotionNowEncoderVelocity()
 		}
 		lockobj.unlock();
 	}
-
 	return NowPluse;
 }
 
