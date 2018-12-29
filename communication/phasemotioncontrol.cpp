@@ -21,7 +21,7 @@
 #define RISE_MOTION_P 0.00004
 #define RISE_MOTION_I 0.0000002
 #define RISE_MOTION_D 0.0
-#define RISE_MAX_VEL  0.2
+#define RISE_MAX_VEL  0.3
 #else
 #define MOTION_P 0.0015
 #define MOTION_I 0.00001
@@ -167,6 +167,7 @@ void PhaseMotionControl::EnableServo()
 #else
 	sixdofDioAndCount.SetMotionEnableBit(bits);
 #endif
+	
 }
 
 void PhaseMotionControl::LockServo()
@@ -329,6 +330,7 @@ double* PhaseMotionControl::GetMotionNowEncoderVelocity()
 		}
 		lockobj.unlock();
 	}
+
 	return NowPluse;
 }
 
@@ -389,8 +391,7 @@ void PhaseMotionControl::DDAControlThread()
 {
 	while (true)
 	{
-		if(lockobj.try_lock())
-		{
+
 			double eps = AXES_COUNT * AXES_COUNT;
 			if (isrising == true)
 			{
@@ -438,8 +439,6 @@ void PhaseMotionControl::DDAControlThread()
 				}	
 			}
 			ReadAllSwitchStatus();
-			lockobj.unlock();	
-		}	
 		Sleep(DDA_CONTROL_THREAD_DELAY);
 	}
 }
@@ -448,11 +447,19 @@ void PhaseMotionControl::MoveToZeroPulseNumber()
 {
 	for (int i = 0;i < AXES_COUNT;++i)
 	{
-		MyPidParaInit(MotionRisePidControler);
+		MyPidParaInit(&MotionRisePidControler[i]);
 	}
 	Sleep(10);
 	isrising = true;
 	UnlockServo();
+}
+
+void PhaseMotionControl::PidControllerInit()
+{
+	for (int i = 0;i < AXES_COUNT;++i)
+	{
+		MyPidParaInit(&MotionLocationPidControler[i]);
+	}
 }
 
 bool PhaseMotionControl::ServoStop()
@@ -527,11 +534,7 @@ bool PhaseMotionControl::CheckStatus(SixDofPlatformStatus& status)
 	case SIXDOF_STATUS_RUN:
 		break;
 	case SIXDOF_STATUS_ISRISING:
-		if(lockobj.try_lock())
-		{
-			pulse = GetMotionAveragePulse();
-			lockobj.unlock();
-		}
+		pulse = GetMotionAveragePulse();
 		if (pulse >= (RISE_R - 1) * PULSE_COUNT_RPM)
 		{
 			status = SIXDOF_STATUS_READY;

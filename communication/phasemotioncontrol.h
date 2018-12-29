@@ -96,6 +96,7 @@ public:
 	void LockServo(int index);
 	void UnlockServo(int index);
 	void MoveToZeroPulseNumber();
+	void PidControllerInit();
 	bool ServoStop();
 	bool ServoSingleStop(int index);
 	void Rise();

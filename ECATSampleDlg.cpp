@@ -984,6 +984,7 @@ void CECATSampleDlg::OnBnClickedBtnStart()
 	delta.RenewNowPulse();
 	delta.GetMotionAveragePulse();
 	delta.UnlockServo();
+	delta.PidControllerInit();
 	// 正常使用模式
 	isTest = false;
 	isCosMode = false;
@@ -1121,6 +1122,7 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	delta.RenewNowPulse();
 	delta.GetMotionAveragePulse();
 	delta.UnlockServo();
+	delta.PidControllerInit();
 	// 正弦测试运动模式
 	isTest = true;
 	isCosMode = true;
