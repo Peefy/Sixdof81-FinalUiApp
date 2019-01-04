@@ -39,6 +39,7 @@
 #include "glut.h"
 #include "opengl/sixdofopenglhelper.h"
 
+#include "cwnds/panel.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -47,6 +48,9 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 using namespace std;
+
+#define COLOR_RED     RGB(255, 123, 123)
+#define COLOR_GREEN   RGB(123, 255, 123)
 
 #define TIMER_MS 10
 
@@ -91,6 +95,7 @@ LandVision vision;
 
 // 六自由度平台状态
 double pulse_cal[AXES_COUNT];
+double poleLength[AXES_COUNT];
 double lastStartPulse[AXES_COUNT];
 SixDofPlatformStatus status = SIXDOF_STATUS_BOTTOM;
 SixDofPlatformStatus lastStartStatus = SIXDOF_STATUS_BOTTOM;
@@ -326,6 +331,7 @@ void SixdofControl()
 			for (auto ii = 0; ii < AXES_COUNT; ++ii)
 			{
 				pulse_cal[ii] = pulse_dugu[ii];
+				poleLength[ii] = pulse_dugu[ii];
 				pulse_cal[ii] *= MM_TO_PULSE_COUNT_SCALE;
 				auto pulse = pulse_cal[ii];
 				dis[ii] = pulse;
@@ -383,6 +389,7 @@ void SixdofControl()
 			for (auto ii = 0; ii < AXES_COUNT; ++ii)
 			{
 				pulse_cal[ii] = pulse_dugu[ii];
+				poleLength[ii] = pulse_dugu[ii];
 				pulse_cal[ii] *= MM_TO_PULSE_COUNT_SCALE;
 				auto pulse = pulse_cal[ii];
 				dis[ii] = pulse;
@@ -629,6 +636,10 @@ void CECATSampleDlg::AppInit()
 	GetDlgItem(IDC_STATIC_TEST)->SetWindowTextW(_T(IDC_STATIC_TEST_SHOW_TEXT));
 	GetDlgItem(IDC_BUTTON_TEST)->SetWindowTextW(_T(IDC_BUTTON_TEST_SHOW_TEXT));
 
+	GetDlgItem(IDC_STATIC_PLATFORM)->SetWindowTextW(_T(IDC_STATIC_PLATFORM_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_SWITCH_STATUS)->SetWindowTextW(_T(IDC_STATIC_SWITCH_STATUS_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_POLE_LENGTH)->SetWindowTextW(_T(IDC_STATIC_POLE_LENGTH_SHOW_TEXT));
+
 	GetDlgItem(IDC_STATIC_APP_STATUS)->SetWindowTextW(_T(CORPORATION_NAME));
 	GetDlgItem(IDC_STATIC_APP_TITLE)->SetWindowTextW(_T(APP_TITLE));
 	CFont* font = new CFont();
@@ -797,6 +808,60 @@ void CECATSampleDlg::RenderScene()
 	SwapBuffers(hrenderDC); 
 } 
 
+void CECATSampleDlg::FillCtlColor(CWnd* cwnd, COLORREF color)
+{
+	CDC *pDC = cwnd->GetDC();
+	CRect rct;
+	cwnd->GetWindowRect(&rct);
+	CBrush brs;
+	brs.CreateSolidBrush(color);
+	CRect picrct;
+	picrct.top = 0;
+	picrct.left = 0;
+	picrct.bottom = rct.Height();
+	picrct.right = rct.Width();
+	pDC->FillRect(&picrct, &brs);
+}
+
+void CECATSampleDlg::ShowSingleImage(int ctlId, float value)
+{
+	CRect rect;
+	CWnd* pic = GetDlgItem(ctlId); 
+	CDC* dc = pic->GetDC();   
+	GetDlgItem(ctlId)->GetClientRect(&rect);  
+	dc->SetMapMode(MM_ANISOTROPIC);
+	dc->SetWindowOrg(0, 0);
+	dc->SetWindowExt(rect.right, rect.bottom);
+	dc->SetViewportOrg(0, rect.bottom / 2);
+	dc->SetViewportExt(rect.right, - rect.bottom);
+
+	Gdiplus::Graphics g(pic->GetDC()->m_hDC);   
+	//g.Clear(Gdiplus::Color::Wheat);
+	g.DrawImage(GetPumpImage(0, MAX_POLE_LENGTH, value, _T("mm")), 0, 0, rect.Width(), rect.Height());
+}
+
+void CECATSampleDlg::ShowImage()
+{
+	ShowSingleImage(IDC_STATIC_PIC_POLE1, poleLength[0]);
+	ShowSingleImage(IDC_STATIC_PIC_POLE2, poleLength[1]);
+	ShowSingleImage(IDC_STATIC_PIC_POLE3, poleLength[2]);
+	ShowSingleImage(IDC_STATIC_PIC_POLE4, poleLength[3]);
+	ShowSingleImage(IDC_STATIC_PIC_POLE5, poleLength[4]);
+	ShowSingleImage(IDC_STATIC_PIC_POLE6, poleLength[5]);
+}
+
+void CECATSampleDlg::RenderSwitchStatus()
+{
+	delta.ReadAllSwitchStatus();
+	FillCtlColor(GetDlgItem(IDC_STATIC_STATUS1), delta.IsAtBottoms[0] ? COLOR_GREEN : COLOR_RED);
+	FillCtlColor(GetDlgItem(IDC_STATIC_STATUS2), delta.IsAtBottoms[1] ? COLOR_GREEN : COLOR_RED);
+	FillCtlColor(GetDlgItem(IDC_STATIC_STATUS3), delta.IsAtBottoms[2] ? COLOR_GREEN : COLOR_RED);
+	FillCtlColor(GetDlgItem(IDC_STATIC_STATUS4), delta.IsAtBottoms[3] ? COLOR_GREEN : COLOR_RED);
+	FillCtlColor(GetDlgItem(IDC_STATIC_STATUS5), delta.IsAtBottoms[4] ? COLOR_GREEN : COLOR_RED);
+	FillCtlColor(GetDlgItem(IDC_STATIC_STATUS6), delta.IsAtBottoms[5] ? COLOR_GREEN : COLOR_RED);
+}
+
+
 void CECATSampleDlg::OnPaint() 
 {
 	if (IsIconic())
@@ -882,9 +947,9 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		data.Yaw, data.Pitch, data.Roll, runTime, 0);
 	SetDlgItemText(IDC_EDIT_Pose, statusStr);
 
-	//statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"), 
-	//	delta.NowPluse[0], delta.NowPluse[1], delta.NowPluse[2],
-	//	delta.NowPluse[3], delta.NowPluse[4], delta.NowPluse[5]);
+	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"), 
+		poleLength[0], poleLength[1], poleLength[2],
+		poleLength[3], poleLength[4], poleLength[5]);
 	SetDlgItemText(IDC_EDIT_Pulse, statusStr);
 
 	statusStr.Format(_T("1:%.1f 2:%.1f 3:%.1f 4:%.1f 5:%.1f 6:%.1f"),

@@ -171,6 +171,7 @@
     <ClCompile Include="control\pid.cpp" />
     <ClCompile Include="control\sensor.cpp" />
     <ClCompile Include="control\water.cpp" />
+    <ClCompile Include="cwnds\panel.cpp" />
     <ClCompile Include="DialogRegister.cpp" />
     <ClCompile Include="ECATSample.cpp" />
     <ClCompile Include="ECATSampleDlg.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="control\pid.h" />
     <ClInclude Include="control\sensor.h" />
     <ClInclude Include="control\water.h" />
+    <ClInclude Include="cwnds\panel.h" />
     <ClInclude Include="DialogRegister.h" />
     <ClInclude Include="ECATSample.h" />
     <ClInclude Include="ECATSampleDlg.h" />

@@ -43,6 +43,9 @@
     <Filter Include="opengl">
       <UniqueIdentifier>{b27e079a-1b3d-421d-b0fd-af87df6e675d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cwnds">
+      <UniqueIdentifier>{a7d91c22-fd1e-4ccf-b78b-2eaafbdd5036}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ECATSample.cpp">
@@ -203,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="hardware\UserPCI1750.cpp">
       <Filter>hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="cwnds\panel.cpp">
+      <Filter>cwnds</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -459,6 +465,9 @@
     </ClInclude>
     <ClInclude Include="control\landvision.h">
       <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="cwnds\panel.h">
+      <Filter>cwnds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

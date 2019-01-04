@@ -23,7 +23,7 @@ class CECATSampleApp : public CWinApp
 {
 public:
 	CECATSampleApp();
-
+	ULONG_PTR m_gdiplusToken;
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CECATSampleApp)

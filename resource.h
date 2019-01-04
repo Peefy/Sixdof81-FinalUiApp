@@ -65,11 +65,18 @@
 #define IDC_EDIT_PITCH_HZ               1043
 #define IDC_EDIT13                      1044
 #define IDC_EDIT_YAW_HZ                 1044
+#define IDC_STATIC_PLATFORM             1045
 #define IDC_EDT_STS_CMD                 1046
-#define IDC_BUTTON_MODE1                1046
+#define IDC_STATIC_SWITCH_STATUS        1046
+#define IDC_STATIC_POLE_LENGTH          1047
+#define IDC_STATIC_STATUS1              1048
 #define IDC_EDT_STS_FBK                 1049
+#define IDC_STATIC_STATUS2              1049
+#define IDC_STATIC_STATUS3              1050
 #define IDC_EDT_STS_IO                  1051
+#define IDC_STATIC_STATUS4              1051
 #define IDC_EDT_STS_MC                  1052
+#define IDC_STATIC_STATUS5              1052
 #define IDC_BTN_STOP                    1053
 #define IDC_STATIC_ROLL_PHASE           1053
 #define IDC_BTN_RESET                   1054
@@ -89,6 +96,14 @@
 #define IDC_EDIT_ROLL_PHASE             1066
 #define IDC_EDIT_PITCH_PHASE            1067
 #define IDC_EDIT_YAW_PHASE              1068
+#define IDC_STATIC_STATUS6              1069
+#define IDC_STATIC_PIC_POLE1            1070
+#define IDC_STATIC_PIC_POLE2            1071
+#define IDC_STATIC_PIC_POLE3            1072
+#define IDC_STATIC_PIC_POLE4            1073
+#define IDC_STATIC_PIC_POLE5            1074
+#define IDC_STATIC_STATUS12             1075
+#define IDC_STATIC_PIC_POLE6            1075
 #define IDC_BTN_PMove                   1077
 #define IDC_BTN_RALM                    1078
 #define IDC_BTN_MMove                   1079
@@ -114,7 +129,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1070
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

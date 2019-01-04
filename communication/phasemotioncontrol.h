@@ -64,6 +64,8 @@ using namespace std;
 #define MIDDLE_POS (PULSE_COUNT_RPM * RISE_R)
 #define ZERO_POS 0
 
+#define MAX_POLE_LENGTH (MAX_MM / 2.0)
+
 #define MM_TO_PULSE_COUNT_SCALE (PULSE_COUNT_RPM / MM_RPM)
 
 #define MOTION_LOCK_LEVEL   false

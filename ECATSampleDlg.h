@@ -59,7 +59,10 @@ public:
 	BOOL SetWindowPixelFormat(HDC hDC);   //�趨���ظ�ʽ 
 	BOOL CreateViewGLContext(HDC hDC);     //View GL Context 
 	void RenderScene();                                //���Ƴ��� 
-
+	void RenderSwitchStatus();
+	void FillCtlColor(CWnd* cwnd, COLORREF color);
+	void ShowImage();
+	void ShowSingleImage(int ctlId, float value);
 	HDC hrenderDC;      //DC 
 	HGLRC hrenderRC;  //RC  
 	int PixelFormat; 
