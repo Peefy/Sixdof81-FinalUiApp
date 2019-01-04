@@ -77,5 +77,6 @@ BOOL CECATSampleApp::InitInstance()
 
 int CECATSampleApp::ExitInstance()
 {
+	Gdiplus::GdiplusShutdown(m_gdiplusToken);
 	return CWinApp::ExitInstance();
 }
