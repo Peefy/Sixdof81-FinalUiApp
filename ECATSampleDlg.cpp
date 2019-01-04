@@ -55,13 +55,15 @@ using namespace std;
 #define SENSOR_THREAD_DELAY 1000
 #define DATA_BUFFER_THREAD_DELAY 1000
 
-#define CHIRP_TIME 5
+#define CHIRP_TIME    2.5
+#define ENABLE_CHIRP  true
+#define ENABLE_SHOCK  false
 
 //#define ENABLE_OPENGL       1
 //#define ENABLE_LINE_GRAPH   1
 
-bool enableShock = false;
-bool enableChirp = false;
+bool enableShock = ENABLE_SHOCK;
+bool enableChirp = ENABLE_CHIRP;
 
 void SixdofControl();
 void SensorRead();
@@ -105,6 +107,7 @@ CChartLineSerie *pLineSerie6;
 bool isAutoInit = true;
 bool isTest = true;
 bool isCosMode = false;
+bool stopSCurve = false;
 
 double testVal[FREEDOM_NUM];
 double testHz[FREEDOM_NUM];
@@ -253,6 +256,7 @@ void SixdofControl()
 			double roll = 0;
 			double pitch = 0;
 			double yaw = 0;
+			double stopTime = 0;
 			// 开始正弦运动时加一个chrip信号缓冲
 			if (t <= chirpTime && enableChirp == true)
 			{
@@ -327,7 +331,29 @@ void SixdofControl()
 				dis[ii] = pulse;
 			}
 			t += 0.016;
-			delta.PidCsp(dis);
+			if (stopSCurve == true && isCosMode == false)
+			{
+				int index = 0;
+				auto maxHz = util::MaxValue(testHz, AXES_COUNT);
+				for (int i = 0;i < 100; ++i)
+				{
+					if (pi * i + 0.5 * pi >= nowt * 2 * pi * maxHz)
+					{
+						index = i;
+						break;
+					}
+				}
+				stopTime = (pi * index + 0.5 * pi) / (2 * pi * maxHz) + chirpTime - 1;
+				stopSCurve = false;
+			}
+			if (stopTime == 0 || nowt <= stopTime) 
+			{
+				delta.PidCsp(dis);
+			}	
+			else if (nowt > stopTime)
+			{
+				t -= 0.016;
+			}	
 		}
 		// 惯性导航
 		else
@@ -995,9 +1021,11 @@ void CECATSampleDlg::OnBnClickedBtnStart()
 void CECATSampleDlg::OnBnClickedBtnStopme()
 {
 	// 停止Csp运动
+	stopSCurve = true;
+	Sleep(2000);
 	closeDataThread = true;
 	delta.ServoStop();
-	Sleep(500);
+	Sleep(100);
 	if (status == SIXDOF_STATUS_RUN)
 	{
 		if (stopAndMiddle == true)
@@ -1115,6 +1143,8 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	testPhase[3] = rollphase;
 	testPhase[4] = pitchphase;
 	testPhase[5] = yawphase;
+
+	stopSCurve = false;
 
 	status = SIXDOF_STATUS_RUN;
 	// 电机先停后启动

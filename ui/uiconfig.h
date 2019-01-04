@@ -42,7 +42,8 @@
 
 #define CORPORATION_NAME "北京市星光凯明动感仿真模拟器中心"
 
-#define APP_TITLE "大型特种车驾驶模拟训练系统"
+//#define APP_TITLE "大型特种车驾驶模拟训练系统"
+#define APP_TITLE ""
 #define APP_TITLE_FONT_SIZE 240
 
 #define CHART_TITLE "位姿信息"
@@ -60,5 +61,6 @@
 #define SIXDOF_NOT_BOTTOM_AND_RISE_MESSAGE "所有缸不在底部，禁止上升"
 #define SIXDOF_NOT_MIDDLE_MESSAGE "缸没有处于静止，不能回中"
 #define SIXDOF_NOT_BEGIN_MESSAGE "缸没有处于静止，不能开始"
+#define SIXDOF_NOT_FALLING_MESSAGE "缸没有处于静止，不能下降"
 
 #endif
