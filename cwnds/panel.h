@@ -8,6 +8,6 @@
 #include <afxdtctl.h>		
 #include <afxcontrolbars.h>
 
-Gdiplus::Bitmap* GetPumpImage( float fMin,float fMax,float fValue, CString strUnit );
+Gdiplus::Bitmap* GetPumpImage(float fValue, CString strUnit );
 
 #endif

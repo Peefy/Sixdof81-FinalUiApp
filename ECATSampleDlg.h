@@ -61,8 +61,11 @@ public:
 	void RenderScene();                                //���Ƴ��� 
 	void RenderSwitchStatus();
 	void FillCtlColor(CWnd* cwnd, COLORREF color);
+	void ShowSingleInitImage(int ctlId);
+	void ShowSingleInitImage(CWnd* pic, float value);
+	void ShowInitImage();
 	void ShowImage();
-	void ShowSingleImage(int ctlId, float value);
+	void ShowSingleImage(CWnd* cwnd, float value);
 	HDC hrenderDC;      //DC 
 	HGLRC hrenderRC;  //RC  
 	int PixelFormat; 

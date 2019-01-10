@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#define PI 3.1415926
+
 //ÏÞÎ»º¯Êý
 #define RANGE(x,min,max)   (((x)<(min) ? (min) : ( (x)>(max) ? (max):(x) )))
 
