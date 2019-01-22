@@ -101,6 +101,7 @@ public:
 	void PidControllerInit();
 	bool ServoStop();
 	bool ServoSingleStop(int index);
+	void StopRiseDownMove();
 	void Rise();
 	void Down();
 	void Csp(double * pulse);

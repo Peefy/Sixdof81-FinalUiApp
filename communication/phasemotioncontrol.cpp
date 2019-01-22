@@ -391,54 +391,52 @@ void PhaseMotionControl::DDAControlThread()
 {
 	while (true)
 	{
-
-			double eps = AXES_COUNT * AXES_COUNT;
-			if (isrising == true)
+		double eps = AXES_COUNT * AXES_COUNT;
+		if (isrising == true)
+		{
+			RenewNowPulse();
+			double pulses[AXES_COUNT] = {0};
+			SlowPidCsp(pulses);
+			for (int i = 0; i < AXES_COUNT; ++i)
 			{
-				RenewNowPulse();
-				double pulses[AXES_COUNT] = {0};
-				SlowPidCsp(pulses);
-				for (int i = 0; i < AXES_COUNT; ++i)
+				if (abs(NowPluse[i] - MIDDLE_POS) <= eps)
 				{
-					if (abs(NowPluse[i] - MIDDLE_POS) <= eps)
-					{
-						ServoSingleStop(i);
-						LockServo(i);
-					}
-				}
-
-			}
-			if(isfalling == true)
-			{
-				RenewNowPulse();
-				double pulses[AXES_COUNT] = {-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS};
-				SlowPidCsp(pulses);
-				for (int i = 0; i < AXES_COUNT; ++i)
-				{
-					if (abs(NowPluse[i] - 0) <= 1)
-					{
-						//ServoSingleStop(i);
-						//LockServo(i);
-					}
+					//ServoSingleStop(i);
+					//LockServo(i);
 				}
 			}
-			if(enableMove == true)
+		}
+		if(isfalling == true)
+		{
+			RenewNowPulse();
+			double pulses[AXES_COUNT] = {-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS,-MIDDLE_POS};
+			SlowPidCsp(pulses);
+			for (int i = 0; i < AXES_COUNT; ++i)
 			{
-				RenewNowPulse();
-				double pulses[AXES_COUNT] = {0};
-				double sum = 0;
-				memcpy(pulses, pos, sizeof(double) * AXES_COUNT);
-				SlowPidCsp(pulses);
-				for (int i = 0; i < AXES_COUNT; ++i)
+				if (abs(NowPluse[i] - 0) <= 1)
 				{
-					sum += abs(pulses[i] - NowPluse[i]); 
+					//ServoSingleStop(i);
+					//LockServo(i);
 				}
-				if (sum <= eps * AXES_COUNT)
-				{
-					ServoStop();
-				}	
 			}
-			ReadAllSwitchStatus();
+		}
+		if(enableMove == true)
+		{
+			RenewNowPulse();
+			double pulses[AXES_COUNT] = {0};
+			double sum = 0;
+			memcpy(pulses, pos, sizeof(double) * AXES_COUNT);
+			SlowPidCsp(pulses);
+			for (int i = 0; i < AXES_COUNT; ++i)
+			{
+				sum += abs(pulses[i] - NowPluse[i]); 
+			}
+			if (sum <= eps * AXES_COUNT)
+			{
+				ServoStop();
+			}	
+		}
+		ReadAllSwitchStatus();
 		Sleep(DDA_CONTROL_THREAD_DELAY);
 	}
 }
@@ -464,13 +462,7 @@ void PhaseMotionControl::PidControllerInit()
 
 bool PhaseMotionControl::ServoStop()
 {
-	enableMove = false;
-	isrising = false;
-	isfalling = false;
-	pulses.clear();
-	double vel[AXES_COUNT];
-	memset(vel, 0, sizeof(double) * AXES_COUNT);
-	SetMotionVelocty(vel, AXES_COUNT);
+	StopRiseDownMove();
 	LockServo();
 	return true;
 }
@@ -481,6 +473,17 @@ bool PhaseMotionControl::ServoSingleStop(int index)
 	double vel = 0;
 	SetMotionVeloctySingle(index, vel);
 	return true;
+}
+
+void PhaseMotionControl::StopRiseDownMove()
+{
+	enableMove = false;
+	isrising = false;
+	isfalling = false;
+	pulses.clear();
+	double vel[AXES_COUNT];
+	memset(vel, 0, sizeof(double) * AXES_COUNT);
+	SetMotionVelocty(vel, AXES_COUNT);
 }
 
 bool PhaseMotionControl::IsAllAtBottom()

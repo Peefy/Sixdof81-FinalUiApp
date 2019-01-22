@@ -729,7 +729,7 @@ BOOL CECATSampleDlg::PreTranslateMessage(MSG* pMsg)
 BOOL CECATSampleDlg::PreCreateWindow(CREATESTRUCT& cs)
 {
 	cs.style |= WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
-	return CECATSampleDlg::PreCreateWindow(cs);
+	return CDialog::PreCreateWindow(cs);
 }
 
 void CECATSampleDlg::InitOpenGlControl()
@@ -934,7 +934,6 @@ void CECATSampleDlg::OnPaint()
 	{
 		CDialog::OnPaint();
 	}
-	RenderScene();
 }
 
 HCURSOR CECATSampleDlg::OnQueryDragIcon()
@@ -1142,8 +1141,7 @@ void CECATSampleDlg::OnBnClickedBtnStopme()
 	stopSCurve = true;
 	Sleep(2000);
 	closeDataThread = true;
-	delta.ServoStop();
-	Sleep(100);
+	delta.StopRiseDownMove();
 	if (status == SIXDOF_STATUS_RUN)
 	{
 		if (stopAndMiddle == true)
@@ -1266,10 +1264,9 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 
 	status = SIXDOF_STATUS_RUN;
 	// 电机先停后启动
-	delta.ServoStop();
+	delta.StopRiseDownMove();
 	delta.RenewNowPulse();
 	delta.GetMotionAveragePulse();
-	delta.UnlockServo();
 	delta.PidControllerInit();
 	// 正弦测试运动模式
 	isTest = true;
