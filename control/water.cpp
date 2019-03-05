@@ -1,7 +1,6 @@
 
 #include "stdafx.h"
 #include "water.h"
-#include "Com.h"
 
 WaterDownDataPackage downData;
 WaterUpDataPackage upData;
@@ -28,13 +27,14 @@ void Water::DataInit()
 
 bool Water::Open()
 {
-	auto re = OpenCOMDevice(WATER_SERIAL_NUM, WATER_SERIAL_BAUD) == 0;
+	auto re = serialPort.InitPort(WATER_SERIAL_NUM, WATER_SERIAL_BAUD) == true;
+	//auto re = OpenCOMDevice(WATER_SERIAL_NUM, WATER_SERIAL_BAUD) == 0;
 	return re;
 }
 
 bool Water::Close()
 {
-	CloseCOMDevice();
+	//CloseCOMDevice();
 	return false;
 }
 
@@ -45,7 +45,14 @@ void Water::RenewData()
 	static unsigned char ucRxCnt = 0;	
 	static unsigned short usRxLength = 0;
 	static int length = DownPackageLength;
-	auto nowlength = CollectUARTData(WATER_SERIAL_NUM, uchrTemp);
+	//auto nowlength = CollectUARTData(WATER_SERIAL_NUM, uchrTemp);
+	auto nowlength = serialPort.GetBytesInCOM();
+	unsigned char cRecved;
+	for (int i = 0; i < nowlength; ++i)
+	{
+		serialPort.ReadChar(cRecved);
+		uchrTemp[i] = cRecved;
+	}
 	memcpy(chrTemp, uchrTemp, sizeof(unsigned char) * BUFFER_MAX);
 	usRxLength += nowlength;
 	while (usRxLength >= length)
@@ -68,7 +75,7 @@ void Water::RenewData()
 
 void Water::TestSendData()
 {
-	static char chrTemp[BUFFER_MAX];
+	static unsigned char chrTemp[BUFFER_MAX] = {0};
 	static unsigned char ucRxCnt = 0;	
 	static unsigned short usRxLength = 0;
 	static int length = UpPackageLength;
@@ -87,13 +94,14 @@ void Water::TestSendData()
 	{
 		chrTemp[CRC_UP_INDEX] ^= chrTemp[i];
 	}
-	SendUARTMessageLength(WATER_SERIAL_NUM, chrTemp, length);
+	serialPort.WriteData(chrTemp, length);
+	//SendUARTMessageLength(WATER_SERIAL_NUM, chrTemp, length);
 }
 
 void Water::SendData(double roll, double yaw, double pitch)
 {
 	size_t sendSize = sizeof(char) * UpPackageLength;
-	char* chrTemp = (char*)malloc(sendSize);
+	unsigned char* chrTemp = (unsigned char*)malloc(sendSize);
 	memset(chrTemp, 0, sendSize);
 	WaterUpDataPackage data;
 	data.HeadOne = PACKAGE_HEADER1;
@@ -113,6 +121,7 @@ void Water::SendData(double roll, double yaw, double pitch)
 	{
 		chrTemp[CRC_UP_INDEX] ^= chrTemp[i];
 	}
-	SendUARTMessageLength(WATER_SERIAL_NUM, chrTemp, UpPackageLength);
+	serialPort.WriteData(chrTemp, UpPackageLength);
+	//SendUARTMessageLength(WATER_SERIAL_NUM, chrTemp, UpPackageLength);
 	delete chrTemp;
 }

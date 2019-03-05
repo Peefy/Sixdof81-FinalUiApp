@@ -4,6 +4,8 @@
 
 #include "stdint.h"
 
+#include "../communication/SerialPort.h"
+
 #define WATER_SERIAL_NUM   8
 #define WATER_SERIAL_BAUD  115200
 #define BUFFER_MAX 4096
@@ -74,6 +76,7 @@ public:
 	void SendData(double roll, double yaw, double pitch);
 private:
 	uint8_t frameNumber;
+	CSerialPort serialPort;
 protected:
 	int UpPackageLength;
 	int DownPackageLength;

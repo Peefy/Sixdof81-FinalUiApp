@@ -2,6 +2,8 @@
 #define __UART_NET_H
 
 #include "stdint.h"
+#include "../config/inihelper.h"
+#include "../communication/SerialPort.h"
 
 signed char	SendUARTMessageLength(const unsigned long ulChannelNo, const char chrMessage[],const unsigned short usLen);
 unsigned short CollectUARTData(const unsigned long ulChannelNo, char chrUARTBufferOutput[]);
@@ -29,6 +31,7 @@ public:
 	T Data;
 private:
 	BaseCom();
+	CSerialPort serialPort;
 };
 
 template <typename T>
@@ -54,15 +57,21 @@ BaseCom<T>::~BaseCom()
 template <typename T>
 bool BaseCom<T>::Open(int portNumber, int baudRate)
 {
-	PortNumber = portNumber;
-	BaudRate = baudRate;
-	return OpenCOMDevice(portNumber, baudRate);
+	bool result;
+	int baud;
+	int portnum;
+	config::ReadAll(result, baud, portnum);
+	PortNumber = portnum;
+	BaudRate = baud;
+	return serialPort.InitPort(portnum, baud) == true;
+	//return OpenCOMDevice(portnum, baud) == 1;
 }
 
 template <typename T>
 bool BaseCom<T>::Close()
 {
-	CloseCOMDevice();
+	//serialPort.ClosePort();
+	//CloseCOMDevice();
 	return true;
 }
 
@@ -74,7 +83,14 @@ T BaseCom<T>::GetDataFromCom()
 	static unsigned char ucRxCnt = 0;	
 	static unsigned short usRxLength = 0;
 	static int length = sizeof(T);
-	auto nowlength = CollectUARTData(PortNumber, uchrTemp);
+	auto nowlength = serialPort.GetBytesInCOM();
+	unsigned char cRecved;
+	for (int i = 0; i < nowlength; ++i)
+	{
+		serialPort.ReadChar(cRecved);
+		uchrTemp[i] = cRecved;
+	}
+	//auto nowlength = CollectUARTData(PortNumber, uchrTemp);
 	memcpy(chrTemp, uchrTemp, sizeof(unsigned char) * COM_BASE_BUFFER_MAX);
 	usRxLength += nowlength;
 	while (usRxLength >= length)

@@ -15,7 +15,7 @@
 #define VISION_ACC_SCALE    0.1
 #define VISION_ANGLE_SCALE  0.01
 
-#define VISION_PORT        3
+#define VISION_PORT        1
 #define VISION_BAUDRATE    57600
 
 #define SERVO_COUNT       6
