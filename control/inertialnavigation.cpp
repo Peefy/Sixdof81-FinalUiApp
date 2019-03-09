@@ -2,10 +2,12 @@
 #include "stdafx.h"
 #include "inertialnavigation.h"
 #include "pid.h"
-
+#include "../config/inihelper.h"
 
 #define JUDGE_IS_START   if(IsRS422Start == false) return;
 #define JUDGE_IS_RECIEVE if(IsRecievedData == false) return;
+
+#define IS_USE_DELTA_PID 0
 
 InertialNavigation::InertialNavigation()
 {
@@ -39,6 +41,16 @@ bool InertialNavigation::Close()
 	return IsRS422Start;
 }
 
+bool InertialNavigation::JudgeCheckByte(char* chars)
+{
+	unsigned char checkbyte = 0;
+	for (int i = CHECK_BYTE_CAL_START_INDEX;i <= CHECK_BYTE_CAL_END_INDEX;++i)
+	{
+		checkbyte += chars[i];
+	}
+	return checkbyte == chars[CHECK_BYTE_INDEX];
+}
+
 void InertialNavigation::RenewData()
 {
 	static char chrTemp[RS422_BUFFER_LENGTH] = {0}; 
@@ -49,7 +61,7 @@ void InertialNavigation::RenewData()
 		return;
 	}
 	auto nowlength = serialPort.GetBytesInCOM();
-	unsigned char cRecved;
+	unsigned char cRecved = 0;
 	for (int i = 0; i < nowlength; ++i)
 	{
 		serialPort.ReadChar(cRecved);
@@ -65,7 +77,9 @@ void InertialNavigation::RenewData()
 			memcpy(&chrTemp[0], &chrTemp[1], usRxLength);                        
 			continue;
 		}
-		if(chrTemp[1] == RS422_DATA_HEAD_TWO)
+		if(chrTemp[1] == RS422_DATA_HEAD_TWO && chrTemp[RS422_DATA_PACKAGE_LEGNTH - 1] == RS422_DATA_TAIL_TWO &&
+			chrTemp[RS422_DATA_PACKAGE_LEGNTH - 2] == RS422_DATA_TAIL_ONE &&
+			JudgeCheckByte(chrTemp) == true)
 		{
 			memcpy(&data, &chrTemp[0], RS422_DATA_PACKAGE_LEGNTH);
 		}
@@ -84,48 +98,48 @@ int InertialNavigation::GetBufferLength()
 void InertialNavigation::SetDefaultAlignment(double lat, double lon, double height)
 {
 	JUDGE_IS_START;
-	RS422SendString("$set gpslever " + to_string(lat) + " " + 
-		to_string(lon) + " " + to_string(height) + "*");
+	RS422SendString("$set gpslever " + to_string((long long)lat) + " " + 
+		to_string((long long)lon) + " " + to_string((long long)height) + "*");
 }
 
 void InertialNavigation::SetGpsPoleLength(double x, double y, double z)
 {
 	JUDGE_IS_START;
-	RS422SendString("$set gpslever " + to_string(x) + " " + 
-		to_string(y) + " " + to_string(z) + "*");
+	RS422SendString("$set gpslever " + to_string((long long)x) + " " + 
+		to_string((long long)y) + " " + to_string((long long)z) + "*");
 }
 
 void InertialNavigation::SetAngleError(double pitch, double roll, double yaw)
 {
 	JUDGE_IS_START;
-	RS422SendString("$set misali " + to_string(pitch) + " " +  
-		to_string(roll) + " " + to_string(yaw) + "*");
+	RS422SendString("$set misali " + to_string((long long)pitch) + " " +  
+		to_string((long long)roll) + " " + to_string((long long)yaw) + "*");
 }
 
 void InertialNavigation::SetAccOffset(double x, double y, double z)
 {
 	JUDGE_IS_START;
-	RS422SendString("$set acc " + to_string(x) + " " + 
-		to_string(y) + " " + to_string(z) + "*");
+	RS422SendString("$set acc " + to_string((long long)x) + " " + 
+		to_string((long long)y) + " " + to_string((long long)z) + "*");
 }
 
 void InertialNavigation::SetGyroOffset(double x, double y, double z)
 {
 	JUDGE_IS_START;
-	RS422SendString("$set gyro " + to_string(x) + " " + 
-		to_string(y) + " " + to_string(z) + "*");
+	RS422SendString("$set gyro " + to_string((long long)x) + " " + 
+		to_string((long long)y) + " " + to_string((long long)z) + "*");
 }
 
 void InertialNavigation::SetDataRefreshFreq(DataRefreshFreq freq)
 {
 	JUDGE_IS_START;
-	RS422SendString("$set fre " + to_string((int)freq) + "*");
+	RS422SendString("$set fre " + to_string((long long)freq) + "*");
 }
 
 void InertialNavigation::SetRS422BaudRate(RS422BaudRate bps)
 {
 	JUDGE_IS_START;
-	RS422SendString("$set bps " + to_string((int)bps) + "*");
+	RS422SendString("$set bps " + to_string((long long)bps) + "*");
 }
 
 void InertialNavigation::StartSwing()
@@ -179,6 +193,9 @@ void InertialNavigation::DecodeData()
 
 void InertialNavigation::DataInit()
 {
+	p = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_P_KEY);
+	i = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_I_KEY);
+	d = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_D_KEY);
 	Roll = 0;
 	Yaw = 0;
 	Pitch = 0;
@@ -195,9 +212,6 @@ void InertialNavigation::DataInit()
 
 void InertialNavigation::PidOut(double * roll, double *yaw, double * pitch)
 {
-	const double p = 0.0001;
-	const double i = 0.00001;
-	const double d = 0.0;
 	const double finalRoll = 0;
 	const double finalPitch = 0;
 	const double finalYaw = 0;
@@ -208,7 +222,12 @@ void InertialNavigation::PidOut(double * roll, double *yaw, double * pitch)
 	static PID_Type pitchPid = {p, i, d};
 	static PID_Type yawPid = {p, i, d};
 	JUDGE_IS_RECIEVE;
+#if IS_USE_DELTA_PID
 	*roll = MyDeltaPIDWithNoDelta(&rollPid, Roll, finalRoll);
 	//*yaw = MyDeltaPIDWithNoDelta(&yawPid, Yaw, finalYaw);
 	*pitch = MyDeltaPIDWithNoDelta(&pitchPid, Pitch, finalPitch);
+#else
+	*roll = -Roll;
+	*pitch = -Pitch;
+#endif
 }

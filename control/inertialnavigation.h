@@ -106,6 +106,10 @@ using namespace std;
 
 #define RS422_BUFFER_LENGTH    4096
 
+#define CHECK_BYTE_INDEX 80
+#define CHECK_BYTE_CAL_START_INDEX  2
+#define CHECK_BYTE_CAL_END_INDEX  79
+
 #pragma pack (1)
 typedef struct
 {
@@ -196,12 +200,16 @@ public:
 	bool IsNavigationError;
 	bool IsRS422Start;
 private:
+	double p;
+	double i;
+	double d;
 	void DecodeData();
 	RS422DataPackage data;
 	bool disposed;
 	void DataInit();
 	CSerialPort serialPort;
 protected:
+	bool JudgeCheckByte(char * chars);
 	void RS422SendString(string strs);
 };
 
