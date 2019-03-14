@@ -1,0 +1,18 @@
+﻿{
+    "naviP" : 0.008,
+    "naviI" : 0.0001,
+    "naviD" : 0.00001,
+    "rollScale" : 1.0,
+    "yawScale" : 2.0,
+    "pitchScale" : -1.0,
+    "rollFilterLevel" : 12,
+    "yawFilterLevel" : 12,
+    "pitchFilterLevel" : 12,
+    "xScale" : 0.01,
+    "yScale" : 0.01,
+    "zScale" : 0.01,
+    "xFilterLevel" : 8,
+    "yFilterLevel" : 8,
+    "zFilterLevel" : 8
+}
+

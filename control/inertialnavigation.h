@@ -168,7 +168,7 @@ class InertialNavigation
 public:
 	InertialNavigation();
 	~InertialNavigation();
-	string GetIntroduction();
+	string GetIntroduction() const;
 	bool Open();
 	bool Close();
 	void RenewData();

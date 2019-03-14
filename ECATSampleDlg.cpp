@@ -129,6 +129,21 @@ double chartYawValPoint[CHART_POINT_NUM] = { 0 };
 double runTime = 0;
 double chartTime = 0;
 
+CRITICAL_SECTION cs;
+CRITICAL_SECTION csdata;
+double visionX = 0;
+double visionY = 0;
+double visionZ = 0;
+double visionRoll = 0;
+double visionPitch = 0;
+double visionYaw = 0;
+double lastx = 0;
+double lasty = 0;
+double lastz = 0;
+double lastroll = 0;
+double lastpitch = 0;
+double lastyaw = 0;
+
 DWORD WINAPI DataTransThread(LPVOID pParam)
 {
 	while (true)
@@ -222,6 +237,7 @@ void CloseThread()
 
 void OpenThread()
 {
+	InitializeCriticalSection(&csdata);
 	DataThread = (HANDLE)CreateThread(NULL, 0, DataTransThread, NULL, 0, NULL);
 	SensorThread = (HANDLE)CreateThread(NULL, 0, SensorInfoThread, NULL, 0, NULL);
 	SceneThread = (HANDLE)CreateThread(NULL, 0, SceneInfoThread, NULL, 0, NULL);
@@ -241,6 +257,15 @@ unsigned int Counter = 0;
 void SixdofControl()
 {
 	Counter++;
+	navigation.RenewData();
+	EnterCriticalSection(&csdata);
+	visionX = 0;
+	visionY = 0;
+	visionZ = 0;
+	visionRoll = navigation.Roll;
+	visionPitch = navigation.Pitch;
+	visionYaw = navigation.Yaw;
+	LeaveCriticalSection(&csdata);
 	if(closeDataThread == false)
 	{	
 		DWORD start_time = 0;
@@ -370,22 +395,22 @@ void SixdofControl()
 			double deltaroll = 0;
 			double deltayaw = 0;
 			double deltapitch = 0;
-			navigation.RenewData();
 			navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
 			double pi = 3.1415926;
-			data.X = (int16_t)(deltax * 10);
-			data.Y = (int16_t)(deltay * 10);
-			data.Z = (int16_t)(deltaz * 10);
-			data.Roll = (int16_t)(deltaroll * 100);
-			data.Yaw = (int16_t)(deltayaw * 100);
-			data.Pitch = (int16_t)(deltapitch * 100);
-			auto x = RANGE(deltax, -MAX_XYZ, MAX_XYZ);
-			auto y = RANGE(deltay, -MAX_XYZ, MAX_XYZ);
-			auto z = RANGE(deltaz, -MAX_XYZ, MAX_XYZ);
-			auto roll = RANGE(deltaroll, -MAX_DEG, MAX_DEG);
-			auto pitch = RANGE(deltapitch, -MAX_DEG, MAX_DEG);
-			auto yaw = RANGE(deltayaw, -MAX_DEG, MAX_DEG);
+
+			auto x = RANGE(lastx + deltax, -MAX_XYZ, MAX_XYZ);
+			auto y = RANGE(lasty + deltay, -MAX_XYZ, MAX_XYZ);
+			auto z = RANGE(lastz + deltaz, -MAX_XYZ, MAX_XYZ);
+			auto roll = RANGE(lastroll + deltaroll, -MAX_DEG, MAX_DEG);
+			auto pitch = RANGE(lastpitch + deltapitch, -MAX_DEG, MAX_DEG);
+			auto yaw = RANGE(lastyaw + deltayaw, -MAX_DEG, MAX_DEG);
 			double* pulse_dugu = Control(x, y, z, roll, yaw, pitch);
+			lastx = x;
+			lasty = y;
+			lastz = z;
+			lastroll = roll;
+			lastpitch = pitch;
+			lastyaw = yaw;
 			for (auto ii = 0; ii < AXES_COUNT; ++ii)
 			{
 				pulse_cal[ii] = pulse_dugu[ii];
@@ -394,6 +419,12 @@ void SixdofControl()
 				auto pulse = pulse_cal[ii];
 				dis[ii] = pulse;
 			}
+			data.X = (int16_t)(x * 10);
+			data.Y = (int16_t)(y * 10);
+			data.Z = (int16_t)(z * 10);
+			data.Roll = (int16_t)(roll * 100);
+			data.Yaw = (int16_t)(yaw * 100);
+			data.Pitch = (int16_t)(pitch * 100);
 			t += 0.016;
 			delta.PidCsp(dis);
 		}
@@ -1003,12 +1034,13 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		poleLength[0], poleLength[1], poleLength[2],
 		poleLength[3], poleLength[4], poleLength[5]);
 	SetDlgItemText(IDC_EDIT_Pulse, statusStr);
-
-	statusStr.Format(_T("1:%.1f 2:%.1f 3:%.1f 4:%.1f 5:%.1f 6:%.1f"),
-		navigation.Lon, navigation.Lan, navigation.Lan,
-		navigation.Roll, navigation.Pitch, navigation.Yaw);
-	SetDlgItemText(IDC_EDIT_Sensor, statusStr);
 	
+	EnterCriticalSection(&csdata);
+	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"),
+		visionX, visionY, visionZ,
+		visionRoll, visionPitch, visionYaw);
+	LeaveCriticalSection(&csdata);
+
 	delta.CheckStatus(status);
 	if(InitialFlag == 0)
 	{

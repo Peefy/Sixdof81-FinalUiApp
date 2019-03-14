@@ -6,21 +6,21 @@
 #include "../json/reader.h"
 #include "../json/writer.h"
 
-#define JSON_FILE_NAME "config.json"
-#define JSON_STOP_AND_MIDDLE_KEY "stopAndMiddle"
+#define JSON_FILE_NAME                "config.json"
+#define JSON_STOP_AND_MIDDLE_KEY      "stopAndMiddle"
 
-#define FILE_NAME "config.ini"
-#define RECORD_FILE_NAME "record.txt"
-#define RECORD_DOUBLE_FILE_NAME "recorddouble.txt"
-#define DUGU_CONFIG_NAME "duguconfig.ini"
-#define SERIALPORT_APPNAME "serialport"
-#define SERIALPORT_BAUD_KEY  "baudrate"
-#define SERIALPORT_ISUSE_KEY "isuse"
+#define FILE_NAME                     "config.ini"
+#define RECORD_FILE_NAME              "record.txt"
+#define RECORD_DOUBLE_FILE_NAME       "recorddouble.txt"
+#define DUGU_CONFIG_NAME              "duguconfig.ini"
+#define SERIALPORT_APPNAME            "serialport"
+#define SERIALPORT_BAUD_KEY           "baudrate"
+#define SERIALPORT_ISUSE_KEY          "isuse"
 
-#define DEFAULT_SERIAL_BAUD     57600
-#define DEFAULT_SERIAL_BAUD_STR  "57600"
-#define DEFAULT_SERIAL_ISUSE_STR  true
-#define DEFAULT_PORT_NUM 1
+#define DEFAULT_SERIAL_BAUD           57600
+#define DEFAULT_SERIAL_BAUD_STR       "57600"
+#define DEFAULT_SERIAL_ISUSE_STR      true
+#define DEFAULT_PORT_NUM              1
 
 #define DEFAULT_LENGTH_TO_PULSE_SCALE 40000
 
@@ -65,7 +65,7 @@ namespace config {
 	{
 		try
 		{
-			ofstream fout(RECORD_FILE_NAME);
+			ofstream fout(RECORD_DOUBLE_FILE_NAME);
 			fout << (int)statusInt << endl;
 			fout << pulse[0] << endl;
 			fout << pulse[1] << endl;
@@ -168,6 +168,72 @@ namespace config {
 				return val.asDouble();
 			else
 				return NULL;
+		}
+		is.close();
+		return NULL;
+	}
+
+	string ParseStringJsonFromFile(const char* filename, const char* key)
+	{
+		// 解析json用Json::Reader   
+		Json::Reader reader;
+		// Json::Value是一种很重要的类型，可以代表任意类型。如int, string, object, array...   
+		Json::Value root;
+
+		std::ifstream is;
+		is.open(filename, std::ios::binary);
+		JSONCPP_STRING doc;
+		std::getline(is, doc, (char)EOF);
+		doc.replace(doc.begin(), doc.begin() + 3, "");
+		if (reader.parse(doc.c_str(), root))
+		{
+			Json::Value val;
+			val = root.get(key, NULL);
+			return val.asString();
+		}
+		is.close();
+		return "";
+	}
+
+	int ParseIntJsonFromFile(const char* filename, const char* key)
+	{
+		// 解析json用Json::Reader   
+		Json::Reader reader;
+		// Json::Value是一种很重要的类型，可以代表任意类型。如int, string, object, array...   
+		Json::Value root;
+
+		std::ifstream is;
+		is.open(filename, std::ios::binary);
+		JSONCPP_STRING doc;
+		std::getline(is, doc, (char)EOF);
+		doc.replace(doc.begin(), doc.begin() + 3, "");
+		if (reader.parse(doc.c_str(), root))
+		{
+			Json::Value val;
+			val = root.get(key, NULL);
+			return val.asInt();
+		}
+		is.close();
+		return NULL;
+	}
+
+	double ParseDoubleJsonFromFile(const char* filename, const char* key)
+	{
+		// 解析json用Json::Reader   
+		Json::Reader reader;
+		// Json::Value是一种很重要的类型，可以代表任意类型。如int, string, object, array...   
+		Json::Value root;
+
+		std::ifstream is;
+		is.open(filename, std::ios::binary);
+		JSONCPP_STRING doc;
+		std::getline(is, doc, (char)EOF);
+		doc.replace(doc.begin(), doc.begin() + 3, "");
+		if (reader.parse(doc.c_str(), root))
+		{
+			Json::Value val;
+			val = root.get(key, NULL);
+			return val.asDouble();
 		}
 		is.close();
 		return NULL;

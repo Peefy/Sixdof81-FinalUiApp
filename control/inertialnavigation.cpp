@@ -7,7 +7,7 @@
 #define JUDGE_IS_START   if(IsRS422Start == false) return;
 #define JUDGE_IS_RECIEVE if(IsRecievedData == false) return;
 
-#define IS_USE_DELTA_PID 0
+#define IS_USE_DELTA_PID 1
 
 InertialNavigation::InertialNavigation()
 {
@@ -22,7 +22,7 @@ InertialNavigation::~InertialNavigation()
 	}
 }
 
-string InertialNavigation::GetIntroduction()
+string InertialNavigation::GetIntroduction() const
 {
 	return "POS-GX7100";
 }
@@ -177,6 +177,7 @@ void InertialNavigation::RS422SendString(string strs)
 
 void InertialNavigation::DecodeData()
 {
+	//1度等于60分，1分等于60秒
 	Roll = data.Roll * ANGLE_SCALE / 3600.0;
 	Yaw = data.Yaw * ANGLE_SCALE / 3600.0;
 	Pitch = data.Pitch * ANGLE_SCALE / 3600.0;
@@ -210,7 +211,7 @@ void InertialNavigation::DataInit()
 	IsRS422Start = false;
 }
 
-void InertialNavigation::PidOut(double * roll, double *yaw, double * pitch)
+void InertialNavigation::PidOut(double* roll, double *yaw, double* pitch)
 {
 	const double finalRoll = 0;
 	const double finalPitch = 0;
@@ -218,16 +219,18 @@ void InertialNavigation::PidOut(double * roll, double *yaw, double * pitch)
 	static double initRoll = 0;
 	static double initPitch = 0;
 	static double initYaw = 0;
-	static PID_Type rollPid = {p, i, d};
-	static PID_Type pitchPid = {p, i, d};
-	static PID_Type yawPid = {p, i, d};
+	static double maxAngle = 15.0;
+	static double minAngle = -15.0;
+	static PID_Type rollPid = {p, i, d, minAngle, maxAngle};
+	static PID_Type pitchPid = {p, i, d, minAngle, maxAngle};
+	static PID_Type yawPid = {p, i, d, minAngle, maxAngle};
 	JUDGE_IS_RECIEVE;
 #if IS_USE_DELTA_PID
-	*roll = MyDeltaPIDWithNoDelta(&rollPid, Roll, finalRoll);
+	*pitch = MyDeltaPID_Real(&rollPid, -Roll, finalRoll);
 	//*yaw = MyDeltaPIDWithNoDelta(&yawPid, Yaw, finalYaw);
-	*pitch = MyDeltaPIDWithNoDelta(&pitchPid, Pitch, finalPitch);
+	*roll = MyDeltaPID_Real(&pitchPid, -Pitch, finalPitch);
 #else
-	*roll = -Roll;
-	*pitch = -Pitch;
+	*roll = Pitch;
+	*pitch = Roll;
 #endif
 }
