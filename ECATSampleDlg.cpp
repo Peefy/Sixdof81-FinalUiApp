@@ -252,11 +252,8 @@ void SensorRead()
 	//vision.RenewVisionData();
 }
 
-unsigned int Counter = 0;
-
 void SixdofControl()
 {
-	Counter++;
 	navigation.RenewData();
 	EnterCriticalSection(&csdata);
 	visionX = 0;
@@ -266,6 +263,7 @@ void SixdofControl()
 	visionPitch = navigation.Pitch;
 	visionYaw = navigation.Yaw;
 	LeaveCriticalSection(&csdata);
+	Sleep(10);
 	if(closeDataThread == false)
 	{	
 		DWORD start_time = 0;
@@ -1017,15 +1015,10 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		OnBTNInitialCard();	
 	}
 
-	SensorRead();
-#if ENABLE_LINE_GRAPH
 	MoveValPoint();
-#endif
-#if ENABLE_OPENGL
-	RenderScene();
-#endif	
-	RenderSwitchStatus();
-	ShowImage();
+	//RenderScene();
+	//RenderSwitchStatus();
+	//ShowImage();
 	statusStr.Format(_T("x:%d y:%d z:%d y:%d a:%d b:%d time:%.2f count:%d"), data.X, data.Y, data.Z,
 		data.Yaw, data.Pitch, data.Roll, runTime, 0);
 	SetDlgItemText(IDC_EDIT_Pose, statusStr);
