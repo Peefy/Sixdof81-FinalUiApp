@@ -90,7 +90,7 @@ void InertialNavigation::RenewData()
 	}
 }
 
-int InertialNavigation::GetBufferLength()
+int InertialNavigation::GetBufferLength() const
 {
 	return sizeof(RS422DataPackage);
 }

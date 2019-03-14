@@ -172,7 +172,7 @@ public:
 	bool Open();
 	bool Close();
 	void RenewData();
-	int GetBufferLength();
+	int GetBufferLength() const;
 	void SetDefaultAlignment(double lat, double lon, double height);
 	void SetGpsPoleLength(double x, double y, double z);
 	void SetAngleError(double pitch, double roll, double yaw);
