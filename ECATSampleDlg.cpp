@@ -1042,7 +1042,6 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		isAutoInit = false;
 		OnBTNInitialCard();	
 	}
-
 	MoveValPoint();
 	//RenderScene();
 	//RenderSwitchStatus();
@@ -1270,6 +1269,8 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 		MessageBox(_T(SIXDOF_NOT_BEGIN_MESSAGE));
 		return;
 	}
+	status = SIXDOF_STATUS_RUN;
+
 	memset(testPhase, 0, sizeof(double) * AXES_COUNT);
 	//位移单位mm 角度单位 度
 	auto xval = RANGE(GetCEditNumber(IDC_EDIT_X_VAL), -MAX_XYZ, MAX_XYZ); 
@@ -1314,9 +1315,19 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	testPhase[4] = pitchphase;
 	testPhase[5] = yawphase;
 
+	if (xphase != 0 || yphase != 0 || zphase != 0 || 
+		rollphase != 0 || pitchphase != 0 || yawphase != 0)
+	{
+		enableChirp = false;
+		isCosMode = true;
+	}
+	else
+	{
+		enableChirp = ENABLE_CHIRP;
+		isCosMode = false;
+	}
 	stopSCurve = false;
 
-	status = SIXDOF_STATUS_RUN;
 	// 电机先停后启动
 	delta.StopRiseDownMove();
 	delta.RenewNowPulse();
@@ -1324,7 +1335,6 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	delta.PidControllerInit();
 	// 正弦测试运动模式
 	isTest = true;
-	isCosMode = true;
 	// 正弦时间清0
 	t = 0;
 	// 允许运动
