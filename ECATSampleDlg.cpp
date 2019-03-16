@@ -253,10 +253,7 @@ void OpenThread()
 
 void SensorRead()
 {
-	//navigation.RenewData();
-	//water.RenewData();
-	//water.SendData();
-	//vision.RenewVisionData();
+
 }
 
 void SixdofControl()
