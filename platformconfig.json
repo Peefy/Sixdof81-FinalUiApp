@@ -1,0 +1,9 @@
+﻿{
+    "upToUpHingeLength" : 100.0,
+    "upToDownHingeLength" : 700.0,
+    "upCircleD" : 680.0,
+    "downCircleD" : 840.0,
+    "upHingesDis" : 190.0,
+    "downHingesDis" : 190.0
+}
+
