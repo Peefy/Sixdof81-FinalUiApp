@@ -395,7 +395,7 @@ void SixdofControl()
 				t -= deltat;
 			}	
 		}
-		// 惯性导航
+		// 模拟船视景
 		else
 		{
 			double deltax = 0;
