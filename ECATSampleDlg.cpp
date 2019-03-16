@@ -1028,11 +1028,17 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		poleLength[3], poleLength[4], poleLength[5]);
 	SetDlgItemText(IDC_EDIT_Pulse, statusStr);
 	
-	EnterCriticalSection(&csdata);
-	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"),
-		visionX, visionY, visionZ,
-		visionRoll, visionPitch, visionYaw);
-	LeaveCriticalSection(&csdata);
+	//EnterCriticalSection(&csdata);
+	//statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"),
+	//	visionX, visionY, visionZ,
+	//	visionRoll, visionPitch, visionYaw);
+	//SetDlgItemText(IDC_EDIT_Sensor, statusStr);
+	//LeaveCriticalSection(&csdata);
+
+	statusStr.Format(_T("1:%d 2:%d 3:%d 4:%d 5:%d 6:%d"),
+		delta.NowPluse[0], delta.NowPluse[1], delta.NowPluse[2],
+		delta.NowPluse[3], delta.NowPluse[4], delta.NowPluse[5]);
+	SetDlgItemText(IDC_EDIT_Sensor, statusStr);
 
 	delta.CheckStatus(status);
 	if(InitialFlag == 0)

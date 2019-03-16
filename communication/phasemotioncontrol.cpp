@@ -23,15 +23,15 @@
 #define RISE_MOTION_D 0.0
 #define RISE_MAX_VEL  0.3
 #else
-#define MOTION_P 0.0015
-#define MOTION_I 0.00001
+#define MOTION_P 0.0001
+#define MOTION_I 0.0000001
 #define MOTION_D 0.0
-#define MAX_VEL  3.0
+#define MAX_VEL  2.5
 
-#define RISE_MOTION_P 0.00017
-#define RISE_MOTION_I 0.000002
+#define RISE_MOTION_P 0.00004
+#define RISE_MOTION_I 0.0000002
 #define RISE_MOTION_D 0.0
-#define RISE_MAX_VEL  0.2
+#define RISE_MAX_VEL  0.3
 #endif // IS_BIG_MOTION
 
 PID_Type MotionLocationPidControler[AXES_COUNT] = 
@@ -135,7 +135,7 @@ void PhaseMotionControl::AllTestUp()
 void PhaseMotionControl::AllTestDown()
 {
 	double vel = -DOWN_VEL;
-	double vels[AXES_COUNT] = {vel, vel, vel - 0.01, vel, vel, vel};
+	double vels[AXES_COUNT] = {vel, vel, vel, vel, vel, vel};
 	UnlockServo();
 	SetMotionVelocty(vels, AXES_COUNT);
 }
@@ -298,7 +298,6 @@ void PhaseMotionControl::PidCsp(double * pulse)
 		}
 		lockobj.unlock();
 	}
-
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
@@ -330,7 +329,6 @@ double* PhaseMotionControl::GetMotionNowEncoderVelocity()
 		}
 		lockobj.unlock();
 	}
-
 	return NowPluse;
 }
 
@@ -401,8 +399,8 @@ void PhaseMotionControl::DDAControlThread()
 			{
 				if (abs(NowPluse[i] - MIDDLE_POS) <= eps)
 				{
-					//ServoSingleStop(i);
-					//LockServo(i);
+					ServoSingleStop(i);
+					LockServo(i);
 				}
 			}
 		}
@@ -501,15 +499,16 @@ bool PhaseMotionControl::IsAllAtBottom()
 
 void PhaseMotionControl::ReadAllSwitchStatus()
 {
+
 #if IS_BIG_MOTION
 	bool kbits[SXIDOF_MOTION_NUM] = { true,true,true,true,true,true };
 	sixdofDioAndCount.BigMotionReadKBit(kbits);
 #endif
 	for (int i = 0;i < AXES_COUNT;++i)
 	{
-		IsAtBottoms[i] = !kbits[i];
-#if IS_BIG_MOTION
 		
+#if IS_BIG_MOTION
+		IsAtBottoms[i] = !kbits[i];
 #else
 		sixdofDioAndCount.ReadKBit(i, &IsAtBottoms[i]);
 #endif

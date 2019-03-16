@@ -31,7 +31,6 @@ bool UserPCI2394::Init(int deviceID)
 	hDevice = PCI2394_CreateDevice(DeviceID);
 	for(nChannel = 0; nChannel < SIXDOF_USE_COUNT_CHANNEL; nChannel++)
 	{
-
 		CNTPara[nChannel].lCNTMode = PCI2394_CNTMODE_1_PULSE;  
 		CNTPara[nChannel].lResetMode = PCI2394_RESETMODE_MIDDLE; // 计数器复位到0x00000000
 		CNTPara[nChannel].bOverflowLock = TRUE; // 上溢锁定
