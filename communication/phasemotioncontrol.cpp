@@ -507,9 +507,9 @@ void PhaseMotionControl::ReadAllSwitchStatus()
 #endif
 	for (int i = 0;i < AXES_COUNT;++i)
 	{
-		IsAtBottoms[i] = !kbits[i];
-#if IS_BIG_MOTION
 		
+#if IS_BIG_MOTION
+		IsAtBottoms[i] = !kbits[i];
 #else
 		sixdofDioAndCount.ReadKBit(i, &IsAtBottoms[i]);
 #endif

@@ -77,6 +77,7 @@ public:
 	afx_msg void OnBnClickedBtnStopme();
 	afx_msg void OnBnClickedBtnDown();
 	void EanbleButton(int isenable);
+	void KalmanFilterInit();
 	void ChartInit();
 	void AppInit();
 	double GetCEditNumber(int cEditId);

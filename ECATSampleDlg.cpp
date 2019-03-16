@@ -87,11 +87,11 @@ PhaseMotionControl delta;
 // 六自由度数据
 DataPackage data = {0};
 // 惯导通信接口
-InertialNavigation navigation;
+//InertialNavigation navigation;
 // 下平台通信接口
 Water water;
 // 陆地视景通信接口
-LandVision vision;
+//LandVision vision;
 
 // 六自由度平台状态
 double pulse_cal[AXES_COUNT];
@@ -128,6 +128,13 @@ double chartYawValPoint[CHART_POINT_NUM] = { 0 };
 
 double runTime = 0;
 double chartTime = 0;
+
+kalman1_state kalman_rollFilter;
+kalman1_state kalman_yawFilter;
+kalman1_state kalman_pitchFilter;
+kalman1_state kalman_xFilter;
+kalman1_state kalman_yFilter;
+kalman1_state kalman_zFilter;
 
 CRITICAL_SECTION cs;
 CRITICAL_SECTION csdata;
@@ -254,14 +261,21 @@ void SensorRead()
 
 void SixdofControl()
 {
-	navigation.RenewData();
+	static double deltat = 0.026;
+	//navigation.RenewData();
+	water.RenewData();
+	if (water.IsRecievedData == true)
+		water.SendData(data.Roll / 100.0, data.Yaw / 100.0, data.Pitch / 100.0);
 	EnterCriticalSection(&csdata);
+	water.Roll = kalman1_filter(&kalman_rollFilter, water.Roll);
+	water.Pitch = kalman1_filter(&kalman_pitchFilter, water.Pitch);
+	water.Yaw = kalman1_filter(&kalman_yawFilter, water.Yaw);
 	visionX = 0;
 	visionY = 0;
 	visionZ = 0;
-	visionRoll = navigation.Roll;
-	visionPitch = navigation.Pitch;
-	visionYaw = navigation.Yaw;
+	visionRoll = water.Roll;
+	visionPitch = water.Pitch;
+	visionYaw = water.Yaw;
 	LeaveCriticalSection(&csdata);
 	Sleep(10);
 	if(closeDataThread == false)
@@ -359,7 +373,7 @@ void SixdofControl()
 				auto pulse = pulse_cal[ii];
 				dis[ii] = pulse;
 			}
-			t += 0.016;
+			t += deltat;
 			if (stopSCurve == true && isCosMode == false)
 			{
 				int index = 0;
@@ -381,7 +395,7 @@ void SixdofControl()
 			}	
 			else if (nowt > stopTime)
 			{
-				t -= 0.016;
+				t -= deltat;
 			}	
 		}
 		// 惯性导航
@@ -393,15 +407,20 @@ void SixdofControl()
 			double deltaroll = 0;
 			double deltayaw = 0;
 			double deltapitch = 0;
-			navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
 			double pi = 3.1415926;
-
-			auto x = RANGE(lastx + deltax, -MAX_XYZ, MAX_XYZ);
-			auto y = RANGE(lasty + deltay, -MAX_XYZ, MAX_XYZ);
-			auto z = RANGE(lastz + deltaz, -MAX_XYZ, MAX_XYZ);
-			auto roll = RANGE(lastroll + deltaroll, -MAX_DEG, MAX_DEG);
-			auto pitch = RANGE(lastpitch + deltapitch, -MAX_DEG, MAX_DEG);
-			auto yaw = RANGE(lastyaw + deltayaw, -MAX_DEG, MAX_DEG);
+			//navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
+			//auto x = RANGE(lastx + deltax, -MAX_XYZ, MAX_XYZ);
+			//auto y = RANGE(lasty + deltay, -MAX_XYZ, MAX_XYZ);
+			//auto z = RANGE(lastz + deltaz, -MAX_XYZ, MAX_XYZ);
+			//auto roll = RANGE(lastroll + deltaroll, -MAX_DEG, MAX_DEG);
+			//auto pitch = RANGE(lastpitch + deltapitch, -MAX_DEG, MAX_DEG);
+			//auto yaw = RANGE(lastyaw + deltayaw, -MAX_DEG, MAX_DEG);
+			auto x = RANGE(0, -MAX_XYZ, MAX_XYZ);
+			auto y = RANGE(0, -MAX_XYZ, MAX_XYZ);
+			auto z = RANGE(0, -MAX_XYZ, MAX_XYZ);
+			auto roll = RANGE(water.Roll, -MAX_DEG, MAX_DEG);
+			auto pitch = RANGE(water.Pitch, -MAX_DEG, MAX_DEG);
+			auto yaw = RANGE(water.Yaw, -MAX_DEG, MAX_DEG);
 			double* pulse_dugu = Control(x, y, z, roll, yaw, pitch);
 			lastx = x;
 			lasty = y;
@@ -516,6 +535,16 @@ BEGIN_MESSAGE_MAP(CECATSampleDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_TEST3, &CECATSampleDlg::OnBnClickedButtonTest3)
 	ON_BN_CLICKED(IDC_BUTTON_STOP_TEST, &CECATSampleDlg::OnBnClickedButtonStopTest)
 END_MESSAGE_MAP()
+
+void CECATSampleDlg::KalmanFilterInit()
+{
+	kalman1_init(&kalman_rollFilter, 0, 0.01);
+	kalman1_init(&kalman_yawFilter, 0, 0.01);
+	kalman1_init(&kalman_pitchFilter, 0, 0.01);
+	kalman1_init(&kalman_xFilter, 0, 0.01);
+	kalman1_init(&kalman_yFilter, 0, 0.01);
+	kalman1_init(&kalman_zFilter, 0, 0.01);
+}
 
 void CECATSampleDlg::ChartInit()
 {
@@ -682,11 +711,13 @@ void CECATSampleDlg::AppInit()
 		((CComboBox*)GetDlgItem(IDC_CBO_SingleNo))->AddString(xx);
 	}
 	((CComboBox*)GetDlgItem(IDC_CBO_SingleNo))->SetCurSel(0);
+	KalmanFilterInit();
 	SetPlatformPara(PlaneAboveHingeLength, PlaneAboveBottomLength, 
 		CircleTopRadius, CircleBottomRadius, DistanceBetweenHingeTop,
 		DistanceBetweenHingeBottom);
 	OpenThread();
-	navigation.Open();
+	//navigation.Open();
+	water.Open();
 }
 
 double CECATSampleDlg::GetCEditNumber(int cEditId)
@@ -1032,6 +1063,7 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"),
 		visionX, visionY, visionZ,
 		visionRoll, visionPitch, visionYaw);
+	SetDlgItemText(IDC_EDIT_Sensor, statusStr);
 	LeaveCriticalSection(&csdata);
 
 	delta.CheckStatus(status);
@@ -1190,16 +1222,16 @@ void CECATSampleDlg::OnBnClickedBtnDown()
 		return;
 	}	
 	status = SIXDOF_STATUS_ISFALLING;
-	delta.ServoStop();
+	delta.StopRiseDownMove();
 	Sleep(100);
 	delta.Down();
 }
 
 void CECATSampleDlg::OnBnClickedOk()
 {
-	navigation.Close();
+	//navigation.Close();
 	//vision.Close();
-	//water.Close();
+	water.Close();
 	CloseThread();
 	delta.ServoStop();
 	Sleep(100);

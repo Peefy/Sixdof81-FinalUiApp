@@ -14,7 +14,7 @@ using namespace std;
 
 #define DDA_CONTROL_THREAD_DELAY 5
 
-#define IS_BIG_MOTION 1
+#define IS_BIG_MOTION 0
 
 #define IS_PULSE_CARD_REVERSE 1
 
@@ -23,7 +23,7 @@ using namespace std;
 #define MAX_MM 700.0
 // 单位mm
 #define MM_RPM 25.0
-// 电机转一圈编码器读数 2048
+// 电机转一圈编码器读数 2500
 #define PULSE_COUNT_RPM 2500
 
 #define PlaneAboveHingeLength       229.907
@@ -33,20 +33,26 @@ using namespace std;
 #define DistanceBetweenHingeTop     200.0
 #define DistanceBetweenHingeBottom  300.0
 
+// 上升到中立位电机需要转动的圈数
+#define RISE_R 14.0
+
 #else
 //缸的最大行程
 #define MAX_MM 700.0
 // 单位mm
-#define MM_RPM 7.5
+#define MM_RPM 20
 // 电机转一圈编码器读数 1024
 #define PULSE_COUNT_RPM 1024.0
 
-#define PlaneAboveHingeLength       100.0
-#define PlaneAboveBottomLength      700.0
-#define CircleTopRadius             680.0
-#define CircleBottomRadius          840.0
-#define DistanceBetweenHingeTop     190.0
-#define DistanceBetweenHingeBottom  190.0
+#define PlaneAboveHingeLength       229.907
+#define PlaneAboveBottomLength      2050.0
+#define CircleTopRadius             858.0
+#define CircleBottomRadius          1514.0
+#define DistanceBetweenHingeTop     200.0
+#define DistanceBetweenHingeBottom  300.0
+
+// 上升到中立位电机需要转动的圈数
+#define RISE_R 17.5
 
 #endif
 
@@ -55,10 +61,6 @@ using namespace std;
 // 单位mm/s
 #define DOWN_VEL 0.05
 // 单位ms
-#define RISE_TIME 500.0
-#define FALL_TIME 400.0
-// 上升到中立位电机需要转动的圈数
-#define RISE_R 14.0
 
 #define MAX_POS (PULSE_COUNT_RPM * MAX_MM / MM_RPM)
 #define MIDDLE_POS (PULSE_COUNT_RPM * RISE_R)
