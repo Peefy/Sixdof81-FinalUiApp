@@ -14,7 +14,7 @@ using namespace std;
 
 #define DDA_CONTROL_THREAD_DELAY 5
 
-#define IS_BIG_MOTION 0
+#define IS_BIG_MOTION 1
 
 #define IS_PULSE_CARD_REVERSE 1
 
@@ -24,7 +24,7 @@ using namespace std;
 // 单位mm
 #define MM_RPM 25.0
 // 电机转一圈编码器读数 2500
-=======
+
 #define MM_RPM 20.0
 // 电机转一圈编码器读数 2048
 #define PULSE_COUNT_RPM 2500

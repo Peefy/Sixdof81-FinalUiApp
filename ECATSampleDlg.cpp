@@ -60,7 +60,7 @@ using namespace std;
 #define DATA_BUFFER_THREAD_DELAY 1000
 
 #define CHIRP_TIME    2.5
-#define ENABLE_CHIRP  true
+#define ENABLE_CHIRP  false
 #define ENABLE_SHOCK  false
 
 //#define ENABLE_OPENGL       1
@@ -82,16 +82,19 @@ volatile HANDLE SensorThread;
 volatile HANDLE SceneThread;
 volatile HANDLE DataBufferThread;
 
+#define IS_USE_NAVIGATION 1
+
 // 六自由度平台逻辑控制
 PhaseMotionControl delta;
 // 六自由度数据
 DataPackage data = {0};
 // 惯导通信接口
-//InertialNavigation navigation;
+#if IS_USE_NAVIGATION
+InertialNavigation navigation;
+#else
 // 下平台通信接口
 Water water;
-// 陆地视景通信接口
-//LandVision vision;
+#endif
 
 // 六自由度平台状态
 double pulse_cal[AXES_COUNT];
@@ -259,7 +262,20 @@ void SensorRead()
 void SixdofControl()
 {
 	static double deltat = 0.026;
-	//navigation.RenewData();
+#if IS_USE_NAVIGATION
+	navigation.RenewData();
+	EnterCriticalSection(&csdata);
+	navigation.Roll = kalman1_filter(&kalman_rollFilter, navigation.Roll);
+	navigation.Pitch = kalman1_filter(&kalman_pitchFilter, navigation.Pitch);
+	navigation.Yaw = kalman1_filter(&kalman_yawFilter, navigation.Yaw);
+	visionX = 0;
+	visionY = 0;
+	visionZ = 0;
+	visionRoll = navigation.Roll;
+	visionPitch = navigation.Pitch;
+	visionYaw = navigation.Yaw;
+	LeaveCriticalSection(&csdata);
+#else
 	water.RenewData();
 	if (water.IsRecievedData == true)
 		water.SendData(data.Roll / 100.0, data.Yaw / 100.0, data.Pitch / 100.0);
@@ -274,6 +290,8 @@ void SixdofControl()
 	visionPitch = water.Pitch;
 	visionYaw = water.Yaw;
 	LeaveCriticalSection(&csdata);
+#endif
+
 	Sleep(10);
 	if(closeDataThread == false)
 	{	
@@ -371,6 +389,8 @@ void SixdofControl()
 				dis[ii] = pulse;
 			}
 			t += deltat;
+			delta.PidCsp(dis);
+			/*
 			if (stopSCurve == true && isCosMode == false)
 			{
 				int index = 0;
@@ -393,7 +413,7 @@ void SixdofControl()
 			else if (nowt > stopTime)
 			{
 				t -= deltat;
-			}	
+			}	*/
 		}
 		// 模拟船视景
 		else
@@ -405,19 +425,22 @@ void SixdofControl()
 			double deltayaw = 0;
 			double deltapitch = 0;
 			double pi = 3.1415926;
-			//navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
-			//auto x = RANGE(lastx + deltax, -MAX_XYZ, MAX_XYZ);
-			//auto y = RANGE(lasty + deltay, -MAX_XYZ, MAX_XYZ);
-			//auto z = RANGE(lastz + deltaz, -MAX_XYZ, MAX_XYZ);
-			//auto roll = RANGE(lastroll + deltaroll, -MAX_DEG, MAX_DEG);
-			//auto pitch = RANGE(lastpitch + deltapitch, -MAX_DEG, MAX_DEG);
-			//auto yaw = RANGE(lastyaw + deltayaw, -MAX_DEG, MAX_DEG);
+#if IS_USE_NAVIGATION
+			navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
+			auto x = RANGE(lastx + deltax, -MAX_XYZ, MAX_XYZ);
+			auto y = RANGE(lasty + deltay, -MAX_XYZ, MAX_XYZ);
+			auto z = RANGE(lastz + deltaz, -MAX_XYZ, MAX_XYZ);
+			auto roll = RANGE(lastroll + deltaroll, -MAX_DEG, MAX_DEG);
+			auto pitch = RANGE(lastpitch + deltapitch, -MAX_DEG, MAX_DEG);
+			auto yaw = RANGE(lastyaw + deltayaw, -MAX_DEG, MAX_DEG);
+#else
 			auto x = RANGE(0, -MAX_XYZ, MAX_XYZ);
 			auto y = RANGE(0, -MAX_XYZ, MAX_XYZ);
 			auto z = RANGE(0, -MAX_XYZ, MAX_XYZ);
 			auto roll = RANGE(water.Roll, -MAX_DEG, MAX_DEG);
 			auto pitch = RANGE(water.Pitch, -MAX_DEG, MAX_DEG);
 			auto yaw = RANGE(water.Yaw, -MAX_DEG, MAX_DEG);
+#endif
 			double* pulse_dugu = Control(x, y, z, roll, yaw, pitch);
 			lastx = x;
 			lasty = y;
@@ -713,8 +736,11 @@ void CECATSampleDlg::AppInit()
 		CircleTopRadius, CircleBottomRadius, DistanceBetweenHingeTop,
 		DistanceBetweenHingeBottom);
 	OpenThread();
-	//navigation.Open();
+#if IS_USE_NAVIGATION
+	navigation.Open();
+#else
 	water.Open();
+#endif
 }
 
 double CECATSampleDlg::GetCEditNumber(int cEditId)
@@ -1192,9 +1218,10 @@ void CECATSampleDlg::OnBnClickedBtnStopme()
 {
 	// 停止Csp运动
 	stopSCurve = true;
-	Sleep(2000);
+	Sleep(100);
 	closeDataThread = true;
 	delta.StopRiseDownMove();
+	Sleep(100);
 	if (status == SIXDOF_STATUS_RUN)
 	{
 		if (stopAndMiddle == true)
@@ -1225,9 +1252,11 @@ void CECATSampleDlg::OnBnClickedBtnDown()
 
 void CECATSampleDlg::OnBnClickedOk()
 {
-	//navigation.Close();
-	//vision.Close();
+#if IS_USE_NAVIGATION
+	navigation.Close();
+#else
 	water.Close();
+#endif
 	CloseThread();
 	delta.ServoStop();
 	Sleep(100);
@@ -1333,6 +1362,7 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	delta.RenewNowPulse();
 	delta.GetMotionAveragePulse();
 	delta.PidControllerInit();
+	delta.UnlockServo();
 	// 正弦测试运动模式
 	isTest = true;
 	// 正弦时间清0
