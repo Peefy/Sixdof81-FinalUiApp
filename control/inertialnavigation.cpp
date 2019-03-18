@@ -226,9 +226,9 @@ void InertialNavigation::PidOut(double* roll, double *yaw, double* pitch)
 	static PID_Type yawPid = {p, i, d, minAngle, maxAngle};
 	JUDGE_IS_RECIEVE;
 #if IS_USE_DELTA_PID
-	*pitch = MyDeltaPID_Real(&rollPid, -Roll, finalRoll);
+	*pitch = MyDeltaPID_Real(&rollPid, Roll, finalRoll);
 	//*yaw = MyDeltaPIDWithNoDelta(&yawPid, Yaw, finalYaw);
-	*roll = MyDeltaPID_Real(&pitchPid, -Pitch, finalPitch);
+	*roll = MyDeltaPID_Real(&pitchPid, Pitch, finalPitch);
 #else
 	*roll = Pitch;
 	*pitch = Roll;
