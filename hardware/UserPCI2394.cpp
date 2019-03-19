@@ -31,7 +31,7 @@ bool UserPCI2394::Init(int deviceID)
 	hDevice = PCI2394_CreateDevice(DeviceID);
 	for(nChannel = 0; nChannel < SIXDOF_USE_COUNT_CHANNEL; nChannel++)
 	{
-		CNTPara[nChannel].lCNTMode = PCI2394_CNTMODE_1_PULSE;  
+		CNTPara[nChannel].lCNTMode = PCI2394_CNTMODE_1_PULSE;
 		CNTPara[nChannel].lResetMode = PCI2394_RESETMODE_MIDDLE; // 计数器复位到0x00000000
 		CNTPara[nChannel].bOverflowLock = TRUE; // 上溢锁定
 		CNTPara[nChannel].bUnderflowLock = TRUE; // 下溢锁定
@@ -56,9 +56,16 @@ void UserPCI2394::RenewCount()
 	for(nChannel = 0; nChannel < SIXDOF_USE_COUNT_CHANNEL; nChannel++)
 	{
 		auto err = PCI2394_GetDeviceCNT(hDevice, &CountValue[nChannel], nChannel);
+#if IS_REVERSE_CONTROL
+		if (CountValue[nChannel] <= (ULONG)(0x80000000))
+			CountValue[nChannel] = (ULONG)(0x80000000);
+		CountValue[nChannel] =  CountValue[nChannel] - (ULONG)(0x80000000);
+#else
 		if (CountValue[nChannel] >= (ULONG)(0x80000000))
 			CountValue[nChannel] = (ULONG)(0x80000000);
 		CountValue[nChannel] = (ULONG)(0x80000000) - CountValue[nChannel];
+#endif
+		
 	}
 }
 

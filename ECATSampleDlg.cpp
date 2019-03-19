@@ -132,6 +132,8 @@ double chartYawValPoint[CHART_POINT_NUM] = { 0 };
 double runTime = 0;
 double chartTime = 0;
 
+#define IS_USE_KALMAN_FILTER 0
+
 kalman1_state kalman_rollFilter;
 kalman1_state kalman_yawFilter;
 kalman1_state kalman_pitchFilter;
@@ -265,9 +267,13 @@ void SixdofControl()
 #if IS_USE_NAVIGATION
 	navigation.RenewData();
 	EnterCriticalSection(&csdata);
+#if	IS_USE_KALMAN_FILTER
 	navigation.Roll = kalman1_filter(&kalman_rollFilter, navigation.Roll);
 	navigation.Pitch = kalman1_filter(&kalman_pitchFilter, navigation.Pitch);
 	navigation.Yaw = kalman1_filter(&kalman_yawFilter, navigation.Yaw);
+#else
+
+#endif
 	visionX = 0;
 	visionY = 0;
 	visionZ = 0;

@@ -65,7 +65,11 @@ bool UserPCI1723::Close()
 void UserPCI1723::WriteAnalogVotiageData(UserPCI1723_AVO_Channel channel, double value)
 {
 	ASSERT_CHANNEL(channel);
+#if IS_REVERSE_CONTROL
+	double rawData[] = {ANALOG_OUT_DIR * -value};
+#else
 	double rawData[] = {ANALOG_OUT_DIR * value};
+#endif
 	instantAoCtrl->Write(channel, 1, &rawData[0]);
 }
 
@@ -74,7 +78,11 @@ void UserPCI1723::WriteAnalogVotiageData(double* values)
 	double rawData[AO_V_OUT_CHANNEL_COUNT] = {};
 	for (auto i = 0;i < AO_V_OUT_CHANNEL_COUNT; ++i)
 	{
+#if IS_REVERSE_CONTROL
+		rawData[i] = ANALOG_OUT_DIR * -values[i];
+#else
 		rawData[i] = ANALOG_OUT_DIR * values[i];
+#endif
 	}
 	instantAoCtrl->Write(AO_V_OUT_GROUP_START_INDEX, AO_V_OUT_CHANNEL_COUNT, &rawData[0]);
 }
