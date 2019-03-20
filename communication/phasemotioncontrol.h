@@ -14,7 +14,7 @@ using namespace std;
 
 #define DDA_CONTROL_THREAD_DELAY 5
 
-#define IS_BIG_MOTION 1
+#define IS_BIG_MOTION 0
 
 #define IS_PULSE_CARD_REVERSE 1
 
@@ -38,6 +38,11 @@ using namespace std;
 // 上升到中立位电机需要转动的圈数
 #define RISE_R 14.0
 
+// 单位mm/s
+#define RISE_VEL 0.1
+// 单位mm/s
+#define DOWN_VEL 0.05
+
 #else
 //缸的最大行程
 #define MAX_MM 700.0
@@ -60,13 +65,12 @@ using namespace std;
 // 上升到中立位电机需要转动的圈数
 #define RISE_R 17.5
 
-#endif
-
 // 单位mm/s
 #define RISE_VEL 0.1
 // 单位mm/s
-#define DOWN_VEL 0.05
-// 单位ms
+#define DOWN_VEL 0.1
+
+#endif
 
 #define MAX_POS (PULSE_COUNT_RPM * MAX_MM / MM_RPM)
 #define MIDDLE_POS (PULSE_COUNT_RPM * RISE_R)
