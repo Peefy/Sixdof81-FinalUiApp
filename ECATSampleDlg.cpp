@@ -25,6 +25,7 @@
 #include "control/inertialnavigation.h"
 #include "control/water.h"
 #include "control/landvision.h"
+#include "control/illusion.h"
 
 #include "ui/uiconfig.h"
 
@@ -55,7 +56,7 @@ using namespace std;
 #define TIMER_MS 10
 
 #define SIXDOF_CONTROL_DELEY 1
-#define SCENE_THREAD_DELAY 1000
+#define SCENE_THREAD_DELAY 20
 #define SENSOR_THREAD_DELAY 1000
 #define DATA_BUFFER_THREAD_DELAY 1000
 
@@ -95,6 +96,14 @@ InertialNavigation navigation;
 // 下平台通信接口
 Water water;
 #endif
+
+#if IS_BIG_MOTION
+
+#else
+IllusionDataAdapter dataAdapter;
+#endif
+
+
 
 // 六自由度平台状态
 double pulse_cal[AXES_COUNT];
@@ -179,6 +188,13 @@ DWORD WINAPI SceneInfoThread(LPVOID pParam)
 {
 	while (true)
 	{	
+#if IS_BIG_MOTION
+
+#else
+		dataAdapter.SendData(false, status, data.X * XYZ_SCALE, data.Y * XYZ_SCALE, 
+			data.Z * XYZ_SCALE, data.Roll * DEG_SCALE, 
+			data.Yaw * DEG_SCALE, data.Pitch * DEG_SCALE);
+#endif
 		Sleep(SCENE_THREAD_DELAY);
 	}
 	return 0;

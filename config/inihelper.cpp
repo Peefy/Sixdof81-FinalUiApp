@@ -6,9 +6,6 @@
 #include "../json/reader.h"
 #include "../json/writer.h"
 
-#define JSON_FILE_NAME                "config.json"
-#define JSON_STOP_AND_MIDDLE_KEY      "stopAndMiddle"
-
 #define FILE_NAME                     "config.ini"
 #define RECORD_FILE_NAME              "record.txt"
 #define RECORD_DOUBLE_FILE_NAME       "recorddouble.txt"

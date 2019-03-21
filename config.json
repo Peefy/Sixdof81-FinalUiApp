@@ -6,5 +6,9 @@
     "isUseConfig" : true,
     "appTitle" : "大型特种车驾驶模拟训练系统",
     "windowTitle" : "星光凯明六自由度平台",
-    "corporationName" : "北京市星光凯明动感仿真模拟器中心"
+    "corporationName" : "北京市星光凯明动感仿真模拟器中心",
+    "udpip" : "192.168.0.104",
+    "udpport" : 9000,
+    "udpselfip" : "192.168.0.123",
+    "udpselfport" : 6666
 }

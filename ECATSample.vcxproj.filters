@@ -210,6 +210,12 @@
     <ClCompile Include="cwnds\panel.cpp">
       <Filter>cwnds</Filter>
     </ClCompile>
+    <ClCompile Include="control\illusion.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\udp.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ECATSample.rc">
@@ -468,6 +474,12 @@
     </ClInclude>
     <ClInclude Include="cwnds\panel.h">
       <Filter>cwnds</Filter>
+    </ClInclude>
+    <ClInclude Include="control\illusion.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\udp.h">
+      <Filter>control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@
 #define MAX_DEG 28
 #define DEG_SCALE 0.01
 //平台运动最大位移
-#define MAX_XYZ 60
+#define MAX_XYZ 600
 #define XYZ_SCALE 0.1
 // 平台运动最大频率
 #define MAX_HZ 5
