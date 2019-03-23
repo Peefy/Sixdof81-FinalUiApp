@@ -67,7 +67,7 @@ using namespace std;
 #define PULSE_COUNT_RPM 1024.0
 
 #define PlaneAboveHingeLength       225.0
-#define PlaneAboveBottomLength      2122.0
+#define PlaneAboveBottomLength      2132.0
 #define CircleTopRadius             880.7
 #define CircleBottomRadius          1519.0
 #define DistanceBetweenHingeTop     200.0

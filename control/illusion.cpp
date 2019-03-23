@@ -80,8 +80,9 @@ void IllusionDataAdapter::RenewData()
 void IllusionDataAdapter::SendData()
 {
 	static char buffer[ILLUSION_BUFFER_LENGTH];
+	static const char * ip = VisionIp.c_str();
 	memcpy(buffer, &SendToData, SendDataPackageLength);
-	udpClient.SendTo(UDP_PORT, UDP_IP_STRING, buffer, SendDataPackageLength);
+	udpClient.SendTo(VisionPort, ip, buffer, SendDataPackageLength);
 }
 
 void IllusionDataAdapter::SendData(bool iswarning, int status, double x, double y, double z, double roll, double yaw, double pitch)
