@@ -20,7 +20,7 @@
 #define DI_GROUP_PORT_START_INDEX 0 
 #define DO_GROUP_PORT_START_INDEX 0 
 
-#define IS_REVERSE_CONTROL 1
+#define IS_REVERSE_CONTROL 0
 
 using namespace std;
 
