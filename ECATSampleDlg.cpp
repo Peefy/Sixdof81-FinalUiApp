@@ -151,6 +151,9 @@ kalman1_state kalman_zFilter;
 
 CRITICAL_SECTION cs;
 CRITICAL_SECTION csdata;
+DataPackageDouble visionData = {0};
+DataPackageDouble lastData = {0};
+/*
 double visionX = 0;
 double visionY = 0;
 double visionZ = 0;
@@ -163,6 +166,7 @@ double lastz = 0;
 double lastroll = 0;
 double lastpitch = 0;
 double lastyaw = 0;
+*/
 
 DWORD WINAPI DataTransThread(LPVOID pParam)
 {
@@ -276,9 +280,8 @@ void SensorRead()
 
 }
 
-void SixdofControl()
+void VisionOrSensorDataDeal()
 {
-	static double deltat = 0.026;
 #if IS_USE_NAVIGATION
 	navigation.RenewData();
 	EnterCriticalSection(&csdata);
@@ -289,12 +292,12 @@ void SixdofControl()
 #else
 
 #endif
-	visionX = 0;
-	visionY = 0;
-	visionZ = 0;
-	visionRoll = navigation.Roll;
-	visionPitch = navigation.Pitch;
-	visionYaw = navigation.Yaw;
+	visionData.X = 0;
+	visionData.Y = 0;
+	visionData.Z = 0;
+	visionData.Roll = navigation.Roll;
+	visionData.Pitch = navigation.Pitch;
+	visionData.Yaw = navigation.Yaw;
 	LeaveCriticalSection(&csdata);
 #else
 	water.RenewData();
@@ -304,14 +307,20 @@ void SixdofControl()
 	water.Roll = kalman1_filter(&kalman_rollFilter, water.Roll);
 	water.Pitch = kalman1_filter(&kalman_pitchFilter, water.Pitch);
 	water.Yaw = kalman1_filter(&kalman_yawFilter, water.Yaw);
-	visionX = 0;
-	visionY = 0;
-	visionZ = 0;
-	visionRoll = water.Roll;
-	visionPitch = water.Pitch;
-	visionYaw = water.Yaw;
+	visionData.X = 0;
+	visionData.Y = 0;
+	visionData.Z = 0;
+	visionData.Roll = water.Roll;
+	visionData.Pitch = water.Pitch;
+	visionData.Yaw = water.Yaw;
 	LeaveCriticalSection(&csdata);
 #endif
+}
+
+void SixdofControl()
+{
+	static double deltat = 0.026;
+	VisionOrSensorDataDeal();
 	Sleep(10);
 	if(closeDataThread == false)
 	{	
@@ -455,15 +464,14 @@ void SixdofControl()
 			double deltaroll = 0;
 			double deltayaw = 0;
 			double deltapitch = 0;
-			double pi = 3.1415926;
 #if IS_USE_NAVIGATION
 			navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
-			auto x = RANGE(lastx + deltax, -MAX_XYZ, MAX_XYZ);
-			auto y = RANGE(lasty + deltay, -MAX_XYZ, MAX_XYZ);
-			auto z = RANGE(lastz + deltaz, -MAX_XYZ, MAX_XYZ);
-			auto roll = RANGE(lastroll + deltaroll, -MAX_DEG, MAX_DEG);
-			auto pitch = RANGE(lastpitch + deltapitch, -MAX_DEG, MAX_DEG);
-			auto yaw = RANGE(lastyaw + deltayaw, -MAX_DEG, MAX_DEG);
+			auto x = RANGE(lastData.X + deltax, -MAX_XYZ, MAX_XYZ);
+			auto y = RANGE(lastData.Y + deltay, -MAX_XYZ, MAX_XYZ);
+			auto z = RANGE(lastData.Z + deltaz, -MAX_XYZ, MAX_XYZ);
+			auto roll = RANGE(lastData.Roll + deltaroll, -MAX_DEG, MAX_DEG);
+			auto pitch = RANGE(lastData.Pitch + deltapitch, -MAX_DEG, MAX_DEG);
+			auto yaw = RANGE(lastData.Yaw + deltayaw, -MAX_DEG, MAX_DEG);
 #else
 			auto x = RANGE(0, -MAX_XYZ, MAX_XYZ);
 			auto y = RANGE(0, -MAX_XYZ, MAX_XYZ);
@@ -473,12 +481,12 @@ void SixdofControl()
 			auto yaw = RANGE(water.Yaw, -MAX_DEG, MAX_DEG);
 #endif
 			double* pulse_dugu = Control(x, y, z, roll, yaw, pitch);
-			lastx = x;
-			lasty = y;
-			lastz = z;
-			lastroll = roll;
-			lastpitch = pitch;
-			lastyaw = yaw;
+			lastData.X = x;
+			lastData.Y = y;
+			lastData.Z = z;
+			lastData.Roll = roll;
+			lastData.Pitch = pitch;
+			lastData.Yaw = yaw;
 			for (auto ii = 0; ii < AXES_COUNT; ++ii)
 			{
 				pulse_cal[ii] = pulse_dugu[ii];
@@ -493,7 +501,7 @@ void SixdofControl()
 			data.Roll = (int16_t)(roll * 100);
 			data.Yaw = (int16_t)(yaw * 100);
 			data.Pitch = (int16_t)(pitch * 100);
-			t += 0.016;
+			t += deltat;
 			delta.PidCsp(dis);
 		}
 		Sleep(delay);
@@ -1128,8 +1136,8 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 	
 	EnterCriticalSection(&csdata);
 	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"),
-		visionX, visionY, visionZ,
-		visionRoll, visionPitch, visionYaw);
+		visionData.X, visionData.Y, visionData.Z,
+		visionData.Roll, visionData.Pitch, visionData.Yaw);
 	SetDlgItemText(IDC_EDIT_Sensor, statusStr);
 	LeaveCriticalSection(&csdata);
 

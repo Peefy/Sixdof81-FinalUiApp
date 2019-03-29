@@ -147,9 +147,6 @@
     <ClCompile Include="control\kalman_filter.cpp">
       <Filter>control</Filter>
     </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <Filter>communication</Filter>
-    </ClCompile>
     <ClCompile Include="register\register.cpp">
       <Filter>register</Filter>
     </ClCompile>
@@ -213,6 +210,9 @@
     <ClCompile Include="control\udp.cpp">
       <Filter>control</Filter>
     </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>communication</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ECATSample.rc">
@@ -236,9 +236,6 @@
       <Filter>communication</Filter>
     </ClInclude>
     <ClInclude Include="communication\sixdof.h">
-      <Filter>communication</Filter>
-    </ClInclude>
-    <ClInclude Include="communication\stdafx.h">
       <Filter>communication</Filter>
     </ClInclude>
     <ClInclude Include="config\inihelper.h">
@@ -477,6 +474,9 @@
     </ClInclude>
     <ClInclude Include="config\appconfig.h">
       <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\stdafx.h">
+      <Filter>communication</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

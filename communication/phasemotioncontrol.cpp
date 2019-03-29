@@ -376,7 +376,7 @@ void PhaseMotionControl::RenewNowPulse()
 
 void PhaseMotionControl::SetDDAPositions(double* positions)
 {
-	this->enableMove = true;
+	//this->enableMove = true;
 	pulses.push_back(positions);
 }
 
