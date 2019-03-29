@@ -9,14 +9,11 @@
 
 #include "sixdof.h"
 #include "../hardware/SixdofDioAndPulseCount.h"
+#include "../config/appconfig.h"
 
 using namespace std;
 
 #define DDA_CONTROL_THREAD_DELAY 5
-
-#define IS_BIG_MOTION 1
-
-#define IS_PULSE_CARD_REVERSE 1
 
 #if IS_BIG_MOTION
 //缸的最大行程
@@ -57,6 +54,9 @@ using namespace std;
 #define MAX_DEG_PITCH  15
 #define MAX_DEG_ROLL   15
 #define MAX_DEG_YAW    15
+
+#define MAX_XYZ_ZERO_POS    30
+#define MAX_DEG_ZERO_POS    3
 
 #else
 //缸的最大行程

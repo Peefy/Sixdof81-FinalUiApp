@@ -51,9 +51,6 @@
     <ClCompile Include="ECATSample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="communication\communication.cpp">
-      <Filter>communication</Filter>
-    </ClCompile>
     <ClCompile Include="communication\SerialPort.cpp">
       <Filter>communication</Filter>
     </ClCompile>
@@ -234,9 +231,6 @@
     </ClInclude>
     <ClInclude Include="StdAfx.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="communication\communication.h">
-      <Filter>communication</Filter>
     </ClInclude>
     <ClInclude Include="communication\SerialPort.h">
       <Filter>communication</Filter>
@@ -480,6 +474,9 @@
     </ClInclude>
     <ClInclude Include="control\udp.h">
       <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="config\appconfig.h">
+      <Filter>config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

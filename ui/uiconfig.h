@@ -37,6 +37,13 @@
 #define IDC_STATIC_PITCH_PHASE_SHOW_TEXT  "俯仰相位"
 #define IDC_STATIC_YAW_PHASE_SHOW_TEXT    "航向相位"
 
+#define IDC_STATIC_X_ZERO_POS_SHOW_TEXT      "纵向零位"
+#define IDC_STATIC_Y_ZERO_POS_SHOW_TEXT      "横向零位"
+#define IDC_STATIC_Z_ZERO_POS_SHOW_TEXT      "垂向零位"
+#define IDC_STATIC_ROLL_ZERO_POS_SHOW_TEXT   "侧倾零位"
+#define IDC_STATIC_PITCH_ZERO_POS_SHOW_TEXT  "俯仰零位"
+#define IDC_STATIC_YAW_ZERO_POS_SHOW_TEXT    "航向零位"
+
 #define IDC_STATIC_TEST_SHOW_TEXT      "测试(位移单位:1mm, 角度单位:1°, 频率单位:1Hz, 相位单位:1°)"
 #define IDC_BUTTON_TEST_SHOW_TEXT      "运行测试"
 

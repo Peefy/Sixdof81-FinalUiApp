@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "../config/appconfig.h"
+
 #define VAR_BIT_CLEAN(var, n)        (var) &= ~(1 << (n))   
 #define VAR_BIT_SETONE(var, n)       (var) |=  (1 << (n))   
 #define VAR_BIT_GET(var, n)          (((var) >> (n)) & 0x01)  
@@ -19,8 +21,6 @@
 
 #define DI_GROUP_PORT_START_INDEX 0 
 #define DO_GROUP_PORT_START_INDEX 0 
-
-#define IS_REVERSE_CONTROL 0
 
 using namespace std;
 

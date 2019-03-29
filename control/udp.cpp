@@ -9,8 +9,6 @@ UdpClient::UdpClient(int port)
 	WSADATA data;
 	WORD wVersionRequired = MAKEWORD(2, 0);
 	WSAStartup(wVersionRequired, &data);
-
-	//SetPortAndBind(port);
 }
 
 UdpClient::~UdpClient()

@@ -16,7 +16,6 @@
 
 #include "communication/sixdof.h"
 #include "communication/phasemotioncontrol.h"
-#include "communication/communication.h"
 #include "communication/SerialPort.h"
 
 #include "control/sensor.h"
@@ -60,15 +59,20 @@ using namespace std;
 #define SENSOR_THREAD_DELAY 1000
 #define DATA_BUFFER_THREAD_DELAY 1000
 
-#define CHIRP_TIME    2.5
+#define CHIRP_TIME       2.5
+#define ZERO_POS_TIME    2.5
 #define ENABLE_CHIRP  false
 #define ENABLE_SHOCK  false
-
+#define ENABLE_ZERO_POS true
 //#define ENABLE_OPENGL       1
 //#define ENABLE_LINE_GRAPH   1
 
+#define IS_USE_NAVIGATION 1
+#define IS_USE_KALMAN_FILTER 0
+
 bool enableShock = ENABLE_SHOCK;
 bool enableChirp = ENABLE_CHIRP;
+bool enableZeroPos = ENABLE_ZERO_POS;
 
 void SixdofControl();
 void SensorRead();
@@ -82,8 +86,6 @@ volatile HANDLE DataThread;
 volatile HANDLE SensorThread;
 volatile HANDLE SceneThread;
 volatile HANDLE DataBufferThread;
-
-#define IS_USE_NAVIGATION 1
 
 // 六自由度平台逻辑控制
 PhaseMotionControl delta;
@@ -102,8 +104,6 @@ Water water;
 #else
 IllusionDataAdapter dataAdapter;
 #endif
-
-
 
 // 六自由度平台状态
 double pulse_cal[AXES_COUNT];
@@ -126,9 +126,10 @@ bool isTest = true;
 bool isCosMode = false;
 bool stopSCurve = false;
 
-double testVal[FREEDOM_NUM];
-double testHz[FREEDOM_NUM];
-double testPhase[FREEDOM_NUM];
+double testVal[FREEDOM_NUM] = {0};
+double testHz[FREEDOM_NUM] = {0};
+double testPhase[FREEDOM_NUM] = {0};
+double testZeroPos[FREEDOM_NUM] = {0};
 
 double chartBottomAxisPoint[CHART_POINT_NUM] = { 0 };
 double chartXValPoint[CHART_POINT_NUM] = { 0 };
@@ -140,8 +141,6 @@ double chartYawValPoint[CHART_POINT_NUM] = { 0 };
 
 double runTime = 0;
 double chartTime = 0;
-
-#define IS_USE_KALMAN_FILTER 0
 
 kalman1_state kalman_rollFilter;
 kalman1_state kalman_yawFilter;
@@ -313,7 +312,6 @@ void SixdofControl()
 	visionYaw = water.Yaw;
 	LeaveCriticalSection(&csdata);
 #endif
-
 	Sleep(10);
 	if(closeDataThread == false)
 	{	
@@ -327,6 +325,7 @@ void SixdofControl()
 		{
 			double nowHz[AXES_COUNT] = {testHz[0], testHz[1], testHz[2], testHz[3], testHz[4], testHz[5]};
 			double chirpTime = CHIRP_TIME;
+			double zeroposTime = ZERO_POS_TIME;
 			double pi = 3.1415926;
 			double nowt = t;
 			double x = 0;
@@ -394,6 +393,16 @@ void SixdofControl()
 				roll = sin(2 * pi * nowHz[3] * nowphase_t[3]) * testVal[3];
 				pitch = sin(2 * pi * nowHz[4] * nowphase_t[4]) * testVal[4];
 				yaw = sin(2 * pi * nowHz[5] * nowphase_t[5]) * testVal[5];
+			}
+			if (enableZeroPos == true)
+			{
+				auto minZeroPosTime = min(t, zeroposTime) / zeroposTime;
+				x += testZeroPos[0] * minZeroPosTime;
+				y += testZeroPos[1] * minZeroPosTime;
+				z += testZeroPos[2] * minZeroPosTime;
+				roll += testZeroPos[3] * minZeroPosTime;
+				pitch += testZeroPos[4] * minZeroPosTime;
+				yaw += testZeroPos[5] * minZeroPosTime;
 			}
 			data.X = (int16_t)(x * 10);
 			data.Y = (int16_t)(y * 10);
@@ -700,6 +709,13 @@ void CECATSampleDlg::AppInit()
 	SetDlgItemText(IDC_EDIT_PITCH_PHASE, _T("0"));
 	SetDlgItemText(IDC_EDIT_YAW_PHASE, _T("0"));
 
+	SetDlgItemText(IDC_EDIT_X_ZERO_POS, _T("0"));
+	SetDlgItemText(IDC_EDIT_Y_ZERO_POS, _T("0"));
+	SetDlgItemText(IDC_EDIT_Z_ZERO_POS, _T("0"));
+	SetDlgItemText(IDC_EDIT_ROLL_ZERO_POS, _T("0"));
+	SetDlgItemText(IDC_EDIT_PITCH_ZERO_POS, _T("0"));
+	SetDlgItemText(IDC_EDIT_YAW_ZERO_POS, _T("0"));
+
 	CDialog::SetWindowTextW(_T(WINDOW_TITLE));
 	GetDlgItem(IDC_BTN_Start)->SetWindowTextW(_T(IDC_BTN_START_SHOW_TEXT));
 	GetDlgItem(IDC_BTN_SINGLE_UP)->SetWindowTextW(_T(IDC_BTN_SINGLE_UP_SHOW_TEXT));
@@ -732,6 +748,13 @@ void CECATSampleDlg::AppInit()
 	GetDlgItem(IDC_STATIC_ROLL_PHASE)->SetWindowTextW(_T(IDC_STATIC_ROLL_PHASE_SHOW_TEXT));
 	GetDlgItem(IDC_STATIC_PITCH_PHASE)->SetWindowTextW(_T(IDC_STATIC_PITCH_PHASE_SHOW_TEXT));
 	GetDlgItem(IDC_STATIC_YAW_PHASE)->SetWindowTextW(_T(IDC_STATIC_YAW_PHASE_SHOW_TEXT));
+
+	GetDlgItem(IDC_STATIC_X_ZERO_POS)->SetWindowTextW(_T(IDC_STATIC_X_ZERO_POS_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_Y_ZERO_POS)->SetWindowTextW(_T(IDC_STATIC_Y_ZERO_POS_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_Z_ZERO_POS)->SetWindowTextW(_T(IDC_STATIC_Z_ZERO_POS_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_ROLL_ZERO_POS)->SetWindowTextW(_T(IDC_STATIC_ROLL_ZERO_POS_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_PITCH_ZERO_POS)->SetWindowTextW(_T(IDC_STATIC_PITCH_ZERO_POS_SHOW_TEXT));
+	GetDlgItem(IDC_STATIC_YAW_ZERO_POS)->SetWindowTextW(_T(IDC_STATIC_YAW_ZERO_POS_SHOW_TEXT));
 
 	GetDlgItem(IDC_STATIC_TEST)->SetWindowTextW(_T(IDC_STATIC_TEST_SHOW_TEXT));
 	GetDlgItem(IDC_BUTTON_TEST)->SetWindowTextW(_T(IDC_BUTTON_TEST_SHOW_TEXT));
@@ -1345,6 +1368,13 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	auto pitchphase = RANGE(GetCEditNumber(IDC_EDIT_PITCH_PHASE), 0, MAX_PHASE);
 	auto yawphase = RANGE(GetCEditNumber(IDC_EDIT_YAW_PHASE), 0, MAX_PHASE);
 
+	auto xzeropos = RANGE(GetCEditNumber(IDC_EDIT_X_ZERO_POS), 0, MAX_XYZ_ZERO_POS);
+	auto yzeropos = RANGE(GetCEditNumber(IDC_EDIT_Y_ZERO_POS), 0, MAX_XYZ_ZERO_POS);
+	auto zzeropos = RANGE(GetCEditNumber(IDC_EDIT_Z_ZERO_POS), 0, MAX_XYZ_ZERO_POS);
+	auto rollzeropos = RANGE(GetCEditNumber(IDC_EDIT_ROLL_ZERO_POS), 0, MAX_DEG_ZERO_POS);
+	auto pitchzeropos = RANGE(GetCEditNumber(IDC_EDIT_PITCH_ZERO_POS), 0, MAX_DEG_ZERO_POS);
+	auto yawzeropos = RANGE(GetCEditNumber(IDC_EDIT_YAW_ZERO_POS), 0, MAX_DEG_ZERO_POS);
+
 	testVal[0] = xval;
 	testVal[1] = yval;
 	testVal[2] = zval;
@@ -1365,6 +1395,13 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	testPhase[3] = rollphase;
 	testPhase[4] = pitchphase;
 	testPhase[5] = yawphase;
+
+	testPhase[0] = xzeropos;
+	testPhase[1] = yzeropos;
+	testPhase[2] = zzeropos;
+	testPhase[3] = rollzeropos;
+	testPhase[4] = pitchzeropos;
+	testPhase[5] = yawzeropos;
 
 	if (xphase != 0 || yphase != 0 || zphase != 0 || 
 		rollphase != 0 || pitchphase != 0 || yawphase != 0)
