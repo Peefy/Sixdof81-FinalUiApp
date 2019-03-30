@@ -153,20 +153,6 @@ CRITICAL_SECTION cs;
 CRITICAL_SECTION csdata;
 DataPackageDouble visionData = {0};
 DataPackageDouble lastData = {0};
-/*
-double visionX = 0;
-double visionY = 0;
-double visionZ = 0;
-double visionRoll = 0;
-double visionPitch = 0;
-double visionYaw = 0;
-double lastx = 0;
-double lasty = 0;
-double lastz = 0;
-double lastroll = 0;
-double lastpitch = 0;
-double lastyaw = 0;
-*/
 
 DWORD WINAPI DataTransThread(LPVOID pParam)
 {

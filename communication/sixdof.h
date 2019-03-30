@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
+#include <memory>
 #include <Windows.h> 
 
 #include "../config/inihelper.h"
@@ -71,6 +72,48 @@ typedef struct
 	//µ¥Î»1¶È
 	double Yaw;
 }DataPackageDouble;
+
+template<typename T>
+class DataPackageType
+{
+public:
+	unique_ptr<T> X;
+	unique_ptr<T> Y;
+	unique_ptr<T> Z;
+	unique_ptr<T> Roll;
+	unique_ptr<T> Pitch;
+	unique_ptr<T> Yaw;
+	DataPackageType()
+	{
+		X = make_unique<T>(new T);
+		Y = make_unique<T>(new T);
+		Z = make_unique<T>(new T);
+		Roll = make_unique<T>(new T);
+		Pitch = make_unique<T>(new T);
+		Yaw = make_unique<T>(new T);
+	}
+	~DataPackageType()
+	{
+		auto ptrX = X.release();
+		delete ptrX;
+		ptrX = nullptr;
+		auto ptrY = Y.release();
+		delete ptrY;
+		ptrY = nullptr;
+		auto ptrZ = Z.release();
+		delete ptrZ;
+		ptrZ = nullptr;
+		auto ptrRoll = Roll.release();
+		delete ptrRoll;
+		ptrRoll = nullptr;
+		auto ptrPitch = Pitch.release();
+		delete ptrPitch;
+		ptrPitch = nullptr;
+		auto ptrYaw = Yaw.release();
+		delete ptrYaw;
+		ptrYaw = nullptr;
+	}
+};
 
 typedef enum
 {
