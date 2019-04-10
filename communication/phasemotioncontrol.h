@@ -98,6 +98,9 @@ using namespace std;
 #define MAX_DEG_ROLL   25
 #define MAX_DEG_YAW    28
 
+#define MAX_XYZ_ZERO_POS    30
+#define MAX_DEG_ZERO_POS    3
+
 #endif
 
 #define MAX_POS (PULSE_COUNT_RPM * MAX_MM / MM_RPM)

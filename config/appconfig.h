@@ -2,8 +2,8 @@
 #ifndef __APP_CONFIG_H_
 #define __APP_CONFIG_H_
 
-#define IS_81_PLATFORM
-//#define IS_84_PLATFORM
+//#define IS_81_PLATFORM
+#define IS_84_PLATFORM
 
 #ifdef IS_81_PLATFORM
 
