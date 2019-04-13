@@ -213,6 +213,9 @@
     <ClCompile Include="StdAfx.cpp">
       <Filter>communication</Filter>
     </ClCompile>
+    <ClCompile Include="control\washout.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ECATSample.rc">
@@ -477,6 +480,9 @@
     </ClInclude>
     <ClInclude Include="communication\stdafx.h">
       <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="control\washout.h">
+      <Filter>control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

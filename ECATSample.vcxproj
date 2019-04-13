@@ -171,6 +171,7 @@
     <ClCompile Include="control\pid.cpp" />
     <ClCompile Include="control\sensor.cpp" />
     <ClCompile Include="control\udp.cpp" />
+    <ClCompile Include="control\washout.cpp" />
     <ClCompile Include="control\water.cpp" />
     <ClCompile Include="cwnds\panel.cpp" />
     <ClCompile Include="DialogRegister.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="control\pid.h" />
     <ClInclude Include="control\sensor.h" />
     <ClInclude Include="control\udp.h" />
+    <ClInclude Include="control\washout.h" />
     <ClInclude Include="control\water.h" />
     <ClInclude Include="cwnds\panel.h" />
     <ClInclude Include="DialogRegister.h" />

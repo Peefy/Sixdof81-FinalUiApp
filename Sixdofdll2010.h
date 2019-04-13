@@ -105,6 +105,45 @@ SIXDOFDLL2010_API void SetPlatformPara(double planeAboveHingeLength, double plan
 									   double circleBottomRadius, double distanceBetweenHingeTop, double distanceBetweenHingeBottom);
 
 
+/*
+设置 六自由度平台的洗出算法
+@para
+x : x轴的位移 mm
+y : y轴的位移 mm
+z : z轴的位移 mm
+roll  : 横滚角，绕x轴旋转的姿态角 deg
+yaw   : 偏航角，绕z轴旋转的姿态角 deg
+pitch : 俯仰角，绕z轴旋转的姿态角 deg
+xacc : x轴的加速度 m/s^2
+yacc : y轴的加速度 m/s^2
+zacc : z轴的加速度 m/s^2
+rollSpeed  : 横滚角角速度，绕x轴旋转的姿态角角速度 deg/s
+yawSpeed   : 偏航角角速度，绕z轴旋转的姿态角角速度 deg/s
+pitchSpeed : 俯仰角角速度，绕z轴旋转的姿态角角速度 deg/s
+@return
+x : X轴位移 mm
+y : y轴位移 mm
+z : z轴位移 mm
+roll :  横滚角 deg
+pitch : 俯仰角 deg
+yaw :   偏航角 deg
+*/
+SIXDOFDLL2010_API double* WashOutFiltering(double x, double y, double z,
+										   double roll, double yaw, double pitch,
+										   double xacc, double yacc, double zacc, 
+										   double rollSpeed, double yawSpeed, double pitchSpeed);
+
+/*
+设置 六自由度平台的洗出算法的参数
+@para
+hpfAccWn : 线加速度高通滤波器截止频率
+lpfAccWn : 线加速度低通滤波器截止频率
+hpfAngleSpdWn : 角速度低通滤波器截止频率
+@return
+null
+*/
+SIXDOFDLL2010_API void SetWashOutFilterPara(double hpfAccWn, double lpfAccWn, double hpfAngleSpdWn, double sampleTime);
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus
