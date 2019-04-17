@@ -158,7 +158,7 @@
     <ClCompile Include="chart\ChartSurfaceSerie.cpp" />
     <ClCompile Include="chart\ChartTitle.cpp" />
     <ClCompile Include="chart\ChartXYSerie.cpp" />
-    <ClCompile Include="communication\phasemotioncontrol.cpp" />
+    <ClCompile Include="communication\dialogmotioncontrol.cpp" />
     <ClCompile Include="communication\SerialPort.cpp" />
     <ClCompile Include="communication\sixdof.cpp" />
     <ClCompile Include="config\inihelper.cpp" />
@@ -234,7 +234,7 @@
     <ClInclude Include="chart\ChartTitle.h" />
     <ClInclude Include="chart\ChartXYSerie.h" />
     <ClInclude Include="chart\PointsOrdering.h" />
-    <ClInclude Include="communication\phasemotioncontrol.h" />
+    <ClInclude Include="communication\dialogmotioncontrol.h" />
     <ClInclude Include="communication\SerialPort.h" />
     <ClInclude Include="communication\sixdof.h" />
     <ClInclude Include="communication\stdafx.h" />

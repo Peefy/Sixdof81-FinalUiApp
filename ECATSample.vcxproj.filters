@@ -171,9 +171,6 @@
     <ClCompile Include="ECATSampleDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="communication\phasemotioncontrol.cpp">
-      <Filter>communication</Filter>
-    </ClCompile>
     <ClCompile Include="hardware\UserPCI1723.cpp">
       <Filter>hardware</Filter>
     </ClCompile>
@@ -215,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="control\washout.cpp">
       <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="communication\dialogmotioncontrol.cpp">
+      <Filter>communication</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -412,9 +412,6 @@
     <ClInclude Include="json\writer.h">
       <Filter>json</Filter>
     </ClInclude>
-    <ClInclude Include="communication\phasemotioncontrol.h">
-      <Filter>communication</Filter>
-    </ClInclude>
     <ClInclude Include="hardware\UserPCI1723.h">
       <Filter>hardware</Filter>
     </ClInclude>
@@ -483,6 +480,9 @@
     </ClInclude>
     <ClInclude Include="control\washout.h">
       <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="communication\dialogmotioncontrol.h">
+      <Filter>communication</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

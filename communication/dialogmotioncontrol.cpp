@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-#include "phasemotioncontrol.h"
+#include "dialogmotioncontrol.h"
 #include "../Sixdofdll2010.h"
 
 #include "../config/inihelper.h"
@@ -54,7 +54,7 @@ PID_Type MotionRisePidControler[AXES_COUNT] =
 	{ RISE_MOTION_P, RISE_MOTION_I, RISE_MOTION_D, -RISE_MAX_VEL, RISE_MAX_VEL }
 };
 
-PhaseMotionControl::PhaseMotionControl()
+DialogMotionControl::DialogMotionControl()
 {
 	disposed = false; 
 	for (int i = 0; i < AXES_COUNT; ++i)
@@ -66,7 +66,7 @@ PhaseMotionControl::PhaseMotionControl()
 	InitCard();
 }
 
-PhaseMotionControl::~PhaseMotionControl()
+DialogMotionControl::~DialogMotionControl()
 {
 	if (this->disposed == false)
 	{
@@ -74,12 +74,12 @@ PhaseMotionControl::~PhaseMotionControl()
 	}
 }
 
-bool PhaseMotionControl::InitCard()
+bool DialogMotionControl::InitCard()
 {
 	return sixdofDioAndCount.Init();
 }
 
-void PhaseMotionControl::Close(SixDofPlatformStatus laststatus)
+void DialogMotionControl::Close(SixDofPlatformStatus laststatus)
 {
 	RenewNowPulse();
 	if (lockobj.try_lock())
@@ -90,19 +90,19 @@ void PhaseMotionControl::Close(SixDofPlatformStatus laststatus)
 	this->disposed = true;
 }
 
-void PhaseMotionControl::SetMotionVeloctySingle(int index, double velocity)
+void DialogMotionControl::SetMotionVeloctySingle(int index, double velocity)
 {
 	ASSERT_INDEX(index);
 	velocity = RANGE_V(velocity, -MAX_VEL, MAX_VEL);
 	sixdofDioAndCount.SetMotionVel(index, velocity);
 }
 
-void PhaseMotionControl::SetMotionVelocty(double* velocity, int axexnum)
+void DialogMotionControl::SetMotionVelocty(double* velocity, int axexnum)
 {
 	sixdofDioAndCount.SetMotionVel(velocity);
 }
 
-bool PhaseMotionControl::ServoAllOnOff(bool isOn)
+bool DialogMotionControl::ServoAllOnOff(bool isOn)
 {
 #if IS_BIG_MOTION
 	sixdofDioAndCount.BigMotionEnableAllMotor(isOn);
@@ -112,19 +112,19 @@ bool PhaseMotionControl::ServoAllOnOff(bool isOn)
 	return true;
 }
 
-void PhaseMotionControl::SingleUp(int index)
+void DialogMotionControl::SingleUp(int index)
 {
 	UnlockServo(index);
 	SetMotionVeloctySingle(index, RISE_VEL);
 }
 
-void PhaseMotionControl::SingleDown(int index)
+void DialogMotionControl::SingleDown(int index)
 {
 	UnlockServo(index);
 	SetMotionVeloctySingle(index, -DOWN_VEL);
 }
 
-void PhaseMotionControl::AllTestUp()
+void DialogMotionControl::AllTestUp()
 {
 	double vel = RISE_VEL;
 	double vels[AXES_COUNT] = {vel, vel, vel, vel, vel, vel};
@@ -132,7 +132,7 @@ void PhaseMotionControl::AllTestUp()
 	SetMotionVelocty(vels, AXES_COUNT);
 }
 
-void PhaseMotionControl::AllTestDown()
+void DialogMotionControl::AllTestDown()
 {
 	double vel = -DOWN_VEL;
 	double vels[AXES_COUNT] = {vel, vel, vel, vel, vel, vel};
@@ -140,7 +140,7 @@ void PhaseMotionControl::AllTestDown()
 	SetMotionVelocty(vels, AXES_COUNT);
 }
 
-bool PhaseMotionControl::ResetStatus()
+bool DialogMotionControl::ResetStatus()
 {
 	if (lockobj.try_lock())
 	{
@@ -155,7 +155,7 @@ bool PhaseMotionControl::ResetStatus()
 	return true;
 }
 
-void PhaseMotionControl::EnableServo()
+void DialogMotionControl::EnableServo()
 {
 	bool bits[AXES_COUNT] = {MOTION_ENABLE_LEVEL};
 	for (int i = 0;i < AXES_COUNT;++i)
@@ -170,7 +170,7 @@ void PhaseMotionControl::EnableServo()
 	
 }
 
-void PhaseMotionControl::LockServo()
+void DialogMotionControl::LockServo()
 {
 	bool bits[AXES_COUNT] = {MOTION_LOCK_LEVEL};
 	for (int i = 0;i < AXES_COUNT;++i)
@@ -188,7 +188,7 @@ void PhaseMotionControl::LockServo()
 	enableMove = false;
 }
 
-void PhaseMotionControl::UnlockServo()
+void DialogMotionControl::UnlockServo()
 {
 	bool bits[AXES_COUNT] = {!MOTION_LOCK_LEVEL};
 	for (int i = 0;i < AXES_COUNT;++i)
@@ -203,7 +203,7 @@ void PhaseMotionControl::UnlockServo()
 #endif
 }
 
-void PhaseMotionControl::EnableServo(int index)
+void DialogMotionControl::EnableServo(int index)
 {
 	ASSERT_INDEX(index);
 #if IS_BIG_MOTION
@@ -214,7 +214,7 @@ void PhaseMotionControl::EnableServo(int index)
 #endif
 }
 
-void PhaseMotionControl::LockServo(int index)
+void DialogMotionControl::LockServo(int index)
 {
 	ASSERT_INDEX(index);
 	enableMove = false;
@@ -226,7 +226,7 @@ void PhaseMotionControl::LockServo(int index)
 #endif
 }
 
-void PhaseMotionControl::UnlockServo(int index)
+void DialogMotionControl::UnlockServo(int index)
 {
 	ASSERT_INDEX(index);
 #if IS_BIG_MOTION
@@ -237,7 +237,7 @@ void PhaseMotionControl::UnlockServo(int index)
 #endif
 }
 
-void PhaseMotionControl::Rise()
+void DialogMotionControl::Rise()
 {
 	LockServo();
 	for (int i = 0;i < AXES_COUNT;++i)
@@ -252,7 +252,7 @@ void PhaseMotionControl::Rise()
 	UnlockServo();
 }
 
-void PhaseMotionControl::Down()
+void DialogMotionControl::Down()
 {
 #if IS_PID_DOWN
 	LockServo();
@@ -271,7 +271,7 @@ double now_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
 double last_str_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
 double speed_scale = 100;
 
-void PhaseMotionControl::Csp(double * pulse)
+void DialogMotionControl::Csp(double * pulse)
 {	
 	for (auto i = 0; i < AXES_COUNT; ++i)
 	{
@@ -285,7 +285,7 @@ void PhaseMotionControl::Csp(double * pulse)
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
-void PhaseMotionControl::PidCsp(double * pulse)
+void DialogMotionControl::PidCsp(double * pulse)
 {
 	if (lockobj.try_lock())
 	{	
@@ -301,7 +301,7 @@ void PhaseMotionControl::PidCsp(double * pulse)
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
-void PhaseMotionControl::SlowPidCsp(double * pulse)
+void DialogMotionControl::SlowPidCsp(double * pulse)
 {
 	if (lockobj.try_lock())
 	{	
@@ -318,21 +318,7 @@ void PhaseMotionControl::SlowPidCsp(double * pulse)
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
-double* PhaseMotionControl::GetMotionNowEncoderVelocity()
-{
-	auto pulses = sixdofDioAndCount.ReadPulseCount();
-	if (lockobj.try_lock())
-	{	
-		for(auto i = 0; i < AXES_COUNT; ++i)
-		{
-			NowPluse[i] = pulses[i];
-		}
-		lockobj.unlock();
-	}
-	return NowPluse;
-}
-
-double PhaseMotionControl::GetMotionAveragePulse()
+double DialogMotionControl::GetMotionAveragePulse()
 {
 	double pulse_num = 0;
 	if (lockobj.try_lock())
@@ -352,7 +338,7 @@ double PhaseMotionControl::GetMotionAveragePulse()
 
 ULONG last_pulses[AXES_COUNT] = {0};
 
-void PhaseMotionControl::RenewNowPulse()
+void DialogMotionControl::RenewNowPulse()
 {
 	if(lockobj.try_lock())
 	{
@@ -374,18 +360,7 @@ void PhaseMotionControl::RenewNowPulse()
 	}
 }
 
-void PhaseMotionControl::SetDDAPositions(double* positions)
-{
-	//this->enableMove = true;
-	pulses.push_back(positions);
-}
-
-int PhaseMotionControl::GetDDAPositionsCount()
-{
-	return pulses.size();
-}
-
-void PhaseMotionControl::DDAControlThread()
+void DialogMotionControl::DDAControlThread()
 {
 	while (true)
 	{
@@ -439,7 +414,7 @@ void PhaseMotionControl::DDAControlThread()
 	}
 }
 
-void PhaseMotionControl::MoveToZeroPulseNumber()
+void DialogMotionControl::MoveToZeroPulseNumber()
 {
 	for (int i = 0;i < AXES_COUNT;++i)
 	{
@@ -450,7 +425,7 @@ void PhaseMotionControl::MoveToZeroPulseNumber()
 	UnlockServo();
 }
 
-void PhaseMotionControl::PidControllerInit()
+void DialogMotionControl::PidControllerInit()
 {
 	for (int i = 0;i < AXES_COUNT;++i)
 	{
@@ -458,14 +433,14 @@ void PhaseMotionControl::PidControllerInit()
 	}
 }
 
-bool PhaseMotionControl::ServoStop()
+bool DialogMotionControl::ServoStop()
 {
 	StopRiseDownMove();
 	LockServo();
 	return true;
 }
 
-bool PhaseMotionControl::ServoSingleStop(int index)
+bool DialogMotionControl::ServoSingleStop(int index)
 {
 	enableMove = false;
 	double vel = 0;
@@ -473,18 +448,17 @@ bool PhaseMotionControl::ServoSingleStop(int index)
 	return true;
 }
 
-void PhaseMotionControl::StopRiseDownMove()
+void DialogMotionControl::StopRiseDownMove()
 {
 	enableMove = false;
 	isrising = false;
 	isfalling = false;
-	pulses.clear();
 	double vel[AXES_COUNT];
 	memset(vel, 0, sizeof(double) * AXES_COUNT);
 	SetMotionVelocty(vel, AXES_COUNT);
 }
 
-bool PhaseMotionControl::IsAllAtBottom()
+bool DialogMotionControl::IsAllAtBottom()
 {
 	for (auto i = 0; i < AXES_COUNT; ++i)
 	{
@@ -497,7 +471,7 @@ bool PhaseMotionControl::IsAllAtBottom()
 	return true;
 }
 
-void PhaseMotionControl::ReadAllSwitchStatus()
+void DialogMotionControl::ReadAllSwitchStatus()
 {
 
 #if IS_BIG_MOTION
@@ -520,7 +494,7 @@ void PhaseMotionControl::ReadAllSwitchStatus()
 	}
 }
 
-bool PhaseMotionControl::CheckStatus(SixDofPlatformStatus& status)
+bool DialogMotionControl::CheckStatus(SixDofPlatformStatus& status)
 {
 	char* str = SixDofStatusText[status];
 	double pulse = 0;
@@ -556,7 +530,7 @@ bool PhaseMotionControl::CheckStatus(SixDofPlatformStatus& status)
 	return true;
 }
 
-bool PhaseMotionControl::PowerOnSelfTest(SixDofPlatformStatus laststatus, double * lastpulse)
+bool DialogMotionControl::PowerOnSelfTest(SixDofPlatformStatus laststatus, double * lastpulse)
 {
 	if(isSelfTest == true)
 		return false;
@@ -593,7 +567,7 @@ bool PhaseMotionControl::PowerOnSelfTest(SixDofPlatformStatus laststatus, double
 	return true;
 }
 
-void PhaseMotionControl::Test()
+void DialogMotionControl::Test()
 {
 #if IS_BIG_MOTION
 	sixdofDioAndCount.BigMotionTest();

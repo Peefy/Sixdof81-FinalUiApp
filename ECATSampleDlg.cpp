@@ -15,7 +15,7 @@
 #include "Sixdofdll2010.h"
 
 #include "communication/sixdof.h"
-#include "communication/phasemotioncontrol.h"
+#include "communication/dialogmotioncontrol.h"
 #include "communication/SerialPort.h"
 
 #include "control/sensor.h"
@@ -75,7 +75,6 @@ bool enableChirp = ENABLE_CHIRP;
 bool enableZeroPos = ENABLE_ZERO_POS;
 
 void SixdofControl();
-void SensorRead();
 
 UINT8 InitialFlag = 0;
 
@@ -88,7 +87,7 @@ volatile HANDLE SceneThread;
 volatile HANDLE DataBufferThread;
 
 // 六自由度平台逻辑控制
-PhaseMotionControl delta;
+DialogMotionControl delta;
 // 六自由度数据
 DataPackage data = {0};
 // 惯导通信接口
@@ -126,10 +125,10 @@ bool isTest = true;
 bool isCosMode = false;
 bool stopSCurve = false;
 
-double testVal[FREEDOM_NUM] = {0};
-double testHz[FREEDOM_NUM] = {0};
-double testPhase[FREEDOM_NUM] = {0};
-double testZeroPos[FREEDOM_NUM] = {0};
+double testVal[FREEDOM_NUM] = { 0 };
+double testHz[FREEDOM_NUM] = { 0 };
+double testPhase[FREEDOM_NUM] = { 0 };
+double testZeroPos[FREEDOM_NUM] = { 0 };
 
 double chartBottomAxisPoint[CHART_POINT_NUM] = { 0 };
 double chartXValPoint[CHART_POINT_NUM] = { 0 };
@@ -167,7 +166,6 @@ DWORD WINAPI SensorInfoThread(LPVOID pParam)
 {
 	while (true)
 	{
-		//SensorRead();
 		Sleep(SENSOR_THREAD_DELAY);
 	}
 	return 0;
@@ -259,11 +257,6 @@ void OpenThread()
 	SensorThread = (HANDLE)CreateThread(NULL, 0, SensorInfoThread, NULL, 0, NULL);
 	SceneThread = (HANDLE)CreateThread(NULL, 0, SceneInfoThread, NULL, 0, NULL);
 	DataBufferThread = (HANDLE)CreateThread(NULL, 0, DataBufferInfoThread, NULL, 0, NULL);
-}
-
-void SensorRead()
-{
-
 }
 
 void VisionOrSensorDataDeal()
