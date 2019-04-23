@@ -23,18 +23,33 @@
 #define RISE_MOTION_D 0.0
 #define RISE_MAX_VEL  0.3
 #else
+// 平台运行过程PID控制参数-P
 #define MOTION_P 0.00008
+// 平台运行过程PID控制参数-I
 #define MOTION_I 0.00000008
+// 平台运行过程PID控制参数-D
 #define MOTION_D 0.0
+// 平台运行过程当中最大速度
 #define MAX_VEL  2.5
-
+// 平台上升过程PID控制参数-P
 #define RISE_MOTION_P 0.00004
+// 平台上升过程PID控制参数-I
 #define RISE_MOTION_I 0.0000002
+// 平台上升过程PID控制参数-D
 #define RISE_MOTION_D 0.0
+// 平台上升过程当中最大速度
 #define RISE_MAX_VEL  0.3
+
 #endif // IS_BIG_MOTION
 
-PID_Type MotionLocationPidControler[AXES_COUNT] = 
+static double last_pulse[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
+static double now_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
+static double last_str_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
+static double speed_scale = 100;
+static ULONG last_pulses[AXES_COUNT] = {0};
+
+// 运行过程六个电机的PID控制器
+static PID_Type MotionLocationPidControler[AXES_COUNT] = 
 {
 	{ MOTION_P, MOTION_I, MOTION_D, -MAX_VEL, MAX_VEL },
 	{ MOTION_P, MOTION_I, MOTION_D, -MAX_VEL, MAX_VEL },
@@ -44,7 +59,8 @@ PID_Type MotionLocationPidControler[AXES_COUNT] =
 	{ MOTION_P, MOTION_I, MOTION_D, -MAX_VEL, MAX_VEL }
 };
 
-PID_Type MotionRisePidControler[AXES_COUNT] = 
+// 上升过程六个电机的PID控制器
+static PID_Type MotionRisePidControler[AXES_COUNT] = 
 {
 	{ RISE_MOTION_P, RISE_MOTION_I, RISE_MOTION_D, -RISE_MAX_VEL, RISE_MAX_VEL },
 	{ RISE_MOTION_P, RISE_MOTION_I, RISE_MOTION_D, -RISE_MAX_VEL, RISE_MAX_VEL },
@@ -54,6 +70,7 @@ PID_Type MotionRisePidControler[AXES_COUNT] =
 	{ RISE_MOTION_P, RISE_MOTION_I, RISE_MOTION_D, -RISE_MAX_VEL, RISE_MAX_VEL }
 };
 
+// 构造函数
 DialogMotionControl::DialogMotionControl()
 {
 	disposed = false; 
@@ -66,6 +83,7 @@ DialogMotionControl::DialogMotionControl()
 	InitCard();
 }
 
+// 析构函数
 DialogMotionControl::~DialogMotionControl()
 {
 	if (this->disposed == false)
@@ -74,11 +92,13 @@ DialogMotionControl::~DialogMotionControl()
 	}
 }
 
+// 初始化所有硬件板卡
 bool DialogMotionControl::InitCard()
 {
 	return sixdofDioAndCount.Init();
 }
 
+// 关闭所有板卡，并保存平台状态
 void DialogMotionControl::Close(SixDofPlatformStatus laststatus)
 {
 	RenewNowPulse();
@@ -90,6 +110,7 @@ void DialogMotionControl::Close(SixDofPlatformStatus laststatus)
 	this->disposed = true;
 }
 
+// 设置单个电机的速度
 void DialogMotionControl::SetMotionVeloctySingle(int index, double velocity)
 {
 	ASSERT_INDEX(index);
@@ -97,11 +118,13 @@ void DialogMotionControl::SetMotionVeloctySingle(int index, double velocity)
 	sixdofDioAndCount.SetMotionVel(index, velocity);
 }
 
+// 设置多个电机的速度
 void DialogMotionControl::SetMotionVelocty(double* velocity, int axexnum)
 {
 	sixdofDioAndCount.SetMotionVel(velocity);
 }
-
+ 
+// 设置所有电机是否抱闸
 bool DialogMotionControl::ServoAllOnOff(bool isOn)
 {
 #if IS_BIG_MOTION
@@ -112,18 +135,21 @@ bool DialogMotionControl::ServoAllOnOff(bool isOn)
 	return true;
 }
 
+// 单缸向上运动
 void DialogMotionControl::SingleUp(int index)
 {
 	UnlockServo(index);
 	SetMotionVeloctySingle(index, RISE_VEL);
 }
 
+// 单缸向下运动
 void DialogMotionControl::SingleDown(int index)
 {
 	UnlockServo(index);
 	SetMotionVeloctySingle(index, -DOWN_VEL);
 }
 
+// 所有缸向上测试运动
 void DialogMotionControl::AllTestUp()
 {
 	double vel = RISE_VEL;
@@ -132,6 +158,7 @@ void DialogMotionControl::AllTestUp()
 	SetMotionVelocty(vels, AXES_COUNT);
 }
 
+// 所有缸向下测试运动
 void DialogMotionControl::AllTestDown()
 {
 	double vel = -DOWN_VEL;
@@ -140,6 +167,7 @@ void DialogMotionControl::AllTestDown()
 	SetMotionVelocty(vels, AXES_COUNT);
 }
 
+// 编码器读数清零
 bool DialogMotionControl::ResetStatus()
 {
 	if (lockobj.try_lock())
@@ -155,6 +183,7 @@ bool DialogMotionControl::ResetStatus()
 	return true;
 }
 
+// 所有电机打开抱闸并使能
 void DialogMotionControl::EnableServo()
 {
 	bool bits[AXES_COUNT] = {MOTION_ENABLE_LEVEL};
@@ -170,6 +199,7 @@ void DialogMotionControl::EnableServo()
 	
 }
 
+// 所有电机关闭抱闸并关闭使能
 void DialogMotionControl::LockServo()
 {
 	bool bits[AXES_COUNT] = {MOTION_LOCK_LEVEL};
@@ -188,6 +218,7 @@ void DialogMotionControl::LockServo()
 	enableMove = false;
 }
 
+// 所有电机打开抱闸并打开使能
 void DialogMotionControl::UnlockServo()
 {
 	bool bits[AXES_COUNT] = {!MOTION_LOCK_LEVEL};
@@ -203,6 +234,7 @@ void DialogMotionControl::UnlockServo()
 #endif
 }
 
+// 单个电机使能
 void DialogMotionControl::EnableServo(int index)
 {
 	ASSERT_INDEX(index);
@@ -214,6 +246,7 @@ void DialogMotionControl::EnableServo(int index)
 #endif
 }
 
+// 单个电机上锁
 void DialogMotionControl::LockServo(int index)
 {
 	ASSERT_INDEX(index);
@@ -226,6 +259,7 @@ void DialogMotionControl::LockServo(int index)
 #endif
 }
 
+// 单个电机解锁
 void DialogMotionControl::UnlockServo(int index)
 {
 	ASSERT_INDEX(index);
@@ -237,6 +271,7 @@ void DialogMotionControl::UnlockServo(int index)
 #endif
 }
 
+// 上升
 void DialogMotionControl::Rise()
 {
 	LockServo();
@@ -252,6 +287,7 @@ void DialogMotionControl::Rise()
 	UnlockServo();
 }
 
+// 下降
 void DialogMotionControl::Down()
 {
 #if IS_PID_DOWN
@@ -266,11 +302,7 @@ void DialogMotionControl::Down()
 #endif	
 }
 
-double last_pulse[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
-double now_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
-double last_str_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
-double speed_scale = 100;
-
+// 连续位置控制
 void DialogMotionControl::Csp(double * pulse)
 {	
 	for (auto i = 0; i < AXES_COUNT; ++i)
@@ -285,6 +317,7 @@ void DialogMotionControl::Csp(double * pulse)
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
+// 连续位置控制(PID控制)
 void DialogMotionControl::PidCsp(double * pulse)
 {
 	if (lockobj.try_lock())
@@ -301,6 +334,7 @@ void DialogMotionControl::PidCsp(double * pulse)
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
+// 缓慢的连续位置控制(PID控制)
 void DialogMotionControl::SlowPidCsp(double * pulse)
 {
 	if (lockobj.try_lock())
@@ -318,6 +352,7 @@ void DialogMotionControl::SlowPidCsp(double * pulse)
 	SetMotionVelocty(now_vel, AXES_COUNT);
 }
 
+// 获取所有电机编码器脉冲的平均值
 double DialogMotionControl::GetMotionAveragePulse()
 {
 	double pulse_num = 0;
@@ -336,8 +371,7 @@ double DialogMotionControl::GetMotionAveragePulse()
 	return avr_pulse;
 }
 
-ULONG last_pulses[AXES_COUNT] = {0};
-
+// 更新所有电机编码器读数
 void DialogMotionControl::RenewNowPulse()
 {
 	if(lockobj.try_lock())
@@ -360,6 +394,7 @@ void DialogMotionControl::RenewNowPulse()
 	}
 }
 
+// 电机上升下降的PID控制函数
 void DialogMotionControl::DDAControlThread()
 {
 	while (true)
@@ -414,6 +449,7 @@ void DialogMotionControl::DDAControlThread()
 	}
 }
 
+// 结束运动后回中
 void DialogMotionControl::MoveToZeroPulseNumber()
 {
 	for (int i = 0;i < AXES_COUNT;++i)
@@ -425,6 +461,7 @@ void DialogMotionControl::MoveToZeroPulseNumber()
 	UnlockServo();
 }
 
+// PID控制器初始化
 void DialogMotionControl::PidControllerInit()
 {
 	for (int i = 0;i < AXES_COUNT;++i)
@@ -433,6 +470,7 @@ void DialogMotionControl::PidControllerInit()
 	}
 }
 
+// 所有电机停转
 bool DialogMotionControl::ServoStop()
 {
 	StopRiseDownMove();
@@ -440,6 +478,7 @@ bool DialogMotionControl::ServoStop()
 	return true;
 }
 
+// 单个电机停转
 bool DialogMotionControl::ServoSingleStop(int index)
 {
 	enableMove = false;
@@ -448,6 +487,7 @@ bool DialogMotionControl::ServoSingleStop(int index)
 	return true;
 }
 
+// 停止上升或者下降的PID控制
 void DialogMotionControl::StopRiseDownMove()
 {
 	enableMove = false;
@@ -458,6 +498,7 @@ void DialogMotionControl::StopRiseDownMove()
 	SetMotionVelocty(vel, AXES_COUNT);
 }
 
+// 所有缸是否位于底部
 bool DialogMotionControl::IsAllAtBottom()
 {
 	for (auto i = 0; i < AXES_COUNT; ++i)
@@ -471,6 +512,7 @@ bool DialogMotionControl::IsAllAtBottom()
 	return true;
 }
 
+// 读取所有接近开关状态
 void DialogMotionControl::ReadAllSwitchStatus()
 {
 
@@ -494,6 +536,7 @@ void DialogMotionControl::ReadAllSwitchStatus()
 	}
 }
 
+// 检查六自由度平台状态
 bool DialogMotionControl::CheckStatus(SixDofPlatformStatus& status)
 {
 	char* str = SixDofStatusText[status];
@@ -530,6 +573,7 @@ bool DialogMotionControl::CheckStatus(SixDofPlatformStatus& status)
 	return true;
 }
 
+// 六自由度平台开机自检
 bool DialogMotionControl::PowerOnSelfTest(SixDofPlatformStatus laststatus, double * lastpulse)
 {
 	if(isSelfTest == true)
@@ -567,7 +611,8 @@ bool DialogMotionControl::PowerOnSelfTest(SixDofPlatformStatus laststatus, doubl
 	return true;
 }
 
-void DialogMotionControl::Test()
+// 测试所有硬件
+void DialogMotionControl::TestHardware()
 {
 #if IS_BIG_MOTION
 	sixdofDioAndCount.BigMotionTest();

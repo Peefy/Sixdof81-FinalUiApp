@@ -162,9 +162,11 @@ using namespace std;
 class DialogMotionControl
 {
 public:
+	// 构造函数
 	DialogMotionControl();
+	// 析构函数
 	~DialogMotionControl();
-	// 初始化所有板卡
+	// 初始化所有硬件板卡
 	bool InitCard();
 	// 关闭所有板卡，并保存平台状态
 	void Close(SixDofPlatformStatus laststatus);
@@ -184,11 +186,11 @@ public:
 	void AllTestDown();
 	// 编码器读数清零
 	bool ResetStatus();
-	// 所有电机打开抱闸并使能
-	void EnableServo();
-	// 所有电机关闭抱闸
-	void LockServo();
 	// 所有电机打开抱闸
+	void EnableServo();
+	// 所有电机关闭抱闸并关闭使能
+	void LockServo();
+	// 所有电机打开抱闸并打开使能
 	void UnlockServo();
 	// 单个电机使能
 	void EnableServo(int index);
@@ -212,8 +214,9 @@ public:
 	void Down();
 	// 连续位置控制
 	void Csp(double * pulse);
-	// 连续位置控制(Pid控制)
+	// 连续位置控制(PID控制)
 	void PidCsp(double * pulse);
+	// 缓慢的连续位置控制(PID控制)
 	void SlowPidCsp(double * pulse);
 	// 获取所有电机编码器脉冲的平均值
 	double GetMotionAveragePulse();
@@ -230,7 +233,7 @@ public:
 	// 六自由度平台开机自检
 	bool PowerOnSelfTest(SixDofPlatformStatus laststatus, double * lastpulse);
 	// 测试所有硬件
-	void Test();
+	void TestHardware();
 public:
 	// 电机编码器位置
 	double NowPluse[AXES_COUNT];
