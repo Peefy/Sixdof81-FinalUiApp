@@ -96,11 +96,17 @@ template<class T>
 class DataPackageType
 {
 public:
+	// XÏßÎ»ÒÆ
 	unique_ptr<T> X;
+	// YÏßÎ»ÒÆ
 	unique_ptr<T> Y;
+	// ZÏßÎ»ÒÆ
 	unique_ptr<T> Z;
+	// ºá¹ö½Ç
 	unique_ptr<T> Roll;
+	//¸©Ñö½Ç
 	unique_ptr<T> Pitch;
+	// Æ«º½½Ç
 	unique_ptr<T> Yaw;
 	DataPackageType()
 	{

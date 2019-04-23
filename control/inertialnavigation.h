@@ -203,10 +203,10 @@ private:
 	double p;
 	double i;
 	double d;
-	void DecodeData();
-	RS422DataPackage data;
 	bool disposed;
+	void DecodeData();
 	void DataInit();
+	RS422DataPackage data;
 	CSerialPort serialPort;
 protected:
 	bool JudgeCheckByte(char * chars);

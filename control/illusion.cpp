@@ -9,7 +9,6 @@
 #include "../config/inihelper.h"
 
 #define IS_USE_WASHOUT 0
-
 #define IS_FILE_RECORD 0
 
 UdpClient udpClient = UdpClient(UDP_SELF_PORT);
