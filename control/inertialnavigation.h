@@ -168,10 +168,15 @@ class InertialNavigation
 public:
 	InertialNavigation();
 	~InertialNavigation();
+	// 获取惯导简介
 	string GetIntroduction() const;
+	// 打开惯导串口
 	bool Open();
+	// 关闭惯导串口
 	bool Close();
+	// 更新惯导数据
 	void RenewData();
+	// 获取惯导buffer长度
 	int GetBufferLength() const;
 	void SetDefaultAlignment(double lat, double lon, double height);
 	void SetGpsPoleLength(double x, double y, double z);
