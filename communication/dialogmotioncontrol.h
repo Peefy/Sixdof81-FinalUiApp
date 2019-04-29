@@ -19,7 +19,7 @@ using namespace std;
 //上升下降控制间隔
 #define DDA_CONTROL_THREAD_DELAY 5
 
-#if IS_BIG_MOTION
+#if IS_81_PLATFORM
 // 缸的最大行程mm
 #define MAX_MM 700.0
 // 电机丝杠导程单位mm
@@ -77,7 +77,7 @@ using namespace std;
 // 平台正弦运动 角度最大零位deg
 #define MAX_DEG_ZERO_POS    3
 
-#else
+#elif IS_84_PLATFORM
 //缸的最大行程mm
 #define MAX_MM 700.0
 // 电机丝杠单位mm
