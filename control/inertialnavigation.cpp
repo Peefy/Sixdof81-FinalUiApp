@@ -8,6 +8,11 @@
 #define JUDGE_IS_RECIEVE if(IsRecievedData == false) return;
 
 #define IS_USE_DELTA_PID 1
+#define IS_FILE_READ_PID_PARA 1
+
+#define INNAVI_PID_CTRL_P 0.00005
+#define INNAVI_PID_CTRL_I 0.0000001
+#define INNAVI_PID_CTRL_D 0.00000001
 
 InertialNavigation::InertialNavigation()
 {
@@ -194,9 +199,16 @@ void InertialNavigation::DecodeData()
 
 void InertialNavigation::DataInit()
 {
+#if IS_FILE_READ_PID_PARA
+	// 从json配置文件中读取pid控制参数
 	p = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_P_KEY);
 	i = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_I_KEY);
 	d = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_D_KEY);
+#else
+	p = INNAVI_PID_CTRL_P
+	i = INNAVI_PID_CTRL_I
+	d = INNAVI_PID_CTRL_D
+#endif
 	Roll = 0;
 	Yaw = 0;
 	Pitch = 0;
