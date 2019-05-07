@@ -98,9 +98,9 @@ InertialNavigation navigation;
 Water water;
 #endif
 
-#if IS_BIG_MOTION
+#if IS_81_PLATFORM
 
-#else
+#elif IS_84_PLATFORM
 IllusionDataAdapter dataAdapter;
 #endif
 
@@ -175,9 +175,9 @@ DWORD WINAPI SceneInfoThread(LPVOID pParam)
 {
 	while (true)
 	{	
-#if IS_BIG_MOTION
+#if IS_81_PLATFORM
 
-#else
+#elif IS_84_PLATFORM
 		dataAdapter.SendData(false, status, data.X * XYZ_SCALE, data.Y * XYZ_SCALE, 
 			data.Z * XYZ_SCALE, data.Roll * DEG_SCALE, 
 			data.Yaw * DEG_SCALE, data.Pitch * DEG_SCALE);
@@ -1383,12 +1383,12 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	testPhase[4] = pitchphase;
 	testPhase[5] = yawphase;
 
-	testPhase[0] = xzeropos;
-	testPhase[1] = yzeropos;
-	testPhase[2] = zzeropos;
-	testPhase[3] = rollzeropos;
-	testPhase[4] = pitchzeropos;
-	testPhase[5] = yawzeropos;
+	testZeroPos[0] = xzeropos;
+	testZeroPos[1] = yzeropos;
+	testZeroPos[2] = zzeropos;
+	testZeroPos[3] = rollzeropos;
+	testZeroPos[4] = pitchzeropos;
+	testZeroPos[5] = yawzeropos;
 
 	if (xphase != 0 || yphase != 0 || zphase != 0 || 
 		rollphase != 0 || pitchphase != 0 || yawphase != 0)
