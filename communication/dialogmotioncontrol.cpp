@@ -13,14 +13,21 @@
 #define ASSERT_INDEX(index) 	if (index < 0 && index >= AXES_COUNT) return;
 
 #if IS_BIG_MOTION
-#define MOTION_P 0.0001
+// 平台运行过程PID控制参数-P
+#define MOTION_P 0.0001、
+// 平台运行过程PID控制参数-I
 #define MOTION_I 0.0000001
+// 平台运行过程PID控制参数-D
 #define MOTION_D 0.0
+// 平台运行过程当中最大速度
 #define MAX_VEL  2.5
-
+// 平台上升过程PID控制参数-P
 #define RISE_MOTION_P 0.00004
+// 平台上升过程PID控制参数-I
 #define RISE_MOTION_I 0.0000002
+// 平台上升过程PID控制参数-D
 #define RISE_MOTION_D 0.0
+// 平台上升过程当中最大速度
 #define RISE_MAX_VEL  0.3
 #else
 // 平台运行过程PID控制参数-P
