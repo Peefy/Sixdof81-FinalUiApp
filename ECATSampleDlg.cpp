@@ -23,7 +23,6 @@
 #include "control/kalman_filter.h"
 #include "control/inertialnavigation.h"
 #include "control/water.h"
-#include "control/landvision.h"
 #include "control/illusion.h"
 
 #include "ui/uiconfig.h"
@@ -279,13 +278,10 @@ void VisionOrSensorDataDeal()
 	visionData.Yaw = navigation.Yaw;
 	LeaveCriticalSection(&csdata);
 #else
-	water.RenewData();
+	water.GatherData();
 	if (water.IsRecievedData == true)
 		water.SendData(data.Roll / 100.0, data.Yaw / 100.0, data.Pitch / 100.0);
 	EnterCriticalSection(&csdata);
-	water.Roll = kalman1_filter(&kalman_rollFilter, water.Roll);
-	water.Pitch = kalman1_filter(&kalman_pitchFilter, water.Pitch);
-	water.Yaw = kalman1_filter(&kalman_yawFilter, water.Yaw);
 	visionData.X = 0;
 	visionData.Y = 0;
 	visionData.Z = 0;

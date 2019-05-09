@@ -23,6 +23,8 @@
 #define UP_DATA_LENGTH    14
 #define DOWN_DATA_LENGTH  13
 
+#define WATER_READ_BUFFER 10240
+
 #pragma pack (1)
 typedef struct
 {
@@ -72,6 +74,7 @@ public:
 	bool Open();
 	bool Close();
 	void RenewData();
+	bool GatherData();
 	void TestSendData();
 	void SendData(double roll, double yaw, double pitch);
 private:

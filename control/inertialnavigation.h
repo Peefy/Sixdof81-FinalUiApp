@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "../communication/SerialPort.h"
+#include "Com.h"
 
 using namespace std;
 
@@ -104,7 +105,7 @@ using namespace std;
 
 #define STATUS_BIT_GET(var, n)     (((var) >> (n)) & 0x01)  
 
-#define RS422_BUFFER_LENGTH    4096
+#define RS422_BUFFER_LENGTH    10240
 
 #define CHECK_BYTE_INDEX 80
 #define CHECK_BYTE_CAL_START_INDEX  2
@@ -168,16 +169,13 @@ class InertialNavigation
 public:
 	InertialNavigation();
 	~InertialNavigation();
-	// 获取惯导简介
 	string GetIntroduction() const;
-	// 打开惯导串口
 	bool Open();
-	// 关闭惯导串口
+	bool Open(int port);
 	bool Close();
-	// 更新惯导数据
 	void RenewData();
-	// 获取惯导buffer长度
-	int GetBufferLength() const;
+	bool GatherData();
+	int GetBufferLength();
 	void SetDefaultAlignment(double lat, double lon, double height);
 	void SetGpsPoleLength(double x, double y, double z);
 	void SetAngleError(double pitch, double roll, double yaw);
@@ -189,51 +187,31 @@ public:
 	void StartGps();
 	void StartSins();
 	void Dispose();
-	// 惯导稳定控制平台的三个姿态增量
 	void PidOut(double * roll, double * yaw, double * pitch);
-	// 惯导的横滚角
+	void PidInit();
 	double Roll;
-	// 惯导的偏航角
 	double Yaw;
-	// 惯导的俯仰角
 	double Pitch;
-	// 经度
 	double Lon;
-	// 维度
 	double Lan;
-	// 是否收到惯导的数据
 	bool IsRecievedData;
-	// 惯导的陀螺仪是否故障
 	bool IsGyroError;
-	// 惯导的加速度计是否故障
 	bool IsAccError;
-	// 惯导的CPU是否故障
 	bool IsCpuError;
-	// 惯导的卫星数据是否故障
 	bool IsSatelliteDataError;
 	bool IsAlignment;
 	bool IsInertialError;
 	bool IsNavigationError;
-	// 惯导的RS422串口是否打开
 	bool IsRS422Start;
 private:
-	// 惯导稳定控制PID参数——比例
-	double p;
-	// 惯导稳定控制PID参数——积分
-	double i;
-	// 惯导稳定控制PID参数——微分
-	double d;
-	bool disposed;
 	void DecodeData();
-	void DataInit();
-	// 惯导的帧数据包
 	RS422DataPackage data;
-	// 惯导的串口
+	bool disposed;
+	void DataInit();
 	CSerialPort serialPort;
+	//CCOM serialPort;
 protected:
-	// 校验惯导数据
 	bool JudgeCheckByte(char * chars);
-	// 向惯导发送字符串
 	void RS422SendString(string strs);
 };
 

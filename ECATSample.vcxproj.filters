@@ -192,9 +192,6 @@
     <ClCompile Include="control\water.cpp">
       <Filter>control</Filter>
     </ClCompile>
-    <ClCompile Include="control\landvision.cpp">
-      <Filter>control</Filter>
-    </ClCompile>
     <ClCompile Include="hardware\UserPCI1750.cpp">
       <Filter>hardware</Filter>
     </ClCompile>
@@ -458,9 +455,6 @@
       <Filter>control</Filter>
     </ClInclude>
     <ClInclude Include="control\water.h">
-      <Filter>control</Filter>
-    </ClInclude>
-    <ClInclude Include="control\landvision.h">
       <Filter>control</Filter>
     </ClInclude>
     <ClInclude Include="cwnds\panel.h">
