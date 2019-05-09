@@ -87,7 +87,7 @@ void LandVision::DataInit()
 
 void LandVision::RenewVisionData()
 {
-	auto data = this->GetDataFromCom();
+	auto data = this->GatherDataFromCom();
 	if (this->IsRecievedData == false)
 		return;
 	auto crc = CalCrc(&data);
@@ -168,13 +168,13 @@ void LandVision::SendVisionData()
 	sendPackage.Crc = ExchangeBit8(CalCrc(&sendPackage)); 
 	memcpy(sendBytes, &sendPackage, SendPackageLength);
 
-	SendUARTMessageLength(VISION_PORT, sendBytes, SendPackageLength);
+	//SendUARTMessageLength(VISION_PORT, sendBytes, SendPackageLength);
 	delete[] sendBytes;
 }
 
 bool LandVision::GetIsShock()
 {
-	bool enableShock = false;
+	bool enableShock = true;
 	if (RecieveState.IsShockOff == true)
 	{
 		enableShock = false;

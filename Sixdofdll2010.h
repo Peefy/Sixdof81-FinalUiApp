@@ -97,8 +97,7 @@ planeAboveHingeLength : 上平台上表面距离上平台铰链的垂直距离
 planeAboveBottomLength : 上平台上表面距离地面的垂直距离
 circleTopRadius : 上平台圆圈半径
 circleBottomRadius : 下平台圆圈半径
-distanceBetweenHingeTop ： 上平台同一组两个铰链的中心距离
-distanceBetweenHingeBottom : 下平台同一组两个铰链的中心距离
+distanceBetweenHinge : 上平台同一组两个铰链的中心距离
 @return
 bool 是否设置成功
 */

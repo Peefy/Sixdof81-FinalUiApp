@@ -213,6 +213,9 @@
     <ClCompile Include="communication\dialogmotioncontrol.cpp">
       <Filter>communication</Filter>
     </ClCompile>
+    <ClCompile Include="control\landvision.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ECATSample.rc">
@@ -477,6 +480,9 @@
     </ClInclude>
     <ClInclude Include="communication\dialogmotioncontrol.h">
       <Filter>communication</Filter>
+    </ClInclude>
+    <ClInclude Include="control\landvision.h">
+      <Filter>control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

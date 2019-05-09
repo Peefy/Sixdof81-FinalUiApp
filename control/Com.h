@@ -19,7 +19,6 @@ public:
 	CCOM();
 	virtual ~CCOM();
 
-
 	BOOL InitCOM(int nPort, int nBaud, int nStop, int nV, int nData);
 	BOOL SendCOMCode(unsigned char chCode[],int nNum);
 	DWORD GetCOMData(unsigned char* pchBuffer);
