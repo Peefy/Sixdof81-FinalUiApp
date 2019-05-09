@@ -60,3 +60,11 @@ void MyPidParaInit(PID_Type *This)
 	This->LastError = 0;
 	This->Error = 0;
 }
+
+
+void MyControllerSetPidPara(PID_Type * This, double p, double i, double d)
+{
+	This->Real_P = p;
+	This->Real_I = i;
+	This->Real_D = d;
+}

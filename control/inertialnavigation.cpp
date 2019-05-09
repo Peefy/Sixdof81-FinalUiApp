@@ -280,15 +280,9 @@ void InertialNavigation::DataInit()
 	p = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_P_KEY);
 	i = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_I_KEY);
 	d = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_NAVI_D_KEY);
-	rollPid.Real_P = p;
-	rollPid.Real_I = i;
-	rollPid.Real_D = d;
-	pitchPid.Real_P = p;
-	pitchPid.Real_I = i;
-	pitchPid.Real_D = d;
-	yawPid.Real_P = p;
-	yawPid.Real_I = i;
-	yawPid.Real_D = d;
+	MyControllerSetPidPara(&rollPid, p, i, d);
+	MyControllerSetPidPara(&pitchPid, p, i, d);
+	MyControllerSetPidPara(&yawPid, p, i, d);
 	Roll = 0;
 	Yaw = 0;
 	Pitch = 0;

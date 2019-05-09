@@ -45,6 +45,7 @@ double MyLocationPID_Real(PID_Type *This, double now, double set);
 double MyDeltaPID_Real(PID_Type *This, double now, double set);
 double MyDeltaPIDWithNoDelta(PID_Type *This, double now, double set);
 void MyPidParaInit(PID_Type *This);
+void MyControllerSetPidPara(PID_Type * This, double p, double i, double d);
 
 #ifdef __cplusplus
 }
