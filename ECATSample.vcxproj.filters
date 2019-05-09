@@ -216,6 +216,9 @@
     <ClCompile Include="control\landvision.cpp">
       <Filter>control</Filter>
     </ClCompile>
+    <ClCompile Include="config\recordpath.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ECATSample.rc">
@@ -483,6 +486,9 @@
     </ClInclude>
     <ClInclude Include="control\landvision.h">
       <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="config\recordpath.h">
+      <Filter>config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

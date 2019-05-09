@@ -315,16 +315,14 @@ void InertialNavigation::PidOut(double* roll, double *yaw, double* pitch)
 	const double finalRoll = 0;
 	const double finalPitch = 0;
 	const double finalYaw = 0;
-	static double initRoll = 0;
-	static double initPitch = 0;
-	static double initYaw = 0;
 	JUDGE_IS_RECIEVE;
 #if IS_USE_DELTA_PID
-	*pitch = MyDeltaPID_Real(&rollPid, Pitch, finalRoll);
-	*roll = MyDeltaPID_Real(&pitchPid, Roll, finalPitch);
+	*pitch = MyDeltaPID_Real(&pitchPid, Pitch, finalPitch);
+	*roll = MyDeltaPID_Real(&rollPid, Roll, finalRoll);
 	//*yaw = MyDeltaPID_Real(&yawPid, Yaw, finalYaw);
 #else
-	*roll = -Pitch;
-	*pitch = -Roll;
+	*roll = Roll;
+	*pitch = Pitch
 #endif
 }
+

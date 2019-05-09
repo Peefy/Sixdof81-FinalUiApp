@@ -57,7 +57,6 @@ public:
 	Sensor(int port);
 	Sensor();
 	~Sensor();
-	SensorInfo_t ProvideSensorInfo();
 	SensorInfo_t GatherData();
 	bool IsReady();
 	bool isStart;
@@ -66,6 +65,7 @@ public:
 	bool closePort();
 	void UpdateOffset();
 private:
+	SensorInfo_t ProvideSensorInfo();
 	SensorInfo_t info;
 	SensorInfo_t offsetinfo;
 	SensorInfo_t readInfo;

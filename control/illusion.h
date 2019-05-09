@@ -33,8 +33,17 @@ using namespace std;
 #define ILLUSION_ANGLE_SCALE    0.001
 #define ILLUSION_SPEED_SCALE    (0.001 * 3.1415926 / 180.0)
 #define ILLUSION_ACC_SCALE      0.001
+#define ILLUSION_OTHER_SCALE    0.001
 
-#define DIRECT_ACC_SCALE 10.0
+#define DIRECT_ACC_X_SCALE        10.0
+#define DIRECT_ACC_Y_SCALE        10.0
+#define DIRECT_ACC_Z_SCALE        10.0
+#define DIRECT_SPEED_ROLL_SCALE   2.0
+#define DIRECT_SPPED_PITCH_SCALE  2.0
+#define DIRECT_SPEED_YAW_SCALE    2.0
+#define DIRECT_ANGLE_ROLL_SCALE   2.0
+#define DIRECT_ANGLE_PITCH_SCALE  1.0
+#define DIRECT_ANGLE_YAW_SCALE    2.0
 
 #define ILLUSION_DT 0.047
 
@@ -48,6 +57,9 @@ using namespace std;
 #define EARTH_G 9.8
 
 #define ILLUSION_NORMAL_ACC      (0.02 * EARTH_G)
+
+#define ILLUSION_SHOCK_MAX_AIR_SPEED 100.0
+#define ILLUSION_SHOCK_MAX_HZ        8.0
 
 typedef enum 
 {
@@ -182,6 +194,8 @@ public:
 	void SendData(bool iswarning, int status, double x, double y, double z, double roll, double yaw, double pitch);
 	int GetControlCommand() const;
 	bool IsIllusionControl() const;
+	bool IsEanbleShock() const;
+	double GetShockHz();
 	bool IsRecievedData;
 	double Roll;
 	double Yaw;
@@ -213,12 +227,23 @@ private:
 	int SendDataPackageLength;
 	void RenewInnerData();
 	void ReadIpAndPortFromFile();
+	void ReadDeirectCtlScaleFromFile();
 protected:
 	void DataInit();
 	int SelfPort;
 	string SelfIp;
 	int VisionPort;
 	string VisionIp;
+private:
+	double directAccXScale;
+	double directAccYScale;
+	double directAccZScale;
+	double directSpeedRollScale;
+	double directSpeedPitchScale;
+	double directSpeedYawScale;
+	double directAngleRollScale;
+	double directAnglePitchScale;
+	double directAngleYawScale;
 };
 
 

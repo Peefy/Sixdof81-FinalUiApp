@@ -1,15 +1,18 @@
 
 #include "stdafx.h"
 #include "illusion.h"
+#include "washout.h"
 
 #include <time.h>
 #include <fstream>
 #include <stdio.h>
 
 #include "../config/inihelper.h"
+#include "../config/recordpath.h"
 
-#define IS_USE_WASHOUT 0
-#define IS_FILE_RECORD 0
+#define IS_USE_WASHOUT 1
+
+//#define IS_FILE_RECORD 1
 
 UdpClient udpClient = UdpClient(UDP_SELF_PORT);
 #if IS_USE_WASHOUT
@@ -28,6 +31,7 @@ IllusionDataAdapter::IllusionDataAdapter()
 	SendToData.flagend = ILLUSION_FLAG_END_INT32;
 	DataInit();
 	ReadIpAndPortFromFile();
+	ReadDeirectCtlScaleFromFile();
 }
 
 IllusionDataAdapter::~IllusionDataAdapter()
@@ -42,13 +46,23 @@ void IllusionDataAdapter::DataInit()
 	SelfIp = UDP_SELF_IP_STRING;
 	VisionIp = UDP_IP_STRING;
 	IsDirectControl = false;
+
+	directAccXScale = DIRECT_ACC_X_SCALE;
+	directAccYScale = DIRECT_ACC_Y_SCALE;
+	directAccZScale = DIRECT_ACC_Z_SCALE;
+	directSpeedRollScale = DIRECT_SPEED_ROLL_SCALE;
+	directSpeedPitchScale = DIRECT_SPPED_PITCH_SCALE;
+	directSpeedYawScale = DIRECT_SPEED_YAW_SCALE;
+	directAngleRollScale = DIRECT_ANGLE_ROLL_SCALE;
+	directAnglePitchScale = DIRECT_ANGLE_PITCH_SCALE;
+	directAngleYawScale = DIRECT_ANGLE_YAW_SCALE;
+
 #if IS_FILE_RECORD
 	time_t currtime = time(NULL);
 	struct tm* p = gmtime(&currtime);
 	sprintf_s(filename, "./datas/illusiondata%d-%d-%d-%d-%d-%d.txt", p->tm_year + 1990, p->tm_mon + 1,
 		p->tm_mday, p->tm_hour + 8, p->tm_min, p->tm_sec);
 #endif
-
 }
 
 void IllusionDataAdapter::RenewData()
@@ -86,7 +100,7 @@ void IllusionDataAdapter::SendData()
 
 void IllusionDataAdapter::SendData(bool iswarning, int status, double x, double y, double z, double roll, double yaw, double pitch)
 {
-	SendToData.iswarning = iswarning == true ? 111 : 0;
+	SendToData.iswarning = iswarning == true ? 111 : 888;
 	SendToData.status = status * 111;
 	SendToData.x = (int)(x / ILLUSION_XYZ_SCALE);
 	SendToData.y = (int)(y / ILLUSION_XYZ_SCALE);
@@ -107,6 +121,17 @@ bool IllusionDataAdapter::IsIllusionControl() const
 	return Data.by35 == 999;
 }
 
+bool IllusionDataAdapter::IsEanbleShock() const
+{
+	return Data.by18 == 1;
+}
+
+double IllusionDataAdapter::GetShockHz()
+{
+	return ILLUSION_RANGE(Data.by28 * ILLUSION_OTHER_SCALE, 0, ILLUSION_SHOCK_MAX_AIR_SPEED) 
+		* ILLUSION_SHOCK_MAX_HZ / ILLUSION_SHOCK_MAX_AIR_SPEED;
+}
+
 void IllusionDataAdapter::SetPoseAngle(double roll, double pitch, double yaw)
 {
 	platformRoll = roll;
@@ -120,12 +145,16 @@ void IllusionDataAdapter::RenewInnerData()
 	IsDirectControl = Data.by35 == ILLUSION_IS_DIRECT_CONTROL_INT32;
 	planeType = (PlaneType)Data.uPlaneType;
 	//角度
+#if IS_USE_WASHOUT
+
+#else
 	Yaw = 0 * ILLUSION_ANGLE_SCALE;
 	Pitch = ILLUSION_RANGE(Data.fyj * ILLUSION_ANGLE_SCALE, -ILLUSION_MAX_ANGLE_DEG, ILLUSION_MAX_ANGLE_DEG);
 	Roll = ILLUSION_RANGE(Data.cqj * ILLUSION_ANGLE_SCALE, -ILLUSION_MAX_ANGLE_DEG, ILLUSION_MAX_ANGLE_DEG);
 	X = 0;
 	Y = 0;
 	Z = 0;
+#endif
 	//速度 
 	PitchSpeed = ILLUSION_RANGE(Data.hxjs * ILLUSION_SPEED_SCALE, -ILLUSION_MAX_ANGLE_SPEED, ILLUSION_MAX_ANGLE_SPEED);
 	YawSpeed = ILLUSION_RANGE(Data.hxjas * ILLUSION_SPEED_SCALE, -ILLUSION_MAX_ANGLE_SPEED, ILLUSION_MAX_ANGLE_SPEED);
@@ -147,12 +176,12 @@ void IllusionDataAdapter::RenewInnerData()
 	if (IsDirectControl == true)
 	{
 		// 直控模式是在飞控模式的基础上增加运动
-		XAcc += Data.uAcceVx_mss * EARTH_G * ILLUSION_ACC_SCALE * DIRECT_ACC_SCALE;
-		YAcc += Data.uAcceVy_mss * EARTH_G * ILLUSION_ACC_SCALE * DIRECT_ACC_SCALE;
-		ZAcc += Data.uAcceVz_mss * EARTH_G * ILLUSION_ACC_SCALE * DIRECT_ACC_SCALE;
-		RollSpeed += Data.uAccebx_degs * ILLUSION_SPEED_SCALE;
-		PitchSpeed += Data.uAcceby_degs * ILLUSION_SPEED_SCALE;
-		YawSpeed += Data.uAccebz_degs * ILLUSION_SPEED_SCALE;
+		XAcc += Data.uAcceVx_mss * EARTH_G * ILLUSION_ACC_SCALE * directAccXScale;
+		YAcc += Data.uAcceVy_mss * EARTH_G * ILLUSION_ACC_SCALE * directAccYScale;
+		ZAcc += Data.uAcceVz_mss * EARTH_G * ILLUSION_ACC_SCALE * directAccZScale;
+		RollSpeed += Data.uAccebx_degs * ILLUSION_SPEED_SCALE * directSpeedRollScale;
+		PitchSpeed += Data.uAcceby_degs * ILLUSION_SPEED_SCALE * directSpeedPitchScale;
+		YawSpeed += Data.uAccebz_degs * ILLUSION_SPEED_SCALE * directSpeedYawScale;
 	}
 	flightwashout.Do(XAcc, YAcc, ZAcc, RollSpeed, PitchSpeed, YawSpeed, platformRoll, platformYaw, platformPitch);
 	Yaw = flightwashout.WashYaw;     //deg
@@ -164,27 +193,31 @@ void IllusionDataAdapter::RenewInnerData()
 #endif
 	if (IsDirectControl == true)
 	{
-		Roll += Data.uAccebx_deg * ILLUSION_ANGLE_SCALE;
-		Pitch += Data.uAcceby_deg * ILLUSION_ANGLE_SCALE;
-		Yaw += Data.uAccebz_deg * ILLUSION_ANGLE_SCALE;
+		Roll += Data.uAccebx_deg * ILLUSION_ANGLE_SCALE * directAngleRollScale;
+		Pitch += Data.uAcceby_deg * ILLUSION_ANGLE_SCALE * directAnglePitchScale;
+		Yaw += Data.uAccebz_deg * ILLUSION_ANGLE_SCALE * directAngleYawScale;
 	}
 }
 
 void IllusionDataAdapter::ReadIpAndPortFromFile()
 {
-	VisionIp = config::ParseStringJsonFromFile(JSON_FILE_NAME, JSON_UDP_IP_KEY);
-	SelfIp = config::ParseStringJsonFromFile(JSON_FILE_NAME, JSON_UDP_SELF_IP_KEY);
-	int result = config::ParseIntJsonFromFile(JSON_FILE_NAME, JSON_UDP_PORT_KEY);
-	if (result != NULL)
-	{
-		VisionPort = result;
-	}
-	result = config::ParseIntJsonFromFile(JSON_FILE_NAME, JSON_UDP_SELF_PORT_KEY);
-	if (result != NULL)
-	{
-		SelfPort = result;
-	}
+ 	VisionIp = config::ParseStringJsonFromFile(JSON_FILE_NAME, JSON_UDP_IP_KEY);
+ 	SelfIp = config::ParseStringJsonFromFile(JSON_FILE_NAME, JSON_UDP_SELF_IP_KEY);
+ 	int result = config::ParseIntJsonFromFile(JSON_FILE_NAME, JSON_UDP_PORT_KEY);
+ 	if (result != NULL)
+ 	{
+ 		VisionPort = result;
+ 	}
+ 	result = config::ParseIntJsonFromFile(JSON_FILE_NAME, JSON_UDP_SELF_PORT_KEY);
+ 	if (result != NULL)
+ 	{
+ 		SelfPort = result;
+ 	}
 	udpClient.SetPortAndBind(SelfPort);
 }
 
+void IllusionDataAdapter::ReadDeirectCtlScaleFromFile()
+{
+
+}
 

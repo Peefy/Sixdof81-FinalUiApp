@@ -173,7 +173,6 @@ public:
 	bool Open();
 	bool Open(int port);
 	bool Close();
-	void RenewData();
 	bool GatherData();
 	int GetBufferLength();
 	void SetDefaultAlignment(double lat, double lon, double height);
@@ -204,6 +203,7 @@ public:
 	bool IsNavigationError;
 	bool IsRS422Start;
 private:
+	void RenewData();
 	void DecodeData();
 	RS422DataPackage data;
 	bool disposed;

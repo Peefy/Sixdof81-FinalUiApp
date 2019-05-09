@@ -147,8 +147,7 @@ kalman1_state kalman_xFilter;
 kalman1_state kalman_yFilter;
 kalman1_state kalman_zFilter;
 
-CRITICAL_SECTION cs;
-CRITICAL_SECTION csdata;
+mutex csdata;
 DataPackageDouble visionData = {0};
 DataPackageDouble lastData = {0};
 
@@ -251,7 +250,6 @@ void CloseThread()
 
 void OpenThread()
 {
-	InitializeCriticalSection(&csdata);
 	DataThread = (HANDLE)CreateThread(NULL, 0, DataTransThread, NULL, 0, NULL);
 	SensorThread = (HANDLE)CreateThread(NULL, 0, SensorInfoThread, NULL, 0, NULL);
 	SceneThread = (HANDLE)CreateThread(NULL, 0, SceneInfoThread, NULL, 0, NULL);
@@ -261,34 +259,38 @@ void OpenThread()
 void VisionOrSensorDataDeal()
 {
 #if IS_USE_NAVIGATION
-	navigation.RenewData();
-	EnterCriticalSection(&csdata);
+	navigation.GatherData();
+	if (csdata.try_lock())
+	{
 #if	IS_USE_KALMAN_FILTER
-	navigation.Roll = kalman1_filter(&kalman_rollFilter, navigation.Roll);
-	navigation.Pitch = kalman1_filter(&kalman_pitchFilter, navigation.Pitch);
-	navigation.Yaw = kalman1_filter(&kalman_yawFilter, navigation.Yaw);
+		navigation.Roll = kalman1_filter(&kalman_rollFilter, navigation.Roll);
+		navigation.Pitch = kalman1_filter(&kalman_pitchFilter, navigation.Pitch);
+		navigation.Yaw = kalman1_filter(&kalman_yawFilter, navigation.Yaw);
 #else
 
 #endif
-	visionData.X = 0;
-	visionData.Y = 0;
-	visionData.Z = 0;
-	visionData.Roll = navigation.Roll;
-	visionData.Pitch = navigation.Pitch;
-	visionData.Yaw = navigation.Yaw;
-	LeaveCriticalSection(&csdata);
+		visionData.X = 0;
+		visionData.Y = 0;
+		visionData.Z = 0;
+		visionData.Roll = navigation.Roll;
+		visionData.Pitch = navigation.Pitch;
+		visionData.Yaw = navigation.Yaw;
+		csdata.unlock();
+	}
 #else
 	water.GatherData();
 	if (water.IsRecievedData == true)
 		water.SendData(data.Roll / 100.0, data.Yaw / 100.0, data.Pitch / 100.0);
-	EnterCriticalSection(&csdata);
-	visionData.X = 0;
-	visionData.Y = 0;
-	visionData.Z = 0;
-	visionData.Roll = water.Roll;
-	visionData.Pitch = water.Pitch;
-	visionData.Yaw = water.Yaw;
-	LeaveCriticalSection(&csdata);
+	if (csdata.try_lock())
+	{
+		visionData.X = 0;
+		visionData.Y = 0;
+		visionData.Z = 0;
+		visionData.Roll = water.Roll;
+		visionData.Pitch = water.Pitch;
+		visionData.Yaw = water.Yaw;
+		csdata.unlock();
+	}
 #endif
 }
 
@@ -405,30 +407,6 @@ void SixdofControl()
 			}
 			t += deltat;
 			delta.PidCsp(dis);
-			/*
-			if (stopSCurve == true && isCosMode == false)
-			{
-				int index = 0;
-				auto maxHz = util::MaxValue(testHz, AXES_COUNT);
-				for (int i = 0;i < 100; ++i)
-				{
-					if (pi * i + 0.5 * pi >= nowt * 2 * pi * maxHz)
-					{
-						index = i;
-						break;
-					}
-				}
-				stopTime = (pi * index + 0.5 * pi) / (2 * pi * maxHz) + chirpTime - 1;
-				stopSCurve = false;
-			}
-			if (stopTime == 0 || nowt <= stopTime) 
-			{
-				delta.PidCsp(dis);
-			}	
-			else if (nowt > stopTime)
-			{
-				t -= deltat;
-			}	*/
 		}
 		// 模拟船视景
 		else
@@ -1109,12 +1087,14 @@ void CECATSampleDlg::OnTimer(UINT nIDEvent)
 		poleLength[3], poleLength[4], poleLength[5]);
 	SetDlgItemText(IDC_EDIT_Pulse, statusStr);
 	
-	EnterCriticalSection(&csdata);
-	statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"),
-		visionData.X, visionData.Y, visionData.Z,
-		visionData.Roll, visionData.Pitch, visionData.Yaw);
+	if (csdata.try_lock())
+	{
+		statusStr.Format(_T("1:%.2f 2:%.2f 3:%.2f 4:%.2f 5:%.2f 6:%.2f"),
+			visionData.X, visionData.Y, visionData.Z,
+			visionData.Roll, visionData.Pitch, visionData.Yaw);
+		csdata.unlock();
+	}
 	SetDlgItemText(IDC_EDIT_Sensor, statusStr);
-	LeaveCriticalSection(&csdata);
 
 	delta.CheckStatus(status);
 	if(InitialFlag == 0)

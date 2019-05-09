@@ -162,6 +162,7 @@
     <ClCompile Include="communication\SerialPort.cpp" />
     <ClCompile Include="communication\sixdof.cpp" />
     <ClCompile Include="config\inihelper.cpp" />
+    <ClCompile Include="config\recordpath.cpp" />
     <ClCompile Include="control\Com.cpp" />
     <ClCompile Include="control\illusion.cpp" />
     <ClCompile Include="control\inertialnavigation.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="communication\stdafx.h" />
     <ClInclude Include="config\appconfig.h" />
     <ClInclude Include="config\inihelper.h" />
+    <ClInclude Include="config\recordpath.h" />
     <ClInclude Include="control\Com.h" />
     <ClInclude Include="control\illusion.h" />
     <ClInclude Include="control\inertialnavigation.h" />
