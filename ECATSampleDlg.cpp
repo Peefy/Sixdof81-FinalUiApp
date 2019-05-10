@@ -266,8 +266,6 @@ void VisionOrSensorDataDeal()
 		navigation.Roll = kalman1_filter(&kalman_rollFilter, navigation.Roll);
 		navigation.Pitch = kalman1_filter(&kalman_pitchFilter, navigation.Pitch);
 		navigation.Yaw = kalman1_filter(&kalman_yawFilter, navigation.Yaw);
-#else
-
 #endif
 		visionData.X = 0;
 		visionData.Y = 0;
