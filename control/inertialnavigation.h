@@ -80,37 +80,63 @@ using namespace std;
 #define MTBF_HOURS    20000.0
 #define MTTR_MINUTES  30.0
 
+// 惯导422接口端口号
 #define RS422_PORT_NUMBER          5
+// 惯导422接口波特率
 #define RS422_PORT_BAUDRATE        115200
+// 惯导422数据帧包头1
 #define RS422_DATA_HEAD_ONE        0x10
+// 惯导422数据帧包头1
 #define RS422_DATA_HEAD_TWO        0x2A
+// 惯导422数据帧包尾1
 #define RS422_DATA_TAIL_ONE        0x10
+// 惯导422数据帧包尾2
 #define RS422_DATA_TAIL_TWO        0x03
+// 惯导422数据帧包长
 #define RS422_DATA_PACKAGE_LEGNTH  83
+#define FRAME_LENGTH               83
 
+// 经纬度数据缩放系数
 #define LATLON_SCALE      0.01
+// 高度数据缩放系数
 #define HEIGHT_SCALE      1.0
+// 速度数据缩放系数
 #define SPEED_SCALE       0.01
+// 加速度数据缩放系数
 #define ACC_SCLAE         0.001
+// 角度数据缩放系数
 #define ANGLE_SCALE       0.01
+// 角速率数据缩放系数
 #define ANGLE_RATE_SCALE  0.001
 
+// 状态字位索引
 #define GYRO_ERR_BIT           0
+// 状态字位索引
 #define ACC_ERR_BIT            1
+// 状态字位索引
 #define CPU_ERR_BIT            2
+// 状态字位索引
 #define SATELLITE_DATA_ERR_BIT 3
+// 状态字位索引
 #define ALIGNMENT_BIT          5
+// 状态字位索引
 #define INERTIAL_ERR_BIT       6
+// 状态字位索引
 #define NAVIGATION_ERR_BIT     7
 
 #define STATUS_BIT_GET(var, n)     (((var) >> (n)) & 0x01)  
 
+// 惯导数据缓冲包长
 #define RS422_BUFFER_LENGTH    10240
 
+// 惯导数据帧校验字节索引
 #define CHECK_BYTE_INDEX 80
+// 惯导数据帧校验开始字节索引
 #define CHECK_BYTE_CAL_START_INDEX  2
+// 惯导数据帧校验结束字节索引
 #define CHECK_BYTE_CAL_END_INDEX  79
 
+// 惯导数据帧定义
 #pragma pack (1)
 typedef struct
 {
@@ -127,9 +153,9 @@ typedef struct
 	int32_t XAcc;            //0.001
 	int32_t YAcc;            //0.001
 	int32_t ZAcc;            //0.001
-	int32_t Yaw;             //0.01
-	int32_t Pitch;           //0.01
-	int32_t Roll;            //0.01
+	int32_t Yaw;             //偏航角 0.01
+	int32_t Pitch;           //俯仰角 0.01
+	int32_t Roll;            //横滚角 0.01
 	int32_t XNECoorAngularRate;    //0.001
 	int32_t YNECoorAngularRate;    //0.001
 	int32_t ZNECoorAngularRate;    //0.001

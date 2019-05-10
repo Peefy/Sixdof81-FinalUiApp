@@ -4,13 +4,12 @@
 #include "pid.h"
 #include "../config/inihelper.h"
 
+// 判断是否打开串口
 #define JUDGE_IS_START   if(IsRS422Start == false) return;
+// 判断是否接收到数据
 #define JUDGE_IS_RECIEVE if(IsRecievedData == false) return;
-
+// 是否使用PID
 #define IS_USE_DELTA_PID 1
-
-#define FRAME_LENGTH 83
-#define DATA_NUM 21
 
 static double p = 0.001;
 static double i = 0.0001;
