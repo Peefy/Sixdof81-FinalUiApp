@@ -10,14 +10,20 @@
 
 using namespace std;
 
+// UDP通信对方的端口号
 #define UDP_PORT        9000
+// UDP通信对方的IP地址
 #define UDP_IP_STRING   "192.168.0.104"
-
+// UDP通信自身的端口号
 #define UDP_SELF_PORT   6666
+// UDP通信自身的IP地址
 #define UDP_SELF_IP_STRING   "192.168.0.123"
 
+// 通信接收缓冲包最大长度
 #define ILLUSION_RECIEVE_BUFFER_MAX   1024
+// 通信接收缓冲包开始标志
 #define ILLUSION_FLAG_START_INT32     999
+// 通信接收缓冲包结束标志
 #define ILLUSION_FLAG_END_INT32       888
 
 #define ILLUSION_CTL_CMD_START_INT32       111000

@@ -66,6 +66,7 @@ public:
 	void ShowInitImage();
 	void ShowImage();
 	void ShowSingleImage(CWnd* cwnd, float value);
+	void JudgeControlCommand();
 	HDC hrenderDC;      //DC 
 	HGLRC hrenderRC;  //RC  
 	int PixelFormat; 
@@ -76,6 +77,7 @@ public:
 	afx_msg void OnBnClickedBtnStart();
 	afx_msg void OnBnClickedBtnStopme();
 	afx_msg void OnBnClickedBtnDown();
+	void OnCommandStopme();
 	void EanbleButton(int isenable);
 	void KalmanFilterInit();
 	void ChartInit();

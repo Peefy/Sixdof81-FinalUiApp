@@ -9,8 +9,11 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+// 串口读取缓存大小
 #define READBUFFER 10240
+// 串口写入缓存大小
 #define WRITEBUFFER 10240
+// 串口最大端口号
 #define MAX_COMNUM 50
 
 class CCOM  

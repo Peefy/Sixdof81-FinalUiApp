@@ -24,6 +24,7 @@
 #include "control/inertialnavigation.h"
 #include "control/water.h"
 #include "control/illusion.h"
+#include "control/platformapi.h"
 
 #include "ui/uiconfig.h"
 
@@ -140,6 +141,8 @@ double chartYawValPoint[CHART_POINT_NUM] = { 0 };
 double runTime = 0;
 double chartTime = 0;
 
+ApiControlCommandInt32 apiCtrlComand = ApiControlCommandInt32::API_CTL_CMD_NONE;
+
 kalman1_state kalman_rollFilter;
 kalman1_state kalman_yawFilter;
 kalman1_state kalman_pitchFilter;
@@ -148,6 +151,7 @@ kalman1_state kalman_yFilter;
 kalman1_state kalman_zFilter;
 
 mutex csdata;
+mutex ctrlCommandLockobj;
 DataPackageDouble visionData = {0};
 DataPackageDouble lastData = {0};
 
@@ -424,7 +428,6 @@ void SixdofControl()
 			auto roll = RANGE(deltaroll + nowpose[3], -MAX_DEG, MAX_DEG);
 			auto pitch = RANGE(deltapitch + nowpose[4], -MAX_DEG, MAX_DEG);
 			auto yaw = RANGE(deltayaw + nowpose[5], -MAX_DEG, MAX_DEG);
-			double* pulse_dugu = Control(x, y, z, roll, yaw, pitch);
 #else
 			auto x = RANGE(0, -MAX_XYZ, MAX_XYZ);
 			auto y = RANGE(0, -MAX_XYZ, MAX_XYZ);
@@ -455,7 +458,11 @@ void SixdofControl()
 			data.Yaw = (int16_t)(yaw * 100);
 			data.Pitch = (int16_t)(pitch * 100);
 			t += deltat;
+#if IS_USE_NAVIGATION
+			delta
+#else
 			delta.PidCsp(dis);
+#endif
 		}
 		Sleep(delay);
 		DWORD end_time = GetTickCount();
@@ -1063,6 +1070,52 @@ void CECATSampleDlg::EanbleButton(int isenable)
 	((CButton*) GetDlgItem(IDC_BUTTON_STOP_TEST))->EnableWindow(isenable);
 }
 
+void CECATSampleDlg::JudgeControlCommand()
+{
+	if (ctrlCommandLockobj.try_lock())
+	{
+		switch (apiCtrlComand)
+		{
+		case ApiControlCommandInt32::API_CTL_CMD_RISE_INT32:
+			// Rise
+			if (status == SIXDOF_STATUS_BOTTOM || status == SIXDOF_STATUS_ISFALLING)
+			{
+				OnBnClickedBtnRise();
+			}
+			else if (status == SIXDOF_STATUS_MIDDLE || status == SIXDOF_STATUS_RUN)
+			{
+				OnCommandStopme();
+			}
+			break;
+		case ApiControlCommandInt32::API_CTL_CMD_DOWN_INT32:
+			// Down
+			OnBnClickedBtnDown();
+			break;
+		case ApiControlCommandInt32::API_CTL_CMD_CONNECT_INT32:
+			// Run
+			OnBnClickedBtnStart();
+			break;
+		case ApiControlCommandInt32::API_CTL_CMD_DISCONNECT_INT32:
+			// StopAndMiddle
+			OnCommandStopme();
+			break;
+		case ApiControlCommandInt32::API_CTL_CMD_PAUSE_INT32:
+			closeDataThread = true;
+			delta.ServoStop();
+			break;
+		case ApiControlCommandInt32::API_CTL_CMD_RECOVER_INT32:
+			// Run
+			OnBnClickedBtnStart();
+			break;
+		default:
+			break;
+		}
+		apiCtrlComand = ApiControlCommandInt32::API_CTL_CMD_NONE;
+		ctrlCommandLockobj.unlock();
+	}
+}
+
+
 void CECATSampleDlg::OnTimer(UINT nIDEvent) 
 {
 	I16 rt;
@@ -1220,6 +1273,22 @@ void CECATSampleDlg::OnBnClickedBtnStart()
 	isCosMode = false;
 	t = 0;
 	closeDataThread = false;
+}
+
+void CECATSampleDlg::OnCommandStopme()
+{
+	if (status != SIXDOF_STATUS_RUN)
+	{
+		return;
+	}
+	status = SIXDOF_STATUS_READY;
+	closeDataThread = true;
+	Sleep(100);
+	delta.UnlockServo();
+	delta.StopRiseDownMove();
+	Sleep(100);
+	delta.MoveToZeroPulseNumber();
+	ResetDefaultData(&data);
 }
 
 void CECATSampleDlg::OnBnClickedBtnStopme()

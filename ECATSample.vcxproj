@@ -170,6 +170,7 @@
     <ClCompile Include="control\kalman_filter.cpp" />
     <ClCompile Include="control\landvision.cpp" />
     <ClCompile Include="control\pid.cpp" />
+    <ClCompile Include="control\platformapi.cpp" />
     <ClCompile Include="control\sensor.cpp" />
     <ClCompile Include="control\udp.cpp" />
     <ClCompile Include="control\washout.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="control\kalman_filter.h" />
     <ClInclude Include="control\landvision.h" />
     <ClInclude Include="control\pid.h" />
+    <ClInclude Include="control\platformapi.h" />
     <ClInclude Include="control\sensor.h" />
     <ClInclude Include="control\udp.h" />
     <ClInclude Include="control\washout.h" />

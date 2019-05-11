@@ -14,7 +14,7 @@
 
 #if IS_BIG_MOTION
 // 平台运行过程PID控制参数-P
-#define MOTION_P 0.0001、
+#define MOTION_P 0.0001
 // 平台运行过程PID控制参数-I
 #define MOTION_I 0.0000001
 // 平台运行过程PID控制参数-D
@@ -29,6 +29,14 @@
 #define RISE_MOTION_D 0.0
 // 平台上升过程当中最大速度
 #define RISE_MAX_VEL  0.3
+// 惯导稳定过程PID控制参数-P
+#define NAVI_MOTION_P 0.0002
+// 惯导稳定过程PID控制参数-I
+#define NAVI_MOTION_I 0.00003
+// 惯导稳定过程PID控制参数-D
+#define NAVI_MOTION_D 0.000005
+// 惯导稳定过程当中最大速度
+#define NAVI_MAX_VEL  4.0
 #else
 // 平台运行过程PID控制参数-P
 #define MOTION_P 0.0001
@@ -46,9 +54,17 @@
 #define RISE_MOTION_D 0.0
 // 平台上升过程当中最大速度
 #define RISE_MAX_VEL  0.3
-
+// 惯导稳定过程PID控制参数-P
+#define NAVI_MOTION_P 0.0002
+// 惯导稳定过程PID控制参数-I
+#define NAVI_MOTION_I 0.00003
+// 惯导稳定过程PID控制参数-D
+#define NAVI_MOTION_D 0.000005
+// 惯导稳定过程当中最大速度
+#define NAVI_MAX_VEL  4.0
 #endif // IS_BIG_MOTION
 
+// 开环连续位置控制模式Csp的临时变量
 static double last_pulse[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
 static double now_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
 static double last_str_vel[AXES_COUNT] = { 0, 0, 0, 0, 0, 0 };
@@ -75,6 +91,17 @@ static PID_Type MotionRisePidControler[AXES_COUNT] =
 	{ RISE_MOTION_P, RISE_MOTION_I, RISE_MOTION_D, -RISE_MAX_VEL, RISE_MAX_VEL },
 	{ RISE_MOTION_P, RISE_MOTION_I, RISE_MOTION_D, -RISE_MAX_VEL, RISE_MAX_VEL },
 	{ RISE_MOTION_P, RISE_MOTION_I, RISE_MOTION_D, -RISE_MAX_VEL, RISE_MAX_VEL }
+};
+
+// 惯导稳定过程的PID控制器
+PID_Type MotionNavigationPidControler[AXES_COUNT] = 
+{
+	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL },
+	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL },
+	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL },
+	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL },
+	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL },
+	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL }
 };
 
 // 构造函数

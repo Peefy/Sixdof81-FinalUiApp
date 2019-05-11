@@ -1,18 +1,30 @@
 ﻿{
-    "naviP" : 0.0001,
-    "naviI" : 0.00001,
-    "naviD" : 0.000001,
-    "rollScale" : 1.0,
-    "yawScale" : 2.0,
-    "pitchScale" : -1.0,
-    "rollFilterLevel" : 12,
-    "yawFilterLevel" : 12,
-    "pitchFilterLevel" : 12,
-    "xScale" : 0.01,
-    "yScale" : 0.01,
-    "zScale" : 0.01,
-    "xFilterLevel" : 8,
-    "yFilterLevel" : 8,
-    "zFilterLevel" : 8
+    "naviP" : 0.0001,          //惯导稳定PID控制器P
+    "naviI" : 0.00001,         //惯导稳定PID控制器I
+    "naviD" : 0.000001,        //惯导稳定PID控制器D
+    "hpfAccWn" : 1.2,          //洗出算法加速度高通滤波器参数，必须大于0
+    "lpfAccWn" : 0.6,          //洗出算法加速度低通滤波器参数，必须大于0
+    "hpfAngleSpdWn" : 0.135,   //洗出算法角速度高通滤波器参数，必须大于0
+    "rollScale" : 0.9,         //横滚角增益,可正可负
+    "yawScale" : 0.4,          //偏航角增益,可正可负
+    "pitchScale" : -1.2,       //俯仰角增益,可正可负
+    "rollFilterLevel" : 1,    //横滚角平滑系数，越大表示平滑程度越高，大于0的整数
+    "yawFilterLevel" : 1,     //偏航角平滑系数，越大表示平滑程度越高，大于0的整数
+    "pitchFilterLevel" : 1,   //俯仰角平滑系数，越大表示平滑程度越高，大于0的整数
+    "xScale" : 0.12,            //x线位移增益,可正可负
+    "yScale" : 0.12,            //y线位移增益,可正可负
+    "zScale" : 0.7,            //z线位移增益,可正可负
+    "xFilterLevel" : 1,        //x线位移平滑系数，越大表示平滑程度越高，大于0的整数
+    "yFilterLevel" : 1,        //y线位移平滑系数，越大表示平滑程度越高，大于0的整数
+    "zFilterLevel" : 1,        //z线位移平滑系数，越大表示平滑程度越高，大于0的整数	  
+    "directAccXScale" :       10.1,    //直控X加速度增益	
+    "directAccYScale" :       10.2,    //直控X加速度增益
+    "directAccZScale" :       10.3,    //直控X加速度增益	
+    "directSpeedRollScale" :  2.1,     //直控横滚角速度增益
+    "directSpeedPitchScale" : 2.2,     //直控俯仰角速度增益	
+    "directSpeedYawScale" :   2.3,     //直控偏航角速度增益	
+    "directAngleRollScale" :  2.1,     //直控横滚角增益	
+    "directAnglePitchScale" : 1.1,     //直控俯仰角增益	
+    "directAngleYawScale" :   2.2      //直控偏航角增益	
 }
 
