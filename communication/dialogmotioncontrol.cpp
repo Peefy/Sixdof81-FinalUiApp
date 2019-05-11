@@ -332,7 +332,7 @@ void DialogMotionControl::PidCsp(double * pulse)
 		for (auto i = 0; i < AXES_COUNT; ++i)
 		{
 			pulse[i] = pulse[i] + MIDDLE_POS;
-			pulse[i] = RANGE_V(pulse[i], 0, MAX_POS);
+			pulse[i] = RANGE_V(pulse[i], HALF_RPM_POS, MAX_POS - HALF_RPM_POS);
 			now_vel[i] = MyDeltaPID_Real(&MotionLocationPidControler[i], \
 				NowPluse[i], pulse[i]);
 		}
@@ -399,6 +399,38 @@ void DialogMotionControl::RenewNowPulse()
 #endif
 		lockobj.unlock();
 	}
+}
+
+// 获取中位缸伸长长度
+double* DialogMotionControl::GetNowPoleLength()
+{
+	if (lockobj.try_lock())
+	{
+		memcpy(polelenthmm, NowPluse, sizeof(double) * AXES_COUNT);
+		lockobj.unlock();
+	}
+	for (int i = 0;i < AXES_COUNT;++i)
+	{
+		polelenthmm[i] = (polelenthmm[i] - MIDDLE_POS) * PULSE_COUNT_TO_MM_SCALE; 
+	}
+	return polelenthmm;
+}
+
+// 运动学正解获取姿态 x y z roll pitch yaw
+double* DialogMotionControl::GetNowPoseFromLength()
+{
+	if (lockobj.try_lock())
+	{
+		memcpy(polelenthmm, NowPluse, sizeof(double) * AXES_COUNT);
+		lockobj.unlock();
+	}
+	for (int i = 0;i < AXES_COUNT;++i)
+	{
+		polelenthmm[i] = (polelenthmm[i] - MIDDLE_POS) * PULSE_COUNT_TO_MM_SCALE; 
+	}
+	auto pose = FromLengthToPose(polelenthmm);
+	memcpy(posefromlength, pose, sizeof(double) * AXES_COUNT);
+	return posefromlength;
 }
 
 // 电机上升下降的PID控制函数

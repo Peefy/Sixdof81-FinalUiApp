@@ -66,7 +66,7 @@ using namespace std;
 //#define ENABLE_OPENGL       1
 //#define ENABLE_LINE_GRAPH   1
 
-#define IS_USE_NAVIGATION 1
+#define IS_USE_NAVIGATION 0
 #define IS_USE_KALMAN_FILTER 0
 
 bool enableShock = ENABLE_SHOCK;
@@ -416,13 +416,15 @@ void SixdofControl()
 			double deltayaw = 0;
 			double deltapitch = 0;
 #if IS_USE_NAVIGATION
+			auto nowpose = delta.GetNowPoseFromLength();
 			navigation.PidOut(&deltaroll, &deltayaw, &deltapitch);
-			auto x = RANGE(lastData.X + deltax, -MAX_XYZ, MAX_XYZ);
-			auto y = RANGE(lastData.Y + deltay, -MAX_XYZ, MAX_XYZ);
-			auto z = RANGE(lastData.Z + deltaz, -MAX_XYZ, MAX_XYZ);
-			auto roll = RANGE(lastData.Roll + deltaroll, -MAX_DEG, MAX_DEG);
-			auto pitch = RANGE(lastData.Pitch + deltapitch, -MAX_DEG, MAX_DEG);
-			auto yaw = RANGE(lastData.Yaw + deltayaw, -MAX_DEG, MAX_DEG);
+			auto x = RANGE(deltax, -MAX_XYZ, MAX_XYZ);
+			auto y = RANGE(deltay, -MAX_XYZ, MAX_XYZ);
+			auto z = RANGE(deltaz, -MAX_XYZ, MAX_XYZ);
+			auto roll = RANGE(deltaroll + nowpose[3], -MAX_DEG, MAX_DEG);
+			auto pitch = RANGE(deltapitch + nowpose[4], -MAX_DEG, MAX_DEG);
+			auto yaw = RANGE(deltayaw + nowpose[5], -MAX_DEG, MAX_DEG);
+			double* pulse_dugu = Control(x, y, z, roll, yaw, pitch);
 #else
 			auto x = RANGE(0, -MAX_XYZ, MAX_XYZ);
 			auto y = RANGE(0, -MAX_XYZ, MAX_XYZ);

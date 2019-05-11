@@ -48,11 +48,11 @@ using namespace std;
 #define DOWN_VEL 0.05
 
 // 平台运动最大角度deg
-#define MAX_DEG 28
+#define MAX_DEG 15
 // 角度变为整数缩放系数
 #define DEG_SCALE 0.01
 // 平台运动最大位移mm
-#define MAX_XYZ 600
+#define MAX_XYZ 150
 // 位移变为整数缩放系数
 #define XYZ_SCALE 0.1
 // 平台运动最大频率Hz
@@ -144,10 +144,14 @@ using namespace std;
 #define MIDDLE_POS (PULSE_COUNT_RPM * RISE_R)
 // 缸零点行程(编码器零点读数)
 #define ZERO_POS 0
+// 缸电机半圈行程(编码器读数)
+#define HALF_RPM_POS (ZERO_POS + PULSE_COUNT_RPM / 2.0)
 // 缸在中位时运动的最大位移
 #define MAX_POLE_LENGTH (MAX_MM / 2.0)
 // 缸伸长量mm到编码器位置的转换系数
 #define MM_TO_PULSE_COUNT_SCALE (PULSE_COUNT_RPM / MM_RPM)
+// 编码器位置到缸伸长量mm的转换系数
+#define PULSE_COUNT_TO_MM_SCALE (MM_RPM / PULSE_COUNT_RPM)
 // 电机抱闸电平
 #define MOTION_LOCK_LEVEL   false
 // 接近开关接触电平
@@ -222,6 +226,10 @@ public:
 	double GetMotionAveragePulse();
 	// 更新所有电机编码器读数
 	void RenewNowPulse();
+	// 获取中位缸伸长长度
+	double* GetNowPoleLength();
+	// 运动学正解获取姿态
+	double* GetNowPoseFromLength();
 	// 电机上升下降的PID控制函数
 	void DDAControlThread();
 	// 所有缸是否位于底部
@@ -256,6 +264,10 @@ private:
 	bool disposed;
 	// 电机位置缓冲变量
 	double pos[AXES_COUNT];
+	// 缸中位伸长长度缓冲变量
+	double polelenthmm[AXES_COUNT];
+	// 运动学正解缓冲变量
+	double posefromlength[AXES_COUNT];
 	// 板卡控制类
 	SixdofDioAndCount sixdofDioAndCount;
 protected:
