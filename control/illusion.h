@@ -51,7 +51,7 @@ using namespace std;
 // 错觉数据角度缩放系数
 #define ILLUSION_ANGLE_SCALE    0.001
 // 错觉数据角速度缩放系数
-#define ILLUSION_SPEED_SCALE    (0.002 * 3.1415926 / 180.0)
+#define ILLUSION_SPEED_SCALE    (0.003 * 3.1415926 / 180.0)
 // 错觉数据其他数据缩放系数
 #define ILLUSION_OTHER_SCALE    0.001
 
@@ -82,7 +82,7 @@ using namespace std;
 // 错觉角度数据最大值
 #define ILLUSION_MAX_ANGLE_DEG     180
 // 错觉角速度数据最大值
-#define ILLUSION_MAX_ANGLE_SPEED   0.12
+#define ILLUSION_MAX_ANGLE_SPEED   1.2
 // 错觉线位移数据最大加速度
 #define ILLUSION_MAX_XYZ_ACC       20
 
