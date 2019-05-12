@@ -6,6 +6,8 @@
 
 #define IS_81_PLATFORM 1
 //#define IS_84_PLATFORM 1
+//#define IS_63_PLATFORM 1
+//#define IS_79_PLATFORM 1
 //#define IS_81_UP_PLATFORM 1
 
 #ifdef IS_81_PLATFORM

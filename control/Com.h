@@ -21,18 +21,19 @@ class CCOM
 public:
 	CCOM();
 	virtual ~CCOM();
-
+	// 打开串口,端口号,波特率,停止位,校验位,数据位
 	BOOL InitCOM(int nPort, int nBaud, int nStop, int nV, int nData);
+	// 串口发送数据
 	BOOL SendCOMCode(unsigned char chCode[],int nNum);
+	// 从串口获取数据
 	DWORD GetCOMData(unsigned char* pchBuffer);
+	// 关闭串口
 	void closeCOM();
-
-	HANDLE hCOM;
-
-	int nComNum;
-	CString sComName[MAX_COMNUM];
-
+	// 获取串口信息
 	int GetCOMInfo(void);
+private:
+	HANDLE hCOM;
+	int nComNum;
 };
 
 #endif // !defined(AFX_COM_H__99E44280_0F56_47FD_9584_338768C44625__INCLUDED_)

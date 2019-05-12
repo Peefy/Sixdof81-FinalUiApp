@@ -118,7 +118,7 @@ int IllusionDataAdapter::GetControlCommand() const
 
 bool IllusionDataAdapter::IsIllusionControl() const
 {
-	return Data.by35 == 999;
+	return Data.by35 == ILLUSION_IS_DIRECT_CONTROL_INT32 ;
 }
 
 bool IllusionDataAdapter::IsEanbleShock() const
@@ -218,6 +218,50 @@ void IllusionDataAdapter::ReadIpAndPortFromFile()
 
 void IllusionDataAdapter::ReadDeirectCtlScaleFromFile()
 {
-
+	double result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_ACC_X_SCALE_KEY);
+	if (result != NULL)
+	{
+		directAccXScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_ACC_Y_SCALE_KEY);
+	if (result != NULL)
+	{
+		directAccYScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_ACC_Z_SCALE_KEY);
+	if (result != NULL)
+	{
+		directAccZScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_SPEED_ROLL_SCALE_KEY);
+	if (result != NULL)
+	{
+		directSpeedRollScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_SPPED_PITCH_SCALE_KEY);
+	if (result != NULL)
+	{
+		directSpeedPitchScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_SPEED_YAW_SCALE_KEY);
+	if (result != NULL)
+	{
+		directSpeedYawScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_ANGLE_ROLL_SCALE_KEY);
+	if (result != NULL)
+	{
+		directAngleRollScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_ANGLE_PITCH_SCALE_KEY);
+	if (result != NULL)
+	{
+		directAnglePitchScale = result;
+	}
+	result = config::ParseDoubleJsonFromFile(JSON_PARA_FILE_NAME, JSON_DIRECT_ANGLE_YAW_SCALE_KEY);
+	if (result != NULL)
+	{
+		directAngleYawScale = result;
+	}
 }
 

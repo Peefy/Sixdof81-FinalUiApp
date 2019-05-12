@@ -26,66 +26,112 @@ using namespace std;
 // 通信接收缓冲包结束标志
 #define ILLUSION_FLAG_END_INT32       888
 
+// 错觉视景控制指令：空
+#define ILLUSION_CTL_CMD_NONE_INT32        0
+// 错觉视景控制指令：开始
 #define ILLUSION_CTL_CMD_START_INT32       111000
+// 错觉视景控制指令：停止
 #define ILLUSION_CTL_CMD_STOP_INT32        777000
+// 错觉视景控制指令：联机
 #define ILLUSION_CTL_CMD_CONNECT_INT32     222000
+// 错觉视景控制指令：脱机
 #define ILLUSION_CTL_CMD_DISCONNECT_INT32  333000
+// 错觉视景控制指令：暂停
 #define ILLUSION_CTL_CMD_PAUSE_INT32       555000
+// 错觉视景控制指令：恢复
 #define ILLUSION_CTL_CMD_RECOVER_INT32     666000
 
+// 错觉UDP数据帧包缓冲长度
 #define ILLUSION_BUFFER_LENGTH  1024
 
+// 错觉数据线位移缩放系数
 #define ILLUSION_XYZ_SCALE      0.001
-#define ILLUSION_ANGLE_SCALE    0.001
-#define ILLUSION_SPEED_SCALE    (0.001 * 3.1415926 / 180.0)
+// 错觉数据线加速度缩放系数
 #define ILLUSION_ACC_SCALE      0.001
+// 错觉数据角度缩放系数
+#define ILLUSION_ANGLE_SCALE    0.001
+// 错觉数据角速度缩放系数
+#define ILLUSION_SPEED_SCALE    (0.002 * 3.1415926 / 180.0)
+// 错觉数据其他数据缩放系数
 #define ILLUSION_OTHER_SCALE    0.001
 
+// 直控X线加速度缩放系数
 #define DIRECT_ACC_X_SCALE        10.0
+// 直控Y线加速度缩放系数
 #define DIRECT_ACC_Y_SCALE        10.0
+// 直控Z线加速度缩放系数
 #define DIRECT_ACC_Z_SCALE        10.0
+// 直控横滚角速度缩放系数
 #define DIRECT_SPEED_ROLL_SCALE   2.0
+// 直控俯仰角速度缩放系数
 #define DIRECT_SPPED_PITCH_SCALE  2.0
+// 直控偏航角速度缩放系数
 #define DIRECT_SPEED_YAW_SCALE    2.0
+// 直控横滚角缩放系数
 #define DIRECT_ANGLE_ROLL_SCALE   2.0
+// 直控俯仰角缩放系数
 #define DIRECT_ANGLE_PITCH_SCALE  1.0
+// 直控偏航角缩放系数
 #define DIRECT_ANGLE_YAW_SCALE    2.0
 
+// 错觉数据采样数据周期
 #define ILLUSION_DT 0.047
 
+// 错觉数据限幅函数
 #define ILLUSION_RANGE(x, min, max)   (((x)<(min) ? (min) : ( (x)>(max) ? (max):(x) )))
+// 错觉角度数据最大值
 #define ILLUSION_MAX_ANGLE_DEG     180
-#define ILLUSION_MAX_ANGLE_SPEED   1.5
-#define ILLUSION_MAX_XYZ_ACC       50
+// 错觉角速度数据最大值
+#define ILLUSION_MAX_ANGLE_SPEED   0.12
+// 错觉线位移数据最大加速度
+#define ILLUSION_MAX_XYZ_ACC       20
 
+// 错觉直控方式指令
 #define ILLUSION_IS_DIRECT_CONTROL_INT32   999 
 
+// 地球重力加速度
 #define EARTH_G 9.8
-
+// 错觉模型正常加速度
 #define ILLUSION_NORMAL_ACC      (0.02 * EARTH_G)
 
+// 起飞抖振最大空速
 #define ILLUSION_SHOCK_MAX_AIR_SPEED 100.0
+// 起飞抖振最大频率
 #define ILLUSION_SHOCK_MAX_HZ        8.0
 
+// 错觉飞行模拟器模型
 typedef enum 
 {
+	// 苏30:默认值
 	PLANE_TYPE_SU30 = 0,
+	// 苏27
 	PLANE_TYPE_SU27 = 1,
+	// 歼15
 	PLANE_TYPE_J15 = 2,
+	// 歼10
 	PLANE_TYPE_J10 = 3,
+	// 直9
 	PLANE_TYPE_Z9 = 4,
+	// 苏30
 	PLANE_TYPE_S30 = 5
 }PlaneType;
 
+// 平台报警代码
 typedef enum 
 {
-	WARING_TYPE_NORMAL = 0,
+	// 正常
+	WARING_TYPE_NORMAL = 888,
+	// 机械故障
 	WARING_TYPE_MECHANICAL = 111,
+	// 数据故障
 	WARING_TYPE_DATA = 222,
+	// 运行故障
 	WARING_TYPE_RUN = 333,
+	// 逻辑故障
 	WARING_TYPE_LOGICAL = 444,
 }PlatformWaringType;
 
+// 错觉接收数据帧
 #pragma pack (1)
 typedef struct
 {
@@ -167,6 +213,7 @@ typedef struct
 }IllusionPackage;
 #pragma pack () 
 
+// 错觉回传数据帧
 #pragma pack (1)
 typedef struct
 {
@@ -189,70 +236,122 @@ typedef struct
 }IllusionSendPackage;
 #pragma pack () 
 
+// 错觉数据适配器
 class IllusionDataAdapter
 {
 public:
 	IllusionDataAdapter();
 	~IllusionDataAdapter();
+	// 设置当前飞机姿态
 	void SetPoseAngle(double roll, double pitch, double yaw);
+	// 接收并更新数据
 	void RenewData();
+	// 发送数据
 	void SendData();
+	// 发送数据
 	void SendData(bool iswarning, int status, double x, double y, double z, double roll, double yaw, double pitch);
+	// 获取平台控制指令
 	int GetControlCommand() const;
+	// 是否是错觉控制模式
 	bool IsIllusionControl() const;
+	// 是否允许抖振
 	bool IsEanbleShock() const;
+	// 获取抖振频率
 	double GetShockHz();
+	// 是否收到数据
 	bool IsRecievedData;
+	// 横滚角
 	double Roll;
-	double Yaw;
+	// 俯仰角
 	double Pitch;
+	// 偏航角
+	double Yaw;
+	// X方向线位移
 	double X;
+	// Y方向线位移
 	double Y;
+	// Z方向线位移
 	double Z;
+	// 横滚角速度
 	double RollSpeed;
+	// 偏航角速度
 	double YawSpeed;
+	// 俯仰角速度
 	double PitchSpeed;
+	// X方向线速度
 	double XSpeed;
+	// Y方向线速度
 	double YSpeed;
+	// Z方向线速度
 	double ZSpeed;
+	// 横滚角加速度
 	double RollAcc;
+	// 偏航角加速度
 	double YawAcc;
+	// 俯仰角加速度
 	double PitchAcc;
+	// X方向线加速度
 	double XAcc;
+	// Y方向线加速度
 	double YAcc;
+	// Z方向线加速度
 	double ZAcc;
+	// 是否是直控模式
 	bool IsDirectControl;
+	// 飞行模型种类
 	PlaneType planeType;
 private:
+	// 平台当前横滚角
 	double platformRoll;
+	// 平台当前俯仰角
 	double platformPitch;
+	// 平台当前偏航角
 	double platformYaw;
+	// 错觉接收数据
 	IllusionPackage Data;
+	// 错觉发送数据
 	IllusionSendPackage SendToData;
+	// 错觉接收数据帧长度
 	int DataPackageLength;
+	// 错觉发送数据帧长度
 	int SendDataPackageLength;
+	// 更新数据
 	void RenewInnerData();
+	// 从文件读取IP和端口号
 	void ReadIpAndPortFromFile();
+	// 从文件读取直控缩放系数
 	void ReadDeirectCtlScaleFromFile();
 protected:
+	// 数据初始化
 	void DataInit();
+	// 自身UDP通信端口号
 	int SelfPort;
+	// 自身UDP通信IP
 	string SelfIp;
+	// 对方UDP通信端口号
 	int VisionPort;
+	// 对方UDP通信IP
 	string VisionIp;
 private:
+	// 直控X加速度增益
 	double directAccXScale;
+	// 直控X加速度增益
 	double directAccYScale;
+	// 直控X加速度增益
 	double directAccZScale;
+	// 直控横滚角速度增益
 	double directSpeedRollScale;
+	// 直控俯仰角速度增益
 	double directSpeedPitchScale;
+	// 直控偏航角速度增益
 	double directSpeedYawScale;
+	// 直控横滚角增益	
 	double directAngleRollScale;
+	// 直控俯仰角增益
 	double directAnglePitchScale;
+	// 直控偏航角增益
 	double directAngleYawScale;
 };
-
-
 
 #endif // !
 
