@@ -41,11 +41,18 @@ struct
 	double Set;
 }PID_Type;
 
+// 位置式PID控制器
 double MyLocationPID_Real(PID_Type *This, double now, double set);
+// 增量式PID控制器
 double MyDeltaPID_Real(PID_Type *This, double now, double set);
+// 没有增量的增量式PID控制器
 double MyDeltaPIDWithNoDelta(PID_Type *This, double now, double set);
+// PID控制器初始化
 void MyPidParaInit(PID_Type *This);
+// 设置PID控制器的PID参数
 void MyControllerSetPidPara(PID_Type * This, double p, double i, double d);
+// 设置PID控制器的输出限幅
+void MyControllerSetOutPara(PID_Type * This, double outMin, double outMax);
 
 #ifdef __cplusplus
 }

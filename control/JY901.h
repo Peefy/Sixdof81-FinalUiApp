@@ -72,6 +72,7 @@
 #define DIO_MODE_DOPWM 4
 #define DIO_MODE_GPS 5		
 
+// 传感器时间数据
 struct STime
 {
 	unsigned char ucYear;
@@ -82,64 +83,87 @@ struct STime
 	unsigned char ucSecond;
 	unsigned short usMiliSecond;
 };
+
+// 传感器加速度计数据
 struct SAcc
 {
 	short a[3];
 	short T;
 };
+
+// 传感器陀螺仪数据
 struct SGyro
 {
 	short w[3];
 	short T;
 };
+
+// 传感器角度融合数据
 struct SAngle
 {
 	short Angle[3];
 	short T;
 };
+
+// 传感器磁传感器数据
 struct SMag
 {
 	short h[3];
 	short T;
 };
 
+// 传感器状态数据
 struct SDStatus
 {
 	short sDStatus[4];
 };
 
+// 传感器压力数据
 struct SPress
 {
 	long lPressure;
 	long lAltitude;
 };
 
+// 传感器经纬度数据
 struct SLonLat
 {
 	unsigned long lLon;
 	unsigned long lLat;
 };
 
+// 传感器GPS数据
 struct SGPSV
 {
 	short sGPSHeight;
 	short sGPSYaw;
 	long lGPSVelocity;
 };
+
+
 class CJY901 
 {
 public: 
+	// 传感器时间数据
 	struct STime		stcTime;
+	// 传感器加速度计数据
 	struct SAcc 		stcAcc;
+	// 传感器陀螺仪数据
 	struct SGyro 		stcGyro;
+	// 传感器角度融合数据
 	struct SAngle 		stcAngle;
+	// 传感器磁传感器数据
 	struct SMag 		stcMag;
+	// 传感器状态数据
 	struct SDStatus 	stcDStatus;
+	// 传感器压力数据
 	struct SPress 		stcPress;
+	// 传感器经纬度数据
 	struct SLonLat 		stcLonLat;
-	struct SGPSV 		stcGPSV;
-	
+	// 传感器GPS数据
+	struct SGPSV 		stcGPSV;	
     CJY901 (); 
+	// 解码数据帧
     void CopeSerialData(char ucData[],unsigned short usLength);
 };
 

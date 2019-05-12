@@ -68,3 +68,9 @@ void MyControllerSetPidPara(PID_Type * This, double p, double i, double d)
 	This->Real_I = i;
 	This->Real_D = d;
 }
+
+void MyControllerSetOutPara(PID_Type * This, double outMin, double outMax)
+{
+	This->OutMin = outMin;
+	This->OutMax = outMax;
+}

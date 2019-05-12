@@ -6,29 +6,41 @@
 #include "../config/inihelper.h"
 #include "../communication/SerialPort.h"
 
+// 视景接收数据包头
 #define VISION_RECIEVE_HAEDER  'P'
+// 视景接收数据包尾
 #define VISION_RECIEVE_TAIL    '#'
-
+// 视景发送数据包头
 #define VISION_SEND_HAEDER     'C'
+// 视景发送数据包头
 #define VISION_SEND_TAIL       13
 
+// 视景线位移数据缩放系数
 #define VISION_XYZ_SCALE    0.1
+// 视景加速度数据缩放系数
 #define VISION_ACC_SCALE    0.1
+// 视景角度数据缩放系数
 #define VISION_ANGLE_SCALE  0.01
 
+// 视景串口端口号
 #define VISION_PORT        1
+// 视景串口波特率
 #define VISION_BAUDRATE    57600
-
+// 六自由度轴个数
 #define SERVO_COUNT       6
 
+// 数据正负：正号
 #define POSITIVE_SIGN 0x00
+// 数据正负：负号
 #define NEGATIVE_SIGN 0xFF
 
+// 视景数据位操作宏
 #define VISION_BIT_SET(var, n)              (var) |=  (1<<(n))   
 #define VISION_BIT_GET(var, n)              (((var)>>(n))&0x01)  
 #define VISION_BIT_CLEAN(var, n)            (var) &= ~(1<<(n))   
 #define VISION_BIT_SET_VAL(var, n, val)     ( ((val) == (1)) ? VISION_BIT_SET(var,n) : VISION_BIT_CLEAN(var,n) )
 
+// 串口接收数据缓存长度
 #define COM_BASE_BUFFER_MAX   4096
 
 template <typename T>
@@ -37,17 +49,27 @@ class BaseCom
 public:
 	BaseCom(uint8_t headerOne, uint8_t headerTwo);
 	~BaseCom();
+	// 数据包头1
 	uint8_t DefaultPackageHeaderOne;
+	// 数据包头2
 	uint8_t DefaultPackageHeaderTwo;
+	// 串口端口号
 	int PortNumber;
+	// 串口端口号
 	int BaudRate;
+	// 串口是否打开
 	bool IsOpen;
+	// 是否接收到数据
 	bool IsRecievedData;
-	bool IsNotConnect;
+	// 打开串口
 	bool Open(int portNumber, int baudRate);
+	// 关闭串口
 	bool Close();
+	// 接收数据
 	T GetDataFromCom();
+	// 接收数据
 	T GatherDataFromCom();
+	// 数据
 	T Data;
 private:
 	BaseCom();
@@ -126,11 +148,6 @@ T BaseCom<T>::GetDataFromCom()
 		usRxLength -= length;
 		memcpy(&chrTemp[0], &chrTemp[length], usRxLength);    
 		IsRecievedData = true;
-	}
-	if (++NotConnectCount > 20)
-	{
-		NotConnectCount = 0;
-		IsRecievedData = false;
 	}
 	return Data;
 }

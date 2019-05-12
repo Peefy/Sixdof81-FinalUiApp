@@ -23,10 +23,12 @@ typedef struct {
 	float gain[2];  /* 2x1 */
 } kalman2_state;
 
-
+// MPU×ËÌ¬´«¸ĞÆ÷×ËÌ¬ÈÚºÏ¿¨¶ûÂüÂË²¨
 float KalmanFilterMPU(float angle_m, float gyro_m);
+// 1½×¿¨¶ûÂüÂË²¨
 extern void kalman1_init(kalman1_state *state, float init_x, float init_p);
 extern float kalman1_filter(kalman1_state *state, float z_measure);
+// 2½×¿¨¶ûÂüÂË²¨
 extern void kalman2_init(kalman2_state *state, float *init_x, float(*init_p)[2]);
 extern float kalman2_filter(kalman2_state *state, float z_measure);
 

@@ -106,7 +106,7 @@ bool Water::GatherData()
 	while(i <= j)
 	{
 		UCHAR *pData = &chData[i];
-		if((pData[0] ==  PACKAGE_HEADER1) && ( pData[1] == PACKAGE_HEADER2))
+		if((pData[0] ==  PACKAGE_HEADER1) && (pData[1] == PACKAGE_HEADER2))
 		{       	
 			ulFrameNum++;
 			memcpy(&downData, &pData[0], length);
@@ -143,7 +143,7 @@ void Water::TestSendData()
 	upData.TailOne = PACKAGE_TAIL1;
 	upData.TailTwo = PACKAGE_TAIL2;
 	upData.Yaw = 11000;
-	upData.Length = UP_DATA_LENGTH ;
+	upData.Length = UP_DATA_LENGTH;
 	upData.FrameNumber++;
 	upData.Kind = 0x01;
 	upData.State = 0x02;
