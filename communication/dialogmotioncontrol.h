@@ -72,10 +72,18 @@ using namespace std;
 #define MAX_DEG_ROLL   15
 // 平台运动最大角度 偏航角deg
 #define MAX_DEG_YAW    15
-// 平台正弦运动 位移最大零位mm
-#define MAX_XYZ_ZERO_POS    30
-// 平台正弦运动 角度最大零位deg
-#define MAX_DEG_ZERO_POS    3
+// 平台正弦运动 纵向位移最大零位mm
+#define MAX_XYZ_ZERO_POS_X        (MAX_XYZ_X)
+// 平台正弦运动 纵向位移最大零位mm
+#define MAX_XYZ_ZERO_POS_Y        (MAX_XYZ_Y)
+// 平台正弦运动 纵向位移最大零位mm
+#define MAX_XYZ_ZERO_POS_Z        (MAX_XYZ_Z)
+// 平台正弦运动 俯仰角度最大零位deg
+#define MAX_DEG_ZERO_POS_PITCH    (MAX_DEG_PITCH)
+// 平台正弦运动 横滚角最大零位deg
+#define MAX_DEG_ZERO_POS_ROLL     (MAX_DEG_ROLL)
+// 平台正弦运动 偏航角度最大零位deg
+#define MAX_DEG_ZERO_POS_YAW      (MAX_DEG_YAW) 
 
 #elif IS_84_PLATFORM
 //缸的最大行程mm

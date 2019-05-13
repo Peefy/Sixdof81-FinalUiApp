@@ -1400,12 +1400,12 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 	auto pitchphase = RANGE(GetCEditNumber(IDC_EDIT_PITCH_PHASE), 0, MAX_PHASE);
 	auto yawphase = RANGE(GetCEditNumber(IDC_EDIT_YAW_PHASE), 0, MAX_PHASE);
 
-	auto xzeropos = RANGE(GetCEditNumber(IDC_EDIT_X_ZERO_POS), 0, MAX_XYZ_ZERO_POS);
-	auto yzeropos = RANGE(GetCEditNumber(IDC_EDIT_Y_ZERO_POS), 0, MAX_XYZ_ZERO_POS);
-	auto zzeropos = RANGE(GetCEditNumber(IDC_EDIT_Z_ZERO_POS), 0, MAX_XYZ_ZERO_POS);
-	auto rollzeropos = RANGE(GetCEditNumber(IDC_EDIT_ROLL_ZERO_POS), 0, MAX_DEG_ZERO_POS);
-	auto pitchzeropos = RANGE(GetCEditNumber(IDC_EDIT_PITCH_ZERO_POS), 0, MAX_DEG_ZERO_POS);
-	auto yawzeropos = RANGE(GetCEditNumber(IDC_EDIT_YAW_ZERO_POS), 0, MAX_DEG_ZERO_POS);
+	auto xzeropos = RANGE(GetCEditNumber(IDC_EDIT_X_ZERO_POS), -MAX_XYZ_ZERO_POS_X, MAX_XYZ_ZERO_POS_X);
+	auto yzeropos = RANGE(GetCEditNumber(IDC_EDIT_Y_ZERO_POS), -MAX_XYZ_ZERO_POS_Y, MAX_XYZ_ZERO_POS_Y);
+	auto zzeropos = RANGE(GetCEditNumber(IDC_EDIT_Z_ZERO_POS), -MAX_XYZ_ZERO_POS_Z, MAX_XYZ_ZERO_POS_Z);
+	auto rollzeropos = RANGE(GetCEditNumber(IDC_EDIT_ROLL_ZERO_POS), -MAX_DEG_ZERO_POS_PITCH, MAX_DEG_ZERO_POS_PITCH);
+	auto pitchzeropos = RANGE(GetCEditNumber(IDC_EDIT_PITCH_ZERO_POS), -MAX_DEG_ZERO_POS_ROLL, MAX_DEG_ZERO_POS_ROLL);
+	auto yawzeropos = RANGE(GetCEditNumber(IDC_EDIT_YAW_ZERO_POS), -MAX_DEG_ZERO_POS_YAW, MAX_DEG_ZERO_POS_YAW);
 
 	testVal[0] = xval;
 	testVal[1] = yval;
