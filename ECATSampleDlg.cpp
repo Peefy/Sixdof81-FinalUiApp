@@ -67,6 +67,7 @@ using namespace std;
 //#define ENABLE_OPENGL       1
 //#define ENABLE_LINE_GRAPH   1
 
+#define IS_USE_MESSAGE_BOX 1
 #define IS_USE_NAVIGATION 0
 #define IS_USE_KALMAN_FILTER 0
 
@@ -1218,12 +1219,16 @@ void CECATSampleDlg::OnBnClickedBtnRise()
 	// 所有开关触碰到了才能上升
 	if (delta.IsAllAtBottom() == false)
 	{
+#if IS_USE_MESSAGE_BOX
 		MessageBox(_T(SIXDOF_NOT_BOTTOM_AND_RISE_MESSAGE));
+#endif	
 		return;
 	}	
 	if (status != SIXDOF_STATUS_BOTTOM)
 	{
+#if IS_USE_MESSAGE_BOX
 		MessageBox(_T(SIXDOF_NOT_BOTTOM_MESSAGE));
+#endif	
 		return;
 	}
 	delta.ResetStatus();
@@ -1238,7 +1243,9 @@ void CECATSampleDlg::OnBnClickedBtnMiddle()
 	{
 		if (status != SIXDOF_STATUS_READY)
 		{
+#if IS_USE_MESSAGE_BOX
 			MessageBox(_T(SIXDOF_NOT_MIDDLE_MESSAGE));
+#endif
 			return;
 		}
 	}
@@ -1246,7 +1253,9 @@ void CECATSampleDlg::OnBnClickedBtnMiddle()
 	{
 		if (status != SIXDOF_STATUS_MIDDLE)
 		{
+#if IS_USE_MESSAGE_BOX
 			MessageBox(_T(SIXDOF_NOT_MIDDLE_MESSAGE));
+#endif	
 			return;
 		}
 	}
@@ -1258,7 +1267,9 @@ void CECATSampleDlg::OnBnClickedBtnStart()
 {
 	if (status != SIXDOF_STATUS_READY)
 	{
-	    MessageBox(_T(SIXDOF_NOT_BEGIN_MESSAGE));
+#if IS_USE_MESSAGE_BOX
+		MessageBox(_T(SIXDOF_NOT_BEGIN_MESSAGE));
+#endif
 		return;
 	}
 	status = SIXDOF_STATUS_RUN;
@@ -1372,7 +1383,9 @@ void CECATSampleDlg::OnBnClickedButtonTest()
 {
 	if (status != SIXDOF_STATUS_READY)
 	{
+#if IS_USE_MESSAGE_BOX
 		MessageBox(_T(SIXDOF_NOT_BEGIN_MESSAGE));
+#endif
 		return;
 	}
 	status = SIXDOF_STATUS_RUN;
