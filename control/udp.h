@@ -19,7 +19,7 @@ private:
 	// 对方的IP地址
 	sockaddr_in addrClient;
 public:
-	UdpClient(int port);
+	explicit UdpClient(int port);
 	~UdpClient();
 	// 设置并绑定使用Socket端口号
 	void SetPortAndBind(int port);

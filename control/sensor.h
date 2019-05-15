@@ -73,9 +73,9 @@ typedef struct
 class Sensor
 {
 public:
-	Sensor(int port);
+	explicit Sensor(int port);
 	Sensor();
-	~Sensor();
+	virtual ~Sensor();
 	// 更新传感器数据
 	SensorInfo_t GatherData();
 	// 传感器是否正常
