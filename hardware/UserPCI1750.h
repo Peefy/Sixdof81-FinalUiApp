@@ -6,8 +6,10 @@
 
 #include "../bdaqctrl.h"
 
+// 包含研华命名空间
 using namespace Automation::BDaq;
 
+// PCI1750板卡数字量输出端口定义
 typedef enum 
 {
 	UserPCI1750_IDI0,
@@ -28,6 +30,7 @@ typedef enum
 	UserPCI1750_IDI15,
 }UserPCI1750_InputPort;
 
+// PCI1750板卡数字量输入端口定义
 typedef enum 
 {
 	UserPCI1750_IDO0,
@@ -53,12 +56,19 @@ class UserPCI1750 : public UserPCICard
 public:
 	UserPCI1750();
 	~UserPCI1750();
+	// 获取简介
 	string GetIntroduction();
+	// 初始化
 	bool Init();
+	// 关闭板卡
 	bool Close();
+	// 写端口
 	void WriteBit(UserPCI1750_OutputPort port, bool bit);
+	// 读端口
 	void ReadBit(UserPCI1750_InputPort port, bool* bit);
+	// 写所有端口
 	void WriteAllBits(bool* bits);
+	// 读所有端口
 	void ReadAllBits(bool* bits);
 private:
 	bool disposed;
