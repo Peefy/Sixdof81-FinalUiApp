@@ -94,7 +94,7 @@ static PID_Type MotionRisePidControler[AXES_COUNT] =
 };
 
 // 惯导稳定过程的PID控制器
-PID_Type MotionNavigationPidControler[AXES_COUNT] = 
+static PID_Type MotionNavigationPidControler[AXES_COUNT] = 
 {
 	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL },
 	{ NAVI_MOTION_P, NAVI_MOTION_I, NAVI_MOTION_D, -NAVI_MAX_VEL, NAVI_MAX_VEL },
