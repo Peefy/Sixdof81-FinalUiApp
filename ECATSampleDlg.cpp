@@ -52,14 +52,18 @@ using namespace std;
 #define COLOR_RED     RGB(255, 123, 123)
 #define COLOR_GREEN   RGB(123, 255, 123)
 
+// 定时器周期
 #define TIMER_MS 10
 
+// 六自由度平台控制周期
 #define SIXDOF_CONTROL_DELEY 1
 #define SCENE_THREAD_DELAY 20
 #define SENSOR_THREAD_DELAY 1000
 #define DATA_BUFFER_THREAD_DELAY 1000
 
+// 平滑启动时间
 #define CHIRP_TIME       2.5
+// 到达姿态零偏时间
 #define ZERO_POS_TIME    2.5
 #define ENABLE_CHIRP  false
 #define ENABLE_SHOCK  false
@@ -67,8 +71,11 @@ using namespace std;
 //#define ENABLE_OPENGL       1
 //#define ENABLE_LINE_GRAPH   1
 
+// 是否显示对话框
 #define IS_USE_MESSAGE_BOX 1
+// 是否使用惯导
 #define IS_USE_NAVIGATION 0
+// 是否使用卡尔曼滤波
 #define IS_USE_KALMAN_FILTER 0
 
 bool enableShock = ENABLE_SHOCK;

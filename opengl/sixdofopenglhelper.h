@@ -28,34 +28,41 @@ extern void OpenGL_SetRoll(double angle);
 extern void OpenGL_SetYaw(double angle);  
 extern void OpenGL_SetPitch(double angle);  
 
+// openGL初始化
 void OpenGlLightInit(void);
 
-//函数声明
+// 函数声明
 int OpenGLControlInit(int panelHandle, int pictureBox); 
-//画实心正方体
+// 画实心正方体
 void DrawCubeWithColor(float length, float r, float b, float g);  
-//画实心长方体
+// 画实心长方体
 void DrawSolidBoxWithColor(float a, float b, float c, float red, float blue, float green); 
-//画实心球
+// 画实心球
 void DrawBall(float radius,float red,float blue,float green);
-//画圆柱
+// 画圆柱
 void DrawCylinderWithTwoPoints(float x1, float y1, float z1, float x2, float y2, float z2, float blueHeight,
 	float baseRadius, int isJudgeAngleY);
+// 画平板
 void DrawBanFormThreePoints(float x1, float y1, float z1, float x2, float y2, float z2,
 	float x3, float y3, float z3);
+// 绕点旋转
 void PointRotatef(float angle, float x, float y, float z,
 	float old_x, float old_y, float old_z,
 	float* new_x, float* new_y, float* new_z);
+// 绕X方向旋转
 void PointRotatef_X(float angle,
 	float old_x, float old_y, float old_z,
 	float* new_x, float* new_y, float* new_z);
+// 绕Y方向旋转
 void PointRotatef_Y(float angle,
 	float old_x, float old_y, float old_z,
 	float* new_x, float* new_y, float* new_z);
+// 绕Z方向旋转
 void PointRotatef_Z(float angle,
 	float old_x, float old_y, float old_z,
 	float* new_x, float* new_y, float* new_z);
 
+// 渲染六自由度平台画面
 void RenderSixdofImage();
 
 #ifdef __cplusplus

@@ -54,6 +54,7 @@ END_MESSAGE_MAP()
 void DialogRegister::OnBnClickedOk()
 {
 	CString str = "";
+	// 获取对话框校验字符串
 	GetDlgItemText(IDC_EDIT_RC, str);
 	std::string STDStr(CW2A(str.GetString()));
 	if (RegisterApp(STDStr) == false)
