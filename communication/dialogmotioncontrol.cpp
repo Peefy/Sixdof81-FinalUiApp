@@ -686,3 +686,22 @@ void DialogMotionControl::TestHardware()
 	sixdofDioAndCount.Test();
 #endif
 }
+
+void DialogMotionControl::PowerStart(bool isStart)
+{
+#if IS_BIG_MOTION
+	
+#else
+	sixdofDioAndCount.Start(isStart);
+#endif
+	
+}
+
+void DialogMotionControl::PowerCheckStart(bool isStart)
+{
+#if IS_BIG_MOTION
+	
+#else
+	sixdofDioAndCount.CheckStart(isStart);
+#endif
+}

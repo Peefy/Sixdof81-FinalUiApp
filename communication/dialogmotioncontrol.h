@@ -250,6 +250,8 @@ public:
 	bool PowerOnSelfTest(SixDofPlatformStatus laststatus, double * lastpulse);
 	// 测试所有硬件
 	void TestHardware();
+	void PowerStart(bool isStart);
+	void PowerCheckStart(bool isStart);
 public:
 	// 电机编码器位置
 	double NowPluse[AXES_COUNT];
