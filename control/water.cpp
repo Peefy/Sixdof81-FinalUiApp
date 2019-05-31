@@ -75,10 +75,6 @@ void Water::RenewData()
 
 bool Water::GatherData()
 {
-	if (IsRecievedData == false)
-	{
-		return false;
-	}
 	// 数据帧处理相关
 	static int uiRemainLength = 0;
 	static unsigned long ulFrameNum = 0;
