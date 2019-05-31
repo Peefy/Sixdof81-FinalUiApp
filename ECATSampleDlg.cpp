@@ -72,7 +72,7 @@ using namespace std;
 //#define ENABLE_LINE_GRAPH   1
 
 // 是否显示对话框
-#define IS_USE_MESSAGE_BOX 1
+#define IS_USE_MESSAGE_BOX 0
 // 是否使用惯导
 #define IS_USE_NAVIGATION 0
 // 是否使用卡尔曼滤波
