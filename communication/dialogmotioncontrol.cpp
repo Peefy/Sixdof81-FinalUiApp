@@ -687,20 +687,22 @@ void DialogMotionControl::TestHardware()
 #endif
 }
 
+// 硬件电源打开
 void DialogMotionControl::PowerStart(bool isStart)
 {
 #if IS_BIG_MOTION
-	
+	sixdofDioAndCount.Start(isStart);
 #else
 	sixdofDioAndCount.Start(isStart);
 #endif
 	
 }
 
+// 检修打开
 void DialogMotionControl::PowerCheckStart(bool isStart)
 {
 #if IS_BIG_MOTION
-	
+	sixdofDioAndCount.CheckStart(isStart);
 #else
 	sixdofDioAndCount.CheckStart(isStart);
 #endif

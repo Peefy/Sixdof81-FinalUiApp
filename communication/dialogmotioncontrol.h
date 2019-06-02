@@ -250,7 +250,9 @@ public:
 	bool PowerOnSelfTest(SixDofPlatformStatus laststatus, double * lastpulse);
 	// 测试所有硬件
 	void TestHardware();
+	// 硬件电源打开
 	void PowerStart(bool isStart);
+	// 检修打开
 	void PowerCheckStart(bool isStart);
 public:
 	// 电机编码器位置
