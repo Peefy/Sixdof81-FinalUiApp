@@ -244,6 +244,17 @@ namespace config {
 		return result;
 	}
 
+	void RecordData(const char * filename, double roll, double pitch, double yaw)
+	{
+		ofstream fout(filename, ios::app);
+		fout << roll << " ";
+		fout << pitch << " ";
+		fout << yaw << " ";
+		fout << endl;
+		fout.flush();
+		fout.close();
+	}
+
 }
 
 

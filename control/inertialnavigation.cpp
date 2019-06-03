@@ -8,9 +8,14 @@
 #define JUDGE_IS_RECIEVE if(IsRecievedData == false) return;
 
 #define IS_USE_DELTA_PID 0
+#define IS_NAVI_FILE_RECORD 1
 
 #define FRAME_LENGTH 83
 #define DATA_NUM 21
+
+#if IS_NAVI_FILE_RECORD
+char filename[100] = "";
+#endif
 
 static double p = 0.001;
 static double i = 0.0001;
@@ -63,7 +68,7 @@ bool InertialNavigation::Close()
 	return IsRS422Start;
 }
 
-bool InertialNavigation::JudgeCheckByte(char* chars)
+bool InertialNavigation::JudgeCheckByte(unsigned char* chars)
 {
 	unsigned char checkbyte = 0;
 	for (int i = CHECK_BYTE_CAL_START_INDEX;i <= CHECK_BYTE_CAL_END_INDEX;++i)
@@ -101,8 +106,8 @@ void InertialNavigation::RenewData()
 			continue;
 		}
 		if(chrTemp[1] == RS422_DATA_HEAD_TWO && chrTemp[RS422_DATA_PACKAGE_LEGNTH - 1] == RS422_DATA_TAIL_TWO &&
-			chrTemp[RS422_DATA_PACKAGE_LEGNTH - 2] == RS422_DATA_TAIL_ONE //&&
-			)//JudgeCheckByte(chrTemp) == true)
+			chrTemp[RS422_DATA_PACKAGE_LEGNTH - 2] == RS422_DATA_TAIL_ONE &&
+			JudgeCheckByte(chrTemp) == true)
 		{
 			memcpy(&data, &chrTemp[0], RS422_DATA_PACKAGE_LEGNTH);
 		}
@@ -148,7 +153,8 @@ bool InertialNavigation::GatherData()
 		if((pData[0] == RS422_DATA_HEAD_ONE) && 
 			(pData[1] == RS422_DATA_HEAD_TWO) && 
 			(pData[FRAME_LENGTH - 2] == RS422_DATA_TAIL_ONE) && 
-			(pData[FRAME_LENGTH - 1] == RS422_DATA_TAIL_TWO))
+			(pData[FRAME_LENGTH - 1] == RS422_DATA_TAIL_TWO) &&
+			JudgeCheckByte(pData) == true)
 		{       	
 			ulFrameNum++;
 			memcpy(&data, &pData[0], FRAME_LENGTH);
@@ -264,6 +270,9 @@ void InertialNavigation::DecodeData()
 	Pitch = -data.Roll * ANGLE_SCALE / 3600.0;
 	Roll = -data.Pitch * ANGLE_SCALE / 3600.0;
 	Yaw = data.Yaw * ANGLE_SCALE / 3600.0 - YawOffset;
+	NaviRoll = data.Roll;
+	NaviPitch = data.Pitch;
+	NaviYaw = data.Yaw;
 	Lon = data.Longitude * LATLON_SCALE / 3600.0;
 	Lan = data.Latitude * LATLON_SCALE / 3600.0;
 	IsGyroError = STATUS_BIT_GET(data.StateByte, GYRO_ERR_BIT);
@@ -273,6 +282,9 @@ void InertialNavigation::DecodeData()
 	IsAlignment = STATUS_BIT_GET(data.StateByte, ALIGNMENT_BIT);
 	IsInertialError = STATUS_BIT_GET(data.StateByte, INERTIAL_ERR_BIT);
 	IsNavigationError = STATUS_BIT_GET(data.StateByte, NAVIGATION_ERR_BIT);
+#if IS_NAVI_FILE_RECORD
+	config::RecordData(filename, NaviRoll, NaviPitch, NaviYaw);
+#endif
 }
 
 void InertialNavigation::DataInit()
@@ -296,11 +308,22 @@ void InertialNavigation::DataInit()
 	IsInertialError = false;
 	IsNavigationError = false;
 	IsRS422Start = false;
+#if IS_NAVI_FILE_RECORD
+	time_t currtime = time(NULL);
+	struct tm* p = gmtime(&currtime);
+	sprintf_s(filename, "./datas/navidata%d-%d-%d-%d-%d-%d.txt", p->tm_year + 1990, p->tm_mon + 1,
+		p->tm_mday, p->tm_hour + 8, p->tm_min, p->tm_sec);
+#endif
 }
 
 void InertialNavigation::JudgeYawOffset()
 {
 	YawOffset = data.Yaw * ANGLE_SCALE / 3600.0;
+}
+
+void InertialNavigation::SetYawOffset(double yawOffset)
+{
+	YawOffset = yawOffset;
 }
 
 void InertialNavigation::PidInit()

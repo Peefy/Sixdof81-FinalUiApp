@@ -150,6 +150,8 @@ using namespace std;
 
 // 默认偏航角数据零点
 #define YAW_OFFSET 305.686
+// 默认船上姿态角度
+#define SHIP_YAW_OFFSET 48.405
 
 #pragma pack (1)
 typedef struct
@@ -226,6 +228,8 @@ public:
 	int GetBufferLength();
 	// 校正偏航零点
 	void JudgeYawOffset();
+	// 设置偏航零点
+	void SetYawOffset(double yawOffset = SHIP_YAW_OFFSET);
 	// 设置默认数据对齐
 	void SetDefaultAlignment(double lat, double lon, double height);
 	// 设置GPS位置
@@ -279,6 +283,12 @@ public:
 	bool IsNavigationError;
 	// 是否串口打开
 	bool IsRS422Start;
+	// 惯导原始数据：横滚角(单位0.01分)
+	double NaviRoll;
+	// 惯导原始数据：俯仰角(单位0.01分)
+	double NaviPitch;
+	// 惯导原始数据：偏航角(单位0.01分)
+	double NaviYaw;
 private:
 	// 更新数据
 	void RenewData();
@@ -295,7 +305,7 @@ private:
 	//CCOM serialPort;
 protected:
 	// 判断校验是否成功
-	bool JudgeCheckByte(char * chars);
+	bool JudgeCheckByte(unsigned char * chars);
 	// 串口发送字符串
 	void RS422SendString(string strs);
 };

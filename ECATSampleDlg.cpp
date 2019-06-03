@@ -301,6 +301,8 @@ void VisionOrSensorDataDeal()
 		visionData.Yaw = water.Yaw;
 		csdata.unlock();
 	}
+	water.SendData(data.Roll, data.Yaw, data.Pitch,
+		status, 1);
 #endif
 }
 

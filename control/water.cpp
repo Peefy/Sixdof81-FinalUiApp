@@ -23,6 +23,7 @@ void Water::DataInit()
 	UpPackageLength = sizeof(WaterUpDataPackage);
 	DownPackageLength = sizeof(WaterDownDataPackage);
 	frameNumber = 0;
+	ControlCommand = WaterControlCommandInt8::WATER_CTL_CMD_NONE_INT8;
 }
 
 bool Water::Open()
@@ -109,6 +110,7 @@ bool Water::GatherData()
 			Roll = downData.Roll / WATER_ANGLE_SCALE;
 			Pitch = downData.Pitch / WATER_ANGLE_SCALE;
 			Yaw = downData.Yaw / WATER_ANGLE_SCALE;
+			ControlCommand = static_cast<WaterControlCommandInt8>(downData.Control);
 			IsRecievedData = true;
 			i += length;		
 			continue;
@@ -153,10 +155,11 @@ void Water::TestSendData()
 	//SendUARTMessageLength(WATER_SERIAL_NUM, chrTemp, length);
 }
 
-void Water::SendData(double roll, double yaw, double pitch)
+void Water::SendData(double roll, double yaw, double pitch, 
+					 uint8_t platformState, uint8_t platformWarning)
 {
+	static unsigned char chrTemp[BUFFER_MAX] = {0};
 	size_t sendSize = sizeof(char) * UpPackageLength;
-	unsigned char* chrTemp = (unsigned char*)malloc(sendSize);
 	memset(chrTemp, 0, sendSize);
 	WaterUpDataPackage data;
 	data.HeadOne = PACKAGE_HEADER1;
@@ -168,14 +171,16 @@ void Water::SendData(double roll, double yaw, double pitch)
 	data.InitState = 0x02;
 	data.FrameNumber = frameNumber++;
 	data.Length = UP_DATA_LENGTH;
-	data.Yaw = (uint32_t)(yaw * WATER_ANGLE_SCALE);
-	data.Roll = (uint32_t)(roll * WATER_ANGLE_SCALE);
-	data.Pitch = (uint32_t)(pitch * WATER_ANGLE_SCALE);
+	data.Yaw = (uint32_t)yaw;
+	data.Roll = (uint32_t)roll;
+	data.Pitch = (uint32_t)pitch;
+	//data.Yaw = (uint32_t)(yaw * WATER_ANGLE_SCALE);
+	//data.Roll = (uint32_t)(roll * WATER_ANGLE_SCALE);
+	//data.Pitch = (uint32_t)(pitch * WATER_ANGLE_SCALE);
 	memcpy(&chrTemp[0], &data, UpPackageLength); 
 	for (int i = 0;i < CRC_UP_INDEX - 1;++i)
 	{
 		chrTemp[CRC_UP_INDEX] ^= chrTemp[i];
 	}
 	serialPort.WriteData(chrTemp, UpPackageLength);
-	delete chrTemp;
 }

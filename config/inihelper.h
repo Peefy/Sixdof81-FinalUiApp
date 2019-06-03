@@ -114,6 +114,8 @@ namespace config {
 	int ParseIntJsonFromFile(const char* filename, const char* key);
 	// 读取json文件-value类型：64位双精度浮点型 double
 	double ParseDoubleJsonFromFile(const char* filename, const char* key);
+	// 记录姿态数据
+	void RecordData(const char * filename, double roll, double pitch, double yaw);
 }
 
 #endif // !__INI_HELPER_H_
