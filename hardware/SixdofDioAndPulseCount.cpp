@@ -67,8 +67,8 @@ UserPCI1723_DIO_Channel BigMotionEnableOutPort[SXIDOF_MOTION_NUM] =
 	UserPCI1723_DIO_Channel5,
 };
 
-UserPCI1723_DIO_Channel BigMotionStartOutPort = UserPCI1723_DIO_Channel6;
-UserPCI1723_DIO_Channel BigMotionCheckStartOutPort = UserPCI1723_DIO_Channel7;
+UserPCI1750_OutputPort BigMotionStartOutPort = UserPCI1750_IDO1;
+UserPCI1750_OutputPort BigMotionCheckStartOutPort = UserPCI1750_IDO3;
 
 SixdofDioAndCount::SixdofDioAndCount()
 {
@@ -313,12 +313,12 @@ bool SixdofDioAndCount::BigMotionReadAlarm()
 
 void SixdofDioAndCount::Start(bool isStart)
 {
-	pci1723Card.WriteBit(BigMotionStartOutPort, isStart);
+	pci1750Card.WriteBit(BigMotionStartOutPort, isStart);
 }
 
 void SixdofDioAndCount::CheckStart(bool isStart)
 {
-	pci1723Card.WriteBit(BigMotionCheckStartOutPort, isStart);
+	pci1750Card.WriteBit(BigMotionCheckStartOutPort, isStart);
 }
 
 bool SixdofDioAndCount::BigMotionTest()

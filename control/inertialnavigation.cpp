@@ -14,7 +14,7 @@
 #define DATA_NUM 21
 
 #if IS_NAVI_FILE_RECORD
-char filename[100] = "";
+static char filename[100] = "";
 #endif
 
 static double p = 0.001;
@@ -270,9 +270,9 @@ void InertialNavigation::DecodeData()
 	Pitch = -data.Roll * ANGLE_SCALE / 3600.0;
 	Roll = -data.Pitch * ANGLE_SCALE / 3600.0;
 	Yaw = data.Yaw * ANGLE_SCALE / 3600.0 - YawOffset;
-	NaviRoll = data.Roll;
-	NaviPitch = data.Pitch;
-	NaviYaw = data.Yaw;
+	NaviRoll = data.Roll * ANGLE_SCALE / 3600.0;
+	NaviPitch = data.Pitch * ANGLE_SCALE / 3600.0;
+	NaviYaw = data.Yaw * ANGLE_SCALE / 3600.0;
 	Lon = data.Longitude * LATLON_SCALE / 3600.0;
 	Lan = data.Latitude * LATLON_SCALE / 3600.0;
 	IsGyroError = STATUS_BIT_GET(data.StateByte, GYRO_ERR_BIT);

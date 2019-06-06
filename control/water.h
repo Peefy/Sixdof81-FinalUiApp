@@ -23,9 +23,9 @@
 #define PACKAGE_TAIL2      0X5B
 
 // 发送数据CRC校验位索引
-#define CRC_UP_INDEX      19
+#define CRC_UP_INDEX      21
 // 接收数据CRC校验位索引
-#define CRC_DOWN_INDEX    18
+#define CRC_DOWN_INDEX    22
 
 // 数据缩放系数
 #define WATER_ANGLE_SCALE 1000.0
@@ -33,7 +33,7 @@
 // 发送数据长度
 #define UP_DATA_LENGTH    16
 // 接收数据长度
-#define DOWN_DATA_LENGTH  13
+#define DOWN_DATA_LENGTH  17
 // 海船视景串口数据读取缓存长度
 #define WATER_READ_BUFFER 10240
 
@@ -53,42 +53,53 @@ enum class WaterControlCommandInt8
 	WATER_CTL_CMD_NONE_INT8       =  100,  //串口API控制指令：空
 };
 
+enum class PlatformWarningType
+{
+	NORMAL = 1,
+	MECHANICAL_ERR = 2,
+	DATA_ERR = 3,
+	RUN_ERR = 4,
+	LOGICAL_ERR = 5,
+	DATA_OUT_OF_RANGE = 6
+};
+
 #pragma pack (1)
 typedef struct
 {
-	uint8_t HeadOne;
-	uint8_t HeadTwo;
-	uint8_t Length;        
-	uint8_t FrameNumber;  
-	uint8_t Kind;
-	uint8_t State;
-	uint8_t InitState;
-	uint8_t PlatformState;
-	uint8_t PlatformWarning;
-	int32_t Yaw;
-	int32_t Pitch;
-	int32_t Roll;
-	int8_t  Crc;
-	uint8_t TailOne;
-	uint8_t TailTwo;
+	uint8_t HeadOne;          //0
+	uint8_t HeadTwo;          //1
+	uint8_t Length;           //2       
+	uint8_t FrameNumber;      //3  
+	uint8_t Kind;             //4
+	uint8_t State;            //5
+	uint8_t InitState;        //6
+	uint8_t PlatformState;    //7
+	uint8_t PlatformWarning;  //8
+	int32_t Yaw;              //9-12
+	int32_t Pitch;            //13-16
+	int32_t Roll;             //17-20
+	int8_t  Crc;              //21
+	uint8_t TailOne;          //22
+	uint8_t TailTwo;          //23
 } WaterUpDataPackage;
 #pragma pack () 
 
 #pragma pack (1)
 typedef struct
 {
-	uint8_t HeadOne;
-	uint8_t HeadTwo;
-	uint8_t Length;        
-	uint8_t FrameNumber;  
-	uint8_t Kind;
-	uint8_t Control;
-	int32_t Yaw;
-	int32_t Pitch;
-	int32_t Roll;
-	int8_t  Crc;
-	uint8_t TailOne;
-	uint8_t TailTwo;
+	uint8_t HeadOne;      //0
+	uint8_t HeadTwo;      //1
+	uint8_t Length;       //2  
+	uint8_t FrameNumber;  //3 
+	uint8_t Kind;         //4
+	uint8_t Control;      //5
+	int32_t Yaw;          //6-9
+	int32_t Pitch;        //10-13
+	int32_t Roll;         //14-17
+	int32_t YawOffset;    //18-21
+	int8_t  Crc;          //22
+	uint8_t TailOne;      //23
+	uint8_t TailTwo;      //24
 } WaterDownDataPackage;
 #pragma pack () 
 
@@ -105,16 +116,17 @@ public:
 	double Pitch;
 	// 偏航角
 	double Yaw;
+	// 偏移偏航角
+	double YawOffset;
 	// 外部控制指令
 	WaterControlCommandInt8 ControlCommand;
+	PlatformWarningType PlatformWarning;
 	// 打开串口
 	bool Open();
 	// 关闭串口
 	bool Close();
 	// 采集数据
 	bool GatherData();
-	// 发送测试数据
-	void TestSendData();
 	// 发送平台数据
 	void SendData(double roll, double yaw, double pitch, 
 		uint8_t platformState, uint8_t platformWarning);
@@ -132,6 +144,8 @@ protected:
 	void DataInit();
 	// 更新数据
 	void RenewData();
+	// 发送测试数据
+	void TestSendData();
 };
 
 #endif 

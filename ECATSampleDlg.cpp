@@ -290,7 +290,8 @@ void VisionOrSensorDataDeal()
 #else
 	water.GatherData();
 	if (water.IsRecievedData == true)
-		water.SendData(data.Roll / 100.0, data.Yaw / 100.0, data.Pitch / 100.0);
+		water.SendData(data.Roll / 100.0, data.Yaw / 100.0, data.Pitch / 100.0,
+			status, 1);
 	if (csdata.try_lock())
 	{
 		visionData.X = 0;

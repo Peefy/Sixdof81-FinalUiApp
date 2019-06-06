@@ -48,6 +48,9 @@
 //下限位函数
 #define DOWN_RANGE(x, min) ( (x)<(min) ? (min) : (x) )
 
+//是否超出范围
+#define IS_OUT_OF_RANGE(x, min, max)   ((x) <= (min) || (x) >= (max)) 
+
 //将数字var的第n位清零
 #define BIT_CLEAN(var,n)        (var) &= ~(1<<(n))   
 //将数字var的第n位置1
